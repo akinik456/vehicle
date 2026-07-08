@@ -1,0 +1,64 @@
+
+**************
+
+FIRESTORE
+	groups
+		groupid - (activeLocatorCount,activeRequesterCount,countryCode,createdAt,entitlementUpdatedAt,groupCode,groupId,groupName,masterRequesterId,maxLocators,maxRequesters,planStatus,purchaseOwnerRequesterId,purchaseStatus,trialEndsAt,trialStartedAt,updatedAt)
+			alerts
+				requesterId
+					items
+						alertid - (alertid,createdAt,groupId,locatorCode,locatorId,locatorName,status,targetRequesterId,type:battery_low,gps_off,movement,place_enter,place_exit)
+			call_me
+				requesterId
+					items
+						callmeid - (callmeid,createdAt,groupId,locatorCode,locatorId,locatorName,status,targetRequesterId)
+				locatorId
+					items
+						callmeid - (callmeid,createdAt,groupId,requesterCode,requesterId,requesterName,status,targetlocatorId)
+			devices
+				locatorId - (active,joinedAt,locatorCode,pairedRequesters,role,updatedAt)
+																								              |_requesterid(pairedAt,requesterCode)													
+					notifyRequesters
+						requesterId - (batteryLow,callMe,createdAt,geofence,gpsOff,movement,updatedAt)
+					settings
+						config - (batteryLowAlert,batteryLowLevel,geofenceAlert,gpsOffAlert,movementAlert,updatedAt)
+					places
+						placeId - (accuracy,address,createdAt,isActive,lat,lng,name,placeId)
+					
+				requesterId - (active,authUid,isMaster,joinedAt,pairedLocators,requesterCode,requesterId,role,updatedAt)
+																								 |_locatorId(locatorCode,pairedAt)
+			join_requests 
+				requesterId - (authUid,createdAt,requesterCode,requesterName,status,updatedAt)
+																								 
+	locators
+		locatorId	-	(active,androidVersion,appVersion,authUid,brand,buildNumber,countryCode,createdAt,device,groupId,locatorCode,locatorName,manufacturer,model,platform,sdkInt,updatedAt)
+			pairing_requests 
+				pairing_requestid - (createdAt,groupId,requesterCode,requesterId,requesterName,status)
+	
+	requesters
+		requesterId	-	(active,androidVersion,appVersion,authUid,brand,buildNumber,countryCode,createdAt,device,groupId,manufacturer,model,platform,requesterCode,requesterName,sdkInt,updatedAt,)
+**************	
+
+RTDB
+	presence
+		auth
+			locators
+				locatorId - (authUid,groupid,role,updatedAt)
+			requesters
+				requesterId - (authUid,groupid,role,updatedAt)
+			uids
+				authUid - (deviceId,groupid,role,updatedAt)			
+		groups
+			groupid
+			  active_watchers
+					locatorId
+						requesterId - (active,lastSeen,requesterCode,requesterName)
+				locators
+					locatorId - (accuracy,battery,gpsEnabled,lastSeen,lat,lng,movedSinceLastUpdateMeters,offlineSince,stationarySince,status,updateCount)
+					
+					
+					
+	notifyRequesters 	createdAt gereksiz
+	places da 2.placeId var updated yok
+	callmeid - (callmeid 2. gereksiz
+	alertid - (alertid 2. gereksiz

@@ -1,0 +1,32 @@
+adb logcat | findstr LYNRA_SERVICE
+Foreground service destroyed
+**************
+
+-	bildirim ayarları check
+
+- app cihazdan kaldırılırsa FS den nasıl sileceğiz ?
+
+
+********
+SMS
+
+Messaging
+
+inApp map
+
+places bireysel enable
+
+v1.1: Firestore group rules hardening
+*******
+- Trial abuse prevention
+
+Purchase Protection
+
+- Never charge a paying user twice.
+- Server-side purchase verification.
+- Restore purchases on reinstall/new device.
+- Protect against unlimited free usage.
+- Keep entitlements synchronized with Google Play.
+Support future products without changing the architecture.
+**********
+
