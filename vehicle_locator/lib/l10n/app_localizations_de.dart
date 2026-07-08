@@ -30,7 +30,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get adminName => 'Administratorname';
 
   @override
+  String get alertBatteryLow => 'Battery Low';
+
+  @override
+  String get alertGpsOff => 'GPS Off';
+
+  @override
+  String get alertMovement => 'Movement Detected';
+
+  @override
+  String get alertPlaceEnter => 'Place Entered';
+
+  @override
+  String get alertPlaceExit => 'Place Exited';
+
+  @override
   String get alerts => 'WARNUNGEN';
+
+  @override
+  String get alertTitle => 'LynraFamily Alert';
 
   @override
   String get allPermissionsGranted => 'Alle Berechtigungen erteilt';

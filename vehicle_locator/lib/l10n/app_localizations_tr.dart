@@ -30,7 +30,25 @@ class AppLocalizationsTr extends AppLocalizations {
   String get adminName => 'Yönetici İsmi';
 
   @override
+  String get alertBatteryLow => 'Pil Düşük';
+
+  @override
+  String get alertGpsOff => 'GPS Kapalı';
+
+  @override
+  String get alertMovement => 'Hareket Algılandı';
+
+  @override
+  String get alertPlaceEnter => 'Bölgeye Girdi';
+
+  @override
+  String get alertPlaceExit => 'Bölgeden Çıktı';
+
+  @override
   String get alerts => 'ALARMLAR';
+
+  @override
+  String get alertTitle => 'LynraFamily Uyarısı';
 
   @override
   String get allPermissionsGranted => 'Tüm İzinler Verildi';
@@ -590,10 +608,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get thismember => 'Bu üye listenizden kaldırılacaktır.';
 
   @override
-  String get title => 'LynraFamily';
+  String get title => 'LynraFleet';
 
   @override
-  String get titleMember => 'LynraFamily Member';
+  String get titleMember => 'LynraFleet Vehicle';
 
   @override
   String get trialExpired => 'Deneme süresi sona erdi';

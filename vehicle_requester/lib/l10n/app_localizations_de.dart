@@ -48,6 +48,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get alerts => 'WARNUNGEN';
 
   @override
+  String get alertTitle => 'LynraFamily Alert';
+
+  @override
   String get allPermissionsGranted => 'Alle Berechtigungen erteilt';
 
   @override

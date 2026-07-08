@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LynraFleet </string>
+
+    <string name="presence_service_channel_name">LynraFamily  Service</string>
+    <string name="presence_service_notification_title">LynraFamily  is active</string>
+    <string name="presence_service_notification_body">Manage and monitor your fleet in real time.</string>
+</resources>

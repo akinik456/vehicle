@@ -30,7 +30,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminName => 'Admin Name';
 
   @override
+  String get alertBatteryLow => 'Battery Low';
+
+  @override
+  String get alertGpsOff => 'GPS Off';
+
+  @override
+  String get alertMovement => 'Movement Detected';
+
+  @override
+  String get alertPlaceEnter => 'Place Entered';
+
+  @override
+  String get alertPlaceExit => 'Place Exited';
+
+  @override
   String get alerts => 'ALERTS';
+
+  @override
+  String get alertTitle => 'LynraFamily Alert';
 
   @override
   String get allPermissionsGranted => 'All Permissions Granted';
@@ -590,10 +608,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thismember => 'This Member will be removed from your paired list.';
 
   @override
-  String get title => 'LynraFamily';
+  String get title => 'LynraFleet';
 
   @override
-  String get titleMember => 'LynraFamily Member';
+  String get titleMember => 'LynraFleet Vehicle';
 
   @override
   String get trialExpired => 'Trial expired';

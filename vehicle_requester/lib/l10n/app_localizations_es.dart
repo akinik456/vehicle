@@ -48,6 +48,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get alerts => 'ALERTAS';
 
   @override
+  String get alertTitle => 'Alerta de LynraFamily';
+
+  @override
   String get allPermissionsGranted => 'Todos los permisos concedidos';
 
   @override
@@ -605,10 +608,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get thismember => 'Este miembro será eliminado de su lista vinculada.';
 
   @override
-  String get title => 'LynraFamily';
+  String get title => 'LynraFleet';
 
   @override
-  String get titleMember => 'LynraFamily Member';
+  String get titleMember => 'LynraFleet Vehicle';
 
   @override
   String get trialExpired => 'Período de prueba finalizado';

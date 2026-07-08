@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LynraFleet Member</string>
+    <string name="app_name">LynraFleet Driver</string>
 
-    <string name="presence_service_channel_name">LynraFamily Member Service</string>
-    <string name="presence_service_notification_title">LynraFamily Member is active</string>
-    <string name="presence_service_notification_body">Ready to respond to trusted family location requests.</string>
+    <string name="presence_service_channel_name">LynraFamily Driver Service</string>
+    <string name="presence_service_notification_title">LynraFamily Driver is active</string>
+    <string name="presence_service_notification_body">Securely share your vehicle location.</string>
 </resources>

@@ -177,6 +177,12 @@ abstract class AppLocalizations {
   /// **'ALERTS'**
   String get alerts;
 
+  /// No description provided for @alertTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'LynraFamily Alert'**
+  String get alertTitle;
+
   /// No description provided for @allPermissionsGranted.
   ///
   /// In en, this message translates to:
@@ -1242,13 +1248,13 @@ abstract class AppLocalizations {
   /// No description provided for @title.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily'**
+  /// **'LynraFleet'**
   String get title;
 
   /// No description provided for @titleMember.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily Member'**
+  /// **'LynraFleet Vehicle'**
   String get titleMember;
 
   /// No description provided for @trialExpired.

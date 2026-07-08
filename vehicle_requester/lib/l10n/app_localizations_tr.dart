@@ -48,6 +48,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get alerts => 'ALARMLAR';
 
   @override
+  String get alertTitle => 'LynraFamily Uyarısı';
+
+  @override
   String get allPermissionsGranted => 'Tüm İzinler Verildi';
 
   @override
@@ -605,10 +608,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get thismember => 'Bu üye listenizden kaldırılacaktır.';
 
   @override
-  String get title => 'LynraFamily';
+  String get title => 'LynraFleet';
 
   @override
-  String get titleMember => 'LynraFamily Member';
+  String get titleMember => 'LynraFleet Vehicle';
 
   @override
   String get trialExpired => 'Deneme süresi sona erdi';
