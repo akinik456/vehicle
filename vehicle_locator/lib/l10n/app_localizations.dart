@@ -120,7 +120,7 @@ abstract class AppLocalizations {
   /// No description provided for @addMember.
   ///
   /// In en, this message translates to:
-  /// **'Add Member'**
+  /// **'Add Vehicle'**
   String get addMember;
 
   /// No description provided for @addressNotAvailable.
@@ -180,7 +180,7 @@ abstract class AppLocalizations {
   /// No description provided for @alertTitle.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily Alert'**
+  /// **'LynraFleet Alert'**
   String get alertTitle;
 
   /// No description provided for @allPermissionsGranted.
@@ -198,7 +198,7 @@ abstract class AppLocalizations {
   /// No description provided for @allowOneMoreMember.
   ///
   /// In en, this message translates to:
-  /// **'Allow one more member'**
+  /// **'Allow one more vehicle'**
   String get allowOneMoreMember;
 
   /// No description provided for @aNewVer.
@@ -210,7 +210,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily'**
+  /// **'LynraFleet'**
   String get appName;
 
   /// No description provided for @approve.
@@ -222,7 +222,7 @@ abstract class AppLocalizations {
   /// No description provided for @askTheGroup.
   ///
   /// In en, this message translates to:
-  /// **'Ask the group owner to upgrade LynraFamily.'**
+  /// **'Ask the group owner to upgrade LynraFleet.'**
   String get askTheGroup;
 
   /// No description provided for @askEverybody.
@@ -264,13 +264,13 @@ abstract class AppLocalizations {
   /// No description provided for @backgroundAccessInstructions.
   ///
   /// In en, this message translates to:
-  /// **'In the opening screen, please find \"LynraFamily Member\" and turn the switch ON to ensure background reliability.\n\nThis window will close in 10 seconds...'**
+  /// **'In the opening screen, please find \"LynraFleet Vehicle\" and turn the switch ON to ensure background reliability.\n\nThis window will close in 10 seconds...'**
   String get backgroundAccessInstructions;
 
   /// No description provided for @backgroundPermissions.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily Member requires these permissions to work in background.'**
+  /// **'LynraFleet Vehicle requires these permissions to work in background.'**
   String get backgroundPermissions;
 
   /// No description provided for @batteryAlertlevel.
@@ -342,7 +342,7 @@ abstract class AppLocalizations {
   /// No description provided for @chooseWhichNotif.
   ///
   /// In en, this message translates to:
-  /// **'Choose which notifications you want to receive from this member.'**
+  /// **'Choose which notifications you want to receive from this vehicle.'**
   String get chooseWhichNotif;
 
   /// No description provided for @cntinue.
@@ -366,19 +366,19 @@ abstract class AppLocalizations {
   /// No description provided for @connectAMember.
   ///
   /// In en, this message translates to:
-  /// **'Connect A Member'**
+  /// **'Connect A Vehicle'**
   String get connectAMember;
 
   /// No description provided for @createNewGroup.
   ///
   /// In en, this message translates to:
-  /// **'Create a new group'**
+  /// **'Create a new fleet'**
   String get createNewGroup;
 
   /// No description provided for @createOrJoin.
   ///
   /// In en, this message translates to:
-  /// **'Create a new group or join an existing group'**
+  /// **'Create a new fleet or join an existing fleet'**
   String get createOrJoin;
 
   /// No description provided for @daysAgo.
@@ -414,25 +414,25 @@ abstract class AppLocalizations {
   /// No description provided for @enableAutostart.
   ///
   /// In en, this message translates to:
-  /// **'Enable LynraFamily Member in Autostart list'**
+  /// **'Enable LynraFleet Vehicle in Autostart list'**
   String get enableAutostart;
 
   /// No description provided for @enteryourname.
   ///
   /// In en, this message translates to:
-  /// **'Enter Your Name (Other members will see this name.)'**
+  /// **'Enter Your Name (Other vehicle will see this name.)'**
   String get enteryourname;
 
   /// No description provided for @enterMemberCode.
   ///
   /// In en, this message translates to:
-  /// **'Enter Member Code'**
+  /// **'Enter Vehicle Code'**
   String get enterMemberCode;
 
   /// No description provided for @enterMemberName.
   ///
   /// In en, this message translates to:
-  /// **'Enter Member Name'**
+  /// **'Enter Vehicle Name'**
   String get enterMemberName;
 
   /// No description provided for @familyHome.
@@ -474,7 +474,7 @@ abstract class AppLocalizations {
   /// No description provided for @groupInfo.
   ///
   /// In en, this message translates to:
-  /// **'Group Information'**
+  /// **'Fleet Information'**
   String get groupInfo;
 
   /// No description provided for @granted.
@@ -492,25 +492,25 @@ abstract class AppLocalizations {
   /// No description provided for @group.
   ///
   /// In en, this message translates to:
-  /// **'Group'**
+  /// **'Fleet'**
   String get group;
 
   /// No description provided for @groupCode.
   ///
   /// In en, this message translates to:
-  /// **'Group Code'**
+  /// **'Fleet Code'**
   String get groupCode;
 
   /// No description provided for @groupName.
   ///
   /// In en, this message translates to:
-  /// **'Group Name'**
+  /// **'Fleet Name'**
   String get groupName;
 
   /// No description provided for @groupQRCode.
   ///
   /// In en, this message translates to:
-  /// **'Group QR Code'**
+  /// **'Fleet QR Code'**
   String get groupQRCode;
 
   /// No description provided for @hello.
@@ -546,7 +546,7 @@ abstract class AppLocalizations {
   /// No description provided for @joinGroup.
   ///
   /// In en, this message translates to:
-  /// **'Join group'**
+  /// **'Join Fleet'**
   String get joinGroup;
 
   /// No description provided for @joinInstantlyWithCamera.
@@ -618,37 +618,37 @@ abstract class AppLocalizations {
   /// No description provided for @locationPermissionDescription.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily uses your location only to calculate the distance between you and your paired members.\n\nYour location is not shared with members or other users.'**
+  /// **'LynraFleet uses your location only to calculate the distance between you and your paired members.\n\nYour location is not shared with members or other users.'**
   String get locationPermissionDescription;
 
   /// No description provided for @locationPermissionDescForLocator.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily Member requires location access so your trusted family can request your location when needed.\n\nBackground location access allows these requests to work even when the app is closed.\n\nYour location is only shared with trusted family members.'**
+  /// **'LynraFleet Vehicle requires location access so your trusted family can request your location when needed.\n\nBackground location access allows these requests to work even when the app is closed.\n\nYour location is only shared with trusted family members.'**
   String get locationPermissionDescForLocator;
 
   /// No description provided for @locatorGuide1.
   ///
   /// In en, this message translates to:
-  /// **'To share your location, you must first join a family group.'**
+  /// **'To share your location, you must first join a Fleet.'**
   String get locatorGuide1;
 
   /// No description provided for @locatorGuide2.
   ///
   /// In en, this message translates to:
-  /// **'Share your Member Code with your family administrator to receive a pairing request.'**
+  /// **'Share your Vehicle Code with your fleet administrator to receive a pairing request.'**
   String get locatorGuide2;
 
   /// No description provided for @locatorGuide3.
   ///
   /// In en, this message translates to:
-  /// **'You can find your Member Code by opening the Group Information panel.'**
+  /// **'You can find your Vehicle Code by opening the Fleet Information panel.'**
   String get locatorGuide3;
 
   /// No description provided for @locatorGuide4.
   ///
   /// In en, this message translates to:
-  /// **'Use the Call Me button whenever you want your family administrators to contact you.'**
+  /// **'Use the Call Me button whenever you want your Fleet administrators to contact you.'**
   String get locatorGuide4;
 
   /// No description provided for @manufacturerSettings.
@@ -672,7 +672,7 @@ abstract class AppLocalizations {
   /// No description provided for @maxFamilyMembersReached.
   ///
   /// In en, this message translates to:
-  /// **'Maximum family members reached'**
+  /// **'Maximum family vehicles reached'**
   String get maxFamilyMembersReached;
 
   /// No description provided for @maximum5Places.
@@ -684,67 +684,67 @@ abstract class AppLocalizations {
   /// No description provided for @member.
   ///
   /// In en, this message translates to:
-  /// **'Member'**
+  /// **'Vehicle'**
   String get member;
 
   /// No description provided for @members.
   ///
   /// In en, this message translates to:
-  /// **'Members'**
+  /// **'Vehicles'**
   String get members;
 
   /// No description provided for @memberAlreadyPaired.
   ///
   /// In en, this message translates to:
-  /// **'Member Already Paired'**
+  /// **'Vehicle Already Paired'**
   String get memberAlreadyPaired;
 
   /// No description provided for @memberCode.
   ///
   /// In en, this message translates to:
-  /// **'Member Code'**
+  /// **'Vehicle Code'**
   String get memberCode;
 
   /// No description provided for @memberlimitreached.
   ///
   /// In en, this message translates to:
-  /// **'Member Limit Reached'**
+  /// **'Vehicle Limit Reached'**
   String get memberlimitreached;
 
   /// No description provided for @memberNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Member Notifications'**
+  /// **'Vehicle Notifications'**
   String get memberNotifications;
 
   /// No description provided for @memberNotFound.
   ///
   /// In en, this message translates to:
-  /// **'Member Not Found'**
+  /// **'Vehicle Not Found'**
   String get memberNotFound;
 
   /// No description provided for @memberpaired.
   ///
   /// In en, this message translates to:
-  /// **'Member paired successfully'**
+  /// **'Vehicle paired successfully'**
   String get memberpaired;
 
   /// No description provided for @memberQRCode.
   ///
   /// In en, this message translates to:
-  /// **'Member QR Code'**
+  /// **'Vehicle QR Code'**
   String get memberQRCode;
 
   /// No description provided for @memberremoved.
   ///
   /// In en, this message translates to:
-  /// **'Member Removed'**
+  /// **'Vehicle Removed'**
   String get memberremoved;
 
   /// No description provided for @memberSettings.
   ///
   /// In en, this message translates to:
-  /// **'Member Settings'**
+  /// **'Vehicle Settings'**
   String get memberSettings;
 
   /// No description provided for @memoryLock.
@@ -762,13 +762,13 @@ abstract class AppLocalizations {
   /// No description provided for @memoryProtectionInstructions.
   ///
   /// In en, this message translates to:
-  /// **'To help LynraFamily Member continue running in the background, please follow these steps:\n\n• Xiaomi: Open the Security app > Boost speed > Settings > App lock, then enable LynraFamily Member.\n• Other Android devices: Open the Recent Apps screen, tap or press and hold the LynraFamily Member app icon to open App Info.\nIf your device supports it, enable the option to keep the app in memory or keep it open.'**
+  /// **'To help LynraFleet Vehicle continue running in the background, please follow these steps:\n\n• Xiaomi: Open the Security app > Boost speed > Settings > App lock, then enable LynraFleet Member.\n• Other Android devices: Open the Recent Apps screen, tap or press and hold the LynraFleet Member app icon to open App Info.\nIf your device supports it, enable the option to keep the app in memory or keep it open.'**
   String get memoryProtectionInstructions;
 
   /// No description provided for @memberReady.
   ///
   /// In en, this message translates to:
-  /// **'Member Ready'**
+  /// **'Vehicle Ready'**
   String get memberReady;
 
   /// No description provided for @minutesAgo.
@@ -822,13 +822,13 @@ abstract class AppLocalizations {
   /// No description provided for @noGroupYet.
   ///
   /// In en, this message translates to:
-  /// **'No group yet'**
+  /// **'No fleet yet'**
   String get noGroupYet;
 
   /// No description provided for @noPairedMemberYet.
   ///
   /// In en, this message translates to:
-  /// **'No paired locators yet.'**
+  /// **'No paired vehicles yet.'**
   String get noPairedMemberYet;
 
   /// No description provided for @noPairedRequester.
@@ -870,7 +870,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifyPlaces.
   ///
   /// In en, this message translates to:
-  /// **'Notify when member enters or leaves places'**
+  /// **'Notify when vehicle enters or leaves places'**
   String get notifyPlaces;
 
   /// No description provided for @offlineNow.
@@ -918,13 +918,13 @@ abstract class AppLocalizations {
   /// No description provided for @pairedMember.
   ///
   /// In en, this message translates to:
-  /// **'Paired Member'**
+  /// **'Paired Vehicle'**
   String get pairedMember;
 
   /// No description provided for @pairedMembers.
   ///
   /// In en, this message translates to:
-  /// **'Paired Members'**
+  /// **'Paired Vehicles'**
   String get pairedMembers;
 
   /// No description provided for @pairingRejected.
@@ -948,7 +948,7 @@ abstract class AppLocalizations {
   /// No description provided for @pairingRequestPending.
   ///
   /// In en, this message translates to:
-  /// **'This member already has a pending pairing request.'**
+  /// **'This vehicle already has a pending pairing request.'**
   String get pairingRequestPending;
 
   /// No description provided for @permissions.
@@ -966,7 +966,7 @@ abstract class AppLocalizations {
   /// No description provided for @permissionIntroSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'LynraFamily needs a few permissions to work safely and correctly.'**
+  /// **'LynraFleet needs a few permissions to work safely and correctly.'**
   String get permissionIntroSubtitle;
 
   /// No description provided for @permissionsRequired.
@@ -1014,7 +1014,7 @@ abstract class AppLocalizations {
   /// No description provided for @preventSystemKillDescription.
   ///
   /// In en, this message translates to:
-  /// **'Prevent the system from killing LynraFamily Member'**
+  /// **'Prevent the system from killing LynraFleet Vehicle'**
   String get preventSystemKillDescription;
 
   /// No description provided for @purchase.
@@ -1038,7 +1038,7 @@ abstract class AppLocalizations {
   /// No description provided for @receiveCallMe.
   ///
   /// In en, this message translates to:
-  /// **'Receive call me requests from this member'**
+  /// **'Receive call me requests from this vehicle'**
   String get receiveCallMe;
 
   /// No description provided for @receiveGPSalerts.
@@ -1080,13 +1080,13 @@ abstract class AppLocalizations {
   /// No description provided for @removeFromGroup.
   ///
   /// In en, this message translates to:
-  /// **'Remove from group'**
+  /// **'Remove from fleet'**
   String get removeFromGroup;
 
   /// No description provided for @removeMember.
   ///
   /// In en, this message translates to:
-  /// **'Remove Member'**
+  /// **'Remove vehicle'**
   String get removeMember;
 
   /// No description provided for @requester.
@@ -1095,28 +1095,22 @@ abstract class AppLocalizations {
   /// **'Admin'**
   String get requester;
 
-  /// No description provided for @requesters.
-  ///
-  /// In en, this message translates to:
-  /// **'Admins'**
-  String get requesters;
-
   /// No description provided for @requesterGuide1.
   ///
   /// In en, this message translates to:
-  /// **'Create a family group or join an existing one.'**
+  /// **'Create a fleet or join an existing one.'**
   String get requesterGuide1;
 
   /// No description provided for @requesterGuide2.
   ///
   /// In en, this message translates to:
-  /// **'Invite members by entering their Member Code or scanning their QR code.'**
+  /// **'Invite vehicles by entering their Vehicle Code or scanning their QR code.'**
   String get requesterGuide2;
 
   /// No description provided for @requesterGuide3.
   ///
   /// In en, this message translates to:
-  /// **'Wait for members to approve your pairing request before requesting their location.'**
+  /// **'Wait for fleets to approve your pairing request before requesting their location.'**
   String get requesterGuide3;
 
   /// No description provided for @requesterGuide4.
@@ -1124,6 +1118,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use Live Location and Call Me only when needed.'**
   String get requesterGuide4;
+
+  /// No description provided for @requesters.
+  ///
+  /// In en, this message translates to:
+  /// **'Admins'**
+  String get requesters;
 
   /// No description provided for @requiredForMotion.
   ///
@@ -1152,7 +1152,7 @@ abstract class AppLocalizations {
   /// No description provided for @saveMemberLocation.
   ///
   /// In en, this message translates to:
-  /// **'Save member location as place'**
+  /// **'Save vehicle location as place'**
   String get saveMemberLocation;
 
   /// No description provided for @saveSettings.
@@ -1164,7 +1164,7 @@ abstract class AppLocalizations {
   /// No description provided for @scanMemberCodeWithCamera.
   ///
   /// In en, this message translates to:
-  /// **'Scan member code with camera'**
+  /// **'Scan vehicle code with camera'**
   String get scanMemberCodeWithCamera;
 
   /// No description provided for @scanQRCode.
@@ -1242,7 +1242,7 @@ abstract class AppLocalizations {
   /// No description provided for @thismember.
   ///
   /// In en, this message translates to:
-  /// **'This Member will be removed from your paired list.'**
+  /// **'This Vehicle will be removed from your paired list.'**
   String get thismember;
 
   /// No description provided for @title.
@@ -1290,13 +1290,13 @@ abstract class AppLocalizations {
   /// No description provided for @upgradeToAddMoreMembers.
   ///
   /// In en, this message translates to:
-  /// **'Upgrade to add more members.'**
+  /// **'Upgrade to add more vehicles.'**
   String get upgradeToAddMoreMembers;
 
   /// No description provided for @upgradeToContinue.
   ///
   /// In en, this message translates to:
-  /// **'Upgrade to continue monitoring your family members.'**
+  /// **'Upgrade to continue monitoring your fleet.'**
   String get upgradeToContinue;
 
   /// No description provided for @version.
@@ -1368,7 +1368,7 @@ abstract class AppLocalizations {
   /// No description provided for @yourrequest.
   ///
   /// In en, this message translates to:
-  /// **'Your request has been sent to the group master.'**
+  /// **'Your request has been sent to the fleet master.'**
   String get yourrequest;
 }
 

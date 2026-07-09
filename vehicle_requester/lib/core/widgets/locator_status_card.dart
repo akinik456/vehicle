@@ -355,7 +355,7 @@ class LocatorStatusCard extends StatelessWidget {
 								onTap: onSettings,
 							),
 							_MiniAction(
-								icon: Icons.person_remove_alt_1_rounded,
+								icon: Icons.car_rental_rounded,
 								label: l10n.remove,
 								color: AppColors.danger,
 								onTap: onRemove,

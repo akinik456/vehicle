@@ -18,7 +18,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get addAdmin => 'Yönetici ekle';
 
   @override
-  String get addMember => 'Üye Ekle';
+  String get addMember => 'Araç Ekle';
 
   @override
   String get addressNotAvailable => 'Adres mevcut değil';
@@ -48,7 +48,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get alerts => 'ALARMLAR';
 
   @override
-  String get alertTitle => 'LynraFamily Uyarısı';
+  String get alertTitle => 'LynraFleet Uyarısı';
 
   @override
   String get allPermissionsGranted => 'Tüm İzinler Verildi';
@@ -57,19 +57,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get allowOneMoreAdmin => 'Bir yönetici daha ekle';
 
   @override
-  String get allowOneMoreMember => 'Bir üye daha ekle';
+  String get allowOneMoreMember => 'Bir araç daha ekle';
 
   @override
   String get aNewVer => 'Yeni bir sürüm mevcut. En iyi deneyim için şimdi güncelleyin.';
 
   @override
-  String get appName => 'LynraFamily';
+  String get appName => 'LynraFleet';
 
   @override
   String get approve => 'Onay';
 
   @override
-  String get askTheGroup => 'Grup sahibinden LynraFamily\'i yükseltmesini isteyin.';
+  String get askTheGroup => 'Grup sahibinden LynraFleet\'i yükseltmesini isteyin.';
 
   @override
   String get askEverybody => 'Herkese \'Beni Ara\' İsteği Gönder';
@@ -96,10 +96,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get autoStart => 'Otomatik Başlatma';
 
   @override
-  String get backgroundAccessInstructions => 'Açılan ekranda \"LynraFamily Member\" seçeneğini bulun ve arka planda güvenilir çalışması için anahtarı AÇIK konuma getirin.\n\nBu pencere 10 saniye içinde kapanacaktır...';
+  String get backgroundAccessInstructions => 'Açılan ekranda \"LynraFleet Vehicle\" seçeneğini bulun ve arka planda güvenilir çalışması için anahtarı AÇIK konuma getirin.\n\nBu pencere 10 saniye içinde kapanacaktır...';
 
   @override
-  String get backgroundPermissions => 'LynraFamily Member\'ın arka planda çalışabilmesi için aşağıdaki izinlere ihtiyaç vardır.';
+  String get backgroundPermissions => 'LynraFleet Vehicle\'ın arka planda çalışabilmesi için aşağıdaki izinlere ihtiyaç vardır.';
 
   @override
   String get batteryAlertlevel => 'Pil Alarm Seviyesi';
@@ -135,7 +135,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cancel => 'İptal';
 
   @override
-  String get chooseWhichNotif => 'Bu üyeden hangi bildirimleri almak istediğinizi seçin.';
+  String get chooseWhichNotif => 'Bu araçtan hangi bildirimleri almak istediğinizi seçin.';
 
   @override
   String get cntinue => 'Devam';
@@ -147,13 +147,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get confirm => 'Onay';
 
   @override
-  String get connectAMember => 'Bir üyeye bağlan';
+  String get connectAMember => 'Bir araca bağlan';
 
   @override
-  String get createNewGroup => 'Yeni grup oluştur';
+  String get createNewGroup => 'Yeni filo oluştur';
 
   @override
-  String get createOrJoin => 'Yeni bir grup oluşturun veya mevcut bir gruba katılın.';
+  String get createOrJoin => 'Yeni bir filo oluşturun veya mevcut bir filo katılın.';
 
   @override
   String daysAgo(Object count) {
@@ -173,16 +173,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dismiss => 'Kapat';
 
   @override
-  String get enableAutostart => 'LynraFamily Member Otomatik Başlatma Listesine Eklenmeli';
+  String get enableAutostart => 'LynraFleet Vehicle Otomatik Başlatma Listesine Eklenmeli';
 
   @override
-  String get enteryourname => 'İsminiz (Diğer üyeler bu ismi görür)';
+  String get enteryourname => 'İsminiz (Diğer araçlar bu ismi görür)';
 
   @override
-  String get enterMemberCode => 'Üye Kodunu Girin';
+  String get enterMemberCode => 'Araç Kodunu Girin';
 
   @override
-  String get enterMemberName => 'Üye İsmi Girin';
+  String get enterMemberName => 'Araç İsmi Girin';
 
   @override
   String get familyHome => 'Aile,Ev...';
@@ -205,7 +205,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get gpsOffAlert => 'GPS Kapalı Alarmı';
 
   @override
-  String get groupInfo => 'Grup Bilgileri';
+  String get groupInfo => 'Filo Bilgileri';
 
   @override
   String get granted => 'Tamam';
@@ -214,16 +214,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get grantRequiredPermissions => 'Gerekli İzinleri Ver';
 
   @override
-  String get group => 'Grup';
+  String get group => 'Filo';
 
   @override
-  String get groupCode => 'Grup Kodu';
+  String get groupCode => 'Filo Kodu';
 
   @override
-  String get groupName => 'Grup İsmi';
+  String get groupName => 'Filo İsmi';
 
   @override
-  String get groupQRCode => 'Grup QR Kodu';
+  String get groupQRCode => 'Filo QR Kodu';
 
   @override
   String get hello => 'Merhaba';
@@ -245,13 +245,13 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get joinGroup => 'Gruba katıl';
+  String get joinGroup => 'Filo katıl';
 
   @override
   String get joinInstantlyWithCamera => 'Kamerayla anında katılın';
 
   @override
-  String get joinRequest => 'Gruba Katılma İsteği';
+  String get joinRequest => 'Filo Katılma İsteği';
 
   @override
   String get joinRequestCouldNotBeApproved => 'Katılma isteği onaylanamadı.';
@@ -281,22 +281,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get locationPermissionTitle => 'Konum izni';
 
   @override
-  String get locationPermissionDescription => 'LynraFamily, konumunuzu yalnızca sizinle eşleştirilmiş üyeler arasındaki mesafeyi hesaplamak için kullanır.\n\nKonumunuz üyelerle veya başka kullanıcılarla paylaşılmaz.';
+  String get locationPermissionDescription => 'LynraFleet, konumunuzu yalnızca sizinle eşleştirilmiş üyeler arasındaki mesafeyi hesaplamak için kullanır.\n\nKonumunuz üyelerle veya başka kullanıcılarla paylaşılmaz.';
 
   @override
-  String get locationPermissionDescForLocator => 'LynraFamily Member, güvenilir aile üyelerinizin gerektiğinde konumunuzu isteyebilmesi için konum erişimine ihtiyaç duyar.\n\nArka plan konum izni, uygulama kapalı olsa bile bu isteklerin çalışmasını sağlar.\n\nKonumunuz yalnızca güvenilir aile üyelerinizle paylaşılır.';
+  String get locationPermissionDescForLocator => 'LynraFleet Vehicle, güvenilir filo üyelerinizin gerektiğinde konumunuzu isteyebilmesi için konum erişimine ihtiyaç duyar.\n\nArka plan konum izni, uygulama kapalı olsa bile bu isteklerin çalışmasını sağlar.\n\nKonumunuz yalnızca güvenilir filo üyelerinizle paylaşılır.';
 
   @override
-  String get locatorGuide1 => 'Konumunuzu paylaşabilmek için önce bir aile grubuna katılmalısınız.';
+  String get locatorGuide1 => 'Konumunuzu paylaşabilmek için önce bir filoya katılmalısınız.';
 
   @override
-  String get locatorGuide2 => 'Eşleştirme isteği alabilmek için Üye Kodunuzu aile yöneticinizle paylaşın.';
+  String get locatorGuide2 => 'Eşleştirme isteği alabilmek için Araç Kodunuzu filo yöneticinizle paylaşın.';
 
   @override
-  String get locatorGuide3 => 'Üye Kodunuzu Grup Bilgileri panelini açarak görebilirsiniz.';
+  String get locatorGuide3 => 'Araç Kodunuzu Filo Bilgileri panelini açarak görebilirsiniz.';
 
   @override
-  String get locatorGuide4 => 'Aile yöneticilerinizin size ulaşmasını istediğinizde Beni Ara butonunu kullanabilirsiniz.';
+  String get locatorGuide4 => 'Filo yöneticilerinizin size ulaşmasını istediğinizde Beni Ara butonunu kullanabilirsiniz.';
 
   @override
   String get manufacturerSettings => 'ÜRETİCİ AYARLARI';
@@ -314,37 +314,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get maximum5Places => 'En fazla 5 konum kaydedilebilir';
 
   @override
-  String get member => 'Üye';
+  String get member => 'Araç';
 
   @override
-  String get members => 'Üyeler';
+  String get members => 'Araçlar';
 
   @override
-  String get memberAlreadyPaired => 'Bu üye zaten listede.';
+  String get memberAlreadyPaired => 'Bu Araç zaten listede.';
 
   @override
-  String get memberCode => 'Üye Kodu';
+  String get memberCode => 'Araç Kodu';
 
   @override
-  String get memberlimitreached => 'Üye Limitine Ulaşıldı';
+  String get memberlimitreached => 'Araç Limitine Ulaşıldı';
 
   @override
-  String get memberNotifications => 'Üye Bildirimleri';
+  String get memberNotifications => 'Araç Bildirimleri';
 
   @override
-  String get memberNotFound => 'Üye Bulunamadı';
+  String get memberNotFound => 'Araç Bulunamadı';
 
   @override
-  String get memberpaired => 'Üye ile Bağlantı Kuruldu';
+  String get memberpaired => 'Araç ile Bağlantı Kuruldu';
 
   @override
-  String get memberQRCode => 'Üye QR Kodu';
+  String get memberQRCode => 'Araç QR Kodu';
 
   @override
-  String get memberremoved => 'Üye Kaldırıldı';
+  String get memberremoved => 'Araç Kaldırıldı';
 
   @override
-  String get memberSettings => 'Üye Ayarları';
+  String get memberSettings => 'Araç Ayarları';
 
   @override
   String get memoryLock => 'Bellek Kilidi';
@@ -353,7 +353,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get memoryProtection => 'Bellek Koruması';
 
   @override
-  String get memoryProtectionInstructions => 'LynraFamily Member uygulamasının arka planda çalışmaya devam etmesi için lütfen aşağıdaki adımları uygulayın:\n\n• Xiaomi: Güvenlik uygulaması > Hızlandırma > Ayarlar > Uygulama Kilidi > LynraFamily Member uygulamasını etkinleştirin.\n• Diğer Android cihazları: Son Uygulamalar ekranında LynraFamily Member uygulamasının simgesine dokunarak veya uzun basarak Uygulama Bilgileri menüsünü açın.\nÜreticiniz destekliyorsa uygulamayı bellekte tutma / açık tutma seçeneğini etkinleştirin.';
+  String get memoryProtectionInstructions => 'LynraFleet Vehicle uygulamasının arka planda çalışmaya devam etmesi için lütfen aşağıdaki adımları uygulayın:\n\n• Xiaomi: Güvenlik uygulaması > Hızlandırma > Ayarlar > Uygulama Kilidi > LynraFleet Member uygulamasını etkinleştirin.\n• Diğer Android cihazları: Son Uygulamalar ekranında LynraFleet Member uygulamasının simgesine dokunarak veya uzun basarak Uygulama Bilgileri menüsünü açın.\nÜreticiniz destekliyorsa uygulamayı bellekte tutma / açık tutma seçeneğini etkinleştirin.';
 
   @override
   String get memberReady => 'Hazır';
@@ -387,10 +387,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noActiveWatchers => 'Aktif izleyen yok';
 
   @override
-  String get noGroupYet => 'Henüz Bir Gruba Girmediniz';
+  String get noGroupYet => 'Henüz Bir Filoya Girmediniz';
 
   @override
-  String get noPairedMemberYet => 'Eşleştirilmiş Üye Yok';
+  String get noPairedMemberYet => 'Eşleştirilmiş Araç Yok';
 
   @override
   String get noPairedRequester => 'Eşleştirilmiş Yönetici Yok';
@@ -411,7 +411,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get notifyMovement => 'Hareket algılandığında bildir';
 
   @override
-  String get notifyPlaces => 'Üye belirlenen yerlere girdiğinde veya ayrıldığında bildir';
+  String get notifyPlaces => 'Araç belirlenen yerlere girdiğinde veya ayrıldığında bildir';
 
   @override
   String get offlineNow => 'Az önce';
@@ -441,10 +441,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get otherApps => 'Diğer Uygulamalar';
 
   @override
-  String get pairedMember => 'Eşleştirilmiş Üye';
+  String get pairedMember => 'Eşleştirilmiş Araç';
 
   @override
-  String get pairedMembers => 'Eşleştirilmiş Üyeler';
+  String get pairedMembers => 'Eşleştirilmiş Araçlar';
 
   @override
   String get pairingRejected => 'Bağlantı isteği reddedildi';
@@ -456,7 +456,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get pairedRequesters => 'Eşleştirilmiş Yöneticiler';
 
   @override
-  String get pairingRequestPending => 'Bu üyeye gönderilmiş bekleyen bir bağlantı isteği var.';
+  String get pairingRequestPending => 'Bu araca gönderilmiş bekleyen bir bağlantı isteği var.';
 
   @override
   String get permissions => 'İzinler';
@@ -465,7 +465,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get permissionIntroTitle => 'Başlamadan önce';
 
   @override
-  String get permissionIntroSubtitle => 'LynraFamily’nin güvenli ve doğru çalışması için birkaç izne ihtiyacı var.';
+  String get permissionIntroSubtitle => 'LynraFleet’nin güvenli ve doğru çalışması için birkaç izne ihtiyacı var.';
 
   @override
   String get permissionsRequired => 'İzinler Gerekli';
@@ -489,7 +489,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get placeSaved => 'Konum kaydedildi';
 
   @override
-  String get preventSystemKillDescription => 'Sistemin LynraFamily Member uygulamasını durdurmasını önleyin';
+  String get preventSystemKillDescription => 'Sistemin LynraFleet Vehicle uygulamasını durdurmasını önleyin';
 
   @override
   String get purchase => 'Satın al';
@@ -501,7 +501,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get rateOnPlayStore => 'Play Store\'da değerlendir';
 
   @override
-  String get receiveCallMe => 'Bu üyeden gelen arama isteklerini alın.';
+  String get receiveCallMe => 'Bu araçtan gelen arama isteklerini alın.';
 
   @override
   String get receiveGPSalerts => 'GPS kapalı uyarılarını alın';
@@ -522,28 +522,28 @@ class AppLocalizationsTr extends AppLocalizations {
   String get remove => 'Sil';
 
   @override
-  String get removeFromGroup => 'Gruptan çıkar';
+  String get removeFromGroup => 'Filodan çıkar';
 
   @override
-  String get removeMember => 'Üyeyi Kaldır';
+  String get removeMember => 'Aracı Kaldır';
 
   @override
   String get requester => 'Yönetici';
 
   @override
-  String get requesters => 'Yöneticiler';
+  String get requesterGuide1 => 'Bir filo oluşturun veya mevcut bir gruba katılın.';
 
   @override
-  String get requesterGuide1 => 'Bir aile grubu oluşturun veya mevcut bir gruba katılın.';
+  String get requesterGuide2 => 'Araç Kodunu girerek veya QR kodunu tarayarak üyeleri davet edin.';
 
   @override
-  String get requesterGuide2 => 'Üye Kodunu girerek veya QR kodunu tarayarak üyeleri davet edin.';
-
-  @override
-  String get requesterGuide3 => 'Konum talep etmeden önce üyelerin eşleştirme isteğinizi onaylamasını bekleyin.';
+  String get requesterGuide3 => 'Konum talep etmeden önce araçların eşleştirme isteğinizi onaylamasını bekleyin.';
 
   @override
   String get requesterGuide4 => 'Canlı Konum ve Beni Ara özelliklerini yalnızca gerektiğinde kullanın.';
+
+  @override
+  String get requesters => 'Yöneticiler';
 
   @override
   String get requiredForMotion => 'Hareket algılama için gereklidir.';
@@ -558,19 +558,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get saved => 'Kaydedildi';
 
   @override
-  String get saveMemberLocation => 'Üye konumunu kaydet';
+  String get saveMemberLocation => 'Araç konumunu kaydet';
 
   @override
   String get saveSettings => 'Ayarları Kaydet';
 
   @override
-  String get scanMemberCodeWithCamera => 'Üye kodunu kamera ile taratın';
+  String get scanMemberCodeWithCamera => 'Araç kodunu kamera ile taratın';
 
   @override
   String get scanQRCode => 'QR kodunu tara';
 
   @override
-  String get scanTheMember => 'Üye QR kodunu taratın veya kısa kodunu manuel olarak girin.';
+  String get scanTheMember => 'Araç QR kodunu taratın veya kısa kodunu manuel olarak girin.';
 
   @override
   String secondsAgo(Object count) {
@@ -605,7 +605,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get systemPermissions => 'SİSTEM İZİNLERİ';
 
   @override
-  String get thismember => 'Bu üye listenizden kaldırılacaktır.';
+  String get thismember => 'Bu Vehicle listenizden kaldırılacaktır.';
 
   @override
   String get title => 'LynraFleet';
@@ -631,10 +631,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get updateAvailable => 'Güncelleme Mevcut';
 
   @override
-  String get upgradeToAddMoreMembers => 'Planınızı yükselterek daha fazla üye ekleyebilirsiniz.';
+  String get upgradeToAddMoreMembers => 'Planınızı yükselterek daha fazla araç ekleyebilirsiniz.';
 
   @override
-  String get upgradeToContinue => 'Aile üyelerinizi takip etmeye devam etmek için Premium\'a yükseltin.';
+  String get upgradeToContinue => 'Filonuzu takip etmeye devam etmek için Premium\'a yükseltin.';
 
   @override
   String get version => 'Sürüm';
@@ -676,5 +676,5 @@ class AppLocalizationsTr extends AppLocalizations {
   String get yourname => 'İsim';
 
   @override
-  String get yourrequest => 'Talebiniz Grup Yöneticisine İletildi.';
+  String get yourrequest => 'Talebiniz Filo Yöneticisine İletildi.';
 }

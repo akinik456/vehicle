@@ -48,7 +48,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get alerts => 'WARNUNGEN';
 
   @override
-  String get alertTitle => 'LynraFamily Alert';
+  String get alertTitle => 'LynraFleet Alert';
 
   @override
   String get allPermissionsGranted => 'Alle Berechtigungen erteilt';
@@ -57,7 +57,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get allowOneMoreAdmin => 'Allow one more admin';
 
   @override
-  String get allowOneMoreMember => 'Allow one more member';
+  String get allowOneMoreMember => 'Allow one more vehicle';
 
   @override
   String get aNewVer => 'A new version is available. Update now for the best experience.';
@@ -69,7 +69,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get approve => 'Genehmigen';
 
   @override
-  String get askTheGroup => 'Ask the group owner to upgrade LynraFamily.';
+  String get askTheGroup => 'Ask the group owner to upgrade LynraFleet.';
 
   @override
   String get askEverybody => 'Alle bitten, mich anzurufen';
@@ -205,7 +205,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get gpsOffAlert => 'GPS deaktiviert';
 
   @override
-  String get groupInfo => 'Group Information';
+  String get groupInfo => 'Fleet Information';
 
   @override
   String get granted => 'Erteilt';
@@ -284,19 +284,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get locationPermissionDescription => 'LynraFamily Member benötigt den Standortzugriff, um auf Standortanfragen der Familie zu reagieren und Standortaktualisierungen zu teilen.\n\nDer Hintergrundzugriff ermöglicht Standortaktualisierungen auch bei geschlossener App.\n\nIhr Standort wird nur mit vertrauenswürdigen Familienmitgliedern geteilt.';
 
   @override
-  String get locationPermissionDescForLocator => 'LynraFamily Member requires location access so your trusted family can request your location when needed.\n\nBackground location access allows these requests to work even when the app is closed.\n\nYour location is only shared with trusted family members.';
+  String get locationPermissionDescForLocator => 'LynraFleet Vehicle requires location access so your trusted family can request your location when needed.\n\nBackground location access allows these requests to work even when the app is closed.\n\nYour location is only shared with trusted family members.';
 
   @override
-  String get locatorGuide1 => 'To share your location, you must first join a family group.';
+  String get locatorGuide1 => 'To share your location, you must first join a Fleet.';
 
   @override
-  String get locatorGuide2 => 'Share your Member Code with your family administrator to receive a pairing request.';
+  String get locatorGuide2 => 'Share your Vehicle Code with your fleet administrator to receive a pairing request.';
 
   @override
-  String get locatorGuide3 => 'You can find your Member Code by opening the Group Information panel.';
+  String get locatorGuide3 => 'You can find your Vehicle Code by opening the Fleet Information panel.';
 
   @override
-  String get locatorGuide4 => 'Use the Call Me button whenever you want your family administrators to contact you.';
+  String get locatorGuide4 => 'Use the Call Me button whenever you want your Fleet administrators to contact you.';
 
   @override
   String get manufacturerSettings => 'HERSTELLER-EINSTELLUNGEN';
@@ -317,10 +317,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get member => 'Mitglied';
 
   @override
-  String get members => 'Members';
+  String get members => 'Vehicles';
 
   @override
-  String get memberAlreadyPaired => 'Member Already Paired';
+  String get memberAlreadyPaired => 'Vehicle Already Paired';
 
   @override
   String get memberCode => 'Mitgliedscode';
@@ -444,7 +444,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pairedMember => 'Gekoppeltes Mitglied';
 
   @override
-  String get pairedMembers => 'Paired Members';
+  String get pairedMembers => 'Paired Vehicles';
 
   @override
   String get pairingRejected => 'Kopplungsanfrage abgelehnt';
@@ -456,7 +456,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pairedRequesters => 'Gekoppelte Administratoren';
 
   @override
-  String get pairingRequestPending => 'This member already has a pending pairing request.';
+  String get pairingRequestPending => 'This vehicle already has a pending pairing request.';
 
   @override
   String get permissions => 'Berechtigungen';
@@ -522,7 +522,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get remove => 'Entfernen';
 
   @override
-  String get removeFromGroup => 'Remove from group';
+  String get removeFromGroup => 'Remove from fleet';
 
   @override
   String get removeMember => 'Mitglied entfernen';
@@ -531,19 +531,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get requester => 'Administrator';
 
   @override
-  String get requesters => 'Administratoren';
+  String get requesterGuide1 => 'Create a fleet or join an existing one.';
 
   @override
-  String get requesterGuide1 => 'Create a family group or join an existing one.';
+  String get requesterGuide2 => 'Invite vehicles by entering their Vehicle Code or scanning their QR code.';
 
   @override
-  String get requesterGuide2 => 'Invite members by entering their Member Code or scanning their QR code.';
-
-  @override
-  String get requesterGuide3 => 'Wait for members to approve your pairing request before requesting their location.';
+  String get requesterGuide3 => 'Wait for fleets to approve your pairing request before requesting their location.';
 
   @override
   String get requesterGuide4 => 'Use Live Location and Call Me only when needed.';
+
+  @override
+  String get requesters => 'Administratoren';
 
   @override
   String get requiredForMotion => 'Erforderlich für Bewegungserkennung';
@@ -631,10 +631,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get updateAvailable => 'Update Available';
 
   @override
-  String get upgradeToAddMoreMembers => 'Upgrade to add more members.';
+  String get upgradeToAddMoreMembers => 'Upgrade to add more vehicles.';
 
   @override
-  String get upgradeToContinue => 'Upgrade to continue monitoring your family members.';
+  String get upgradeToContinue => 'Upgrade to continue monitoring your fleet.';
 
   @override
   String get version => 'Version';

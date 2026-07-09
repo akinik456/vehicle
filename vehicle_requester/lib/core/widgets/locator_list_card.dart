@@ -94,7 +94,7 @@ class LocatorListCard extends StatelessWidget {
 													child: Row(
 														children: [
 															Icon(
-																Icons.person_pin_circle_rounded,
+																Icons.directions_car_filled_rounded,
 																color: AppColors.primary,
 																size: 18,
 															),
@@ -193,7 +193,7 @@ class LocatorListCard extends StatelessWidget {
 																		tapTargetSize: MaterialTapTargetSize.shrinkWrap,
 																	),
 																	icon: Icon(
-																		Icons.person_remove_rounded,
+																		Icons.car_rental_rounded,
 																		color: AppColors.danger,
 																		size: 18,
 																	),

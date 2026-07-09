@@ -18,7 +18,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get addAdmin => 'Agregar administrador';
 
   @override
-  String get addMember => 'Agregar miembro';
+  String get addMember => 'Agregar Vehículo';
 
   @override
   String get addressNotAvailable => 'Dirección no disponible';
@@ -48,7 +48,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get alerts => 'ALERTAS';
 
   @override
-  String get alertTitle => 'Alerta de LynraFamily';
+  String get alertTitle => 'Alerta de LynraFleet';
 
   @override
   String get allPermissionsGranted => 'Todos los permisos concedidos';
@@ -57,19 +57,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get allowOneMoreAdmin => 'Permitir un administrador más';
 
   @override
-  String get allowOneMoreMember => 'Permitir un miembro más';
+  String get allowOneMoreMember => 'Permitir un Vehículo más';
 
   @override
   String get aNewVer => 'Hay una nueva versión disponible. Actualiza ahora para disfrutar de la mejor experiencia.';
 
   @override
-  String get appName => 'LynraFamily';
+  String get appName => 'LynraFleet';
 
   @override
   String get approve => 'Aprobar';
 
   @override
-  String get askTheGroup => 'Pide al propietario del grupo que actualice LynraFamily.';
+  String get askTheGroup => 'Pide al propietario del grupo que actualice LynraFleet.';
 
   @override
   String get askEverybody => 'Pedir a todos que me llamen';
@@ -96,10 +96,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get autoStart => 'Inicio automático';
 
   @override
-  String get backgroundAccessInstructions => 'En la pantalla inicial, busque \"LynraFamily Member\" y active el interruptor para garantizar la fiabilidad en segundo plano.\n\nEsta ventana se cerrará en 10 segundos...';
+  String get backgroundAccessInstructions => 'En la pantalla inicial, busque \"LynraFleet Vehicle\" y active el interruptor para garantizar la fiabilidad en segundo plano.\n\nEsta ventana se cerrará en 10 segundos...';
 
   @override
-  String get backgroundPermissions => 'LynraFamily Member requiere estos permisos para funcionar en segundo plano.';
+  String get backgroundPermissions => 'LynraFleet Vehicle requiere estos permisos para funcionar en segundo plano.';
 
   @override
   String get batteryAlertlevel => 'Nivel de alerta de batería';
@@ -135,7 +135,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cancel => 'Cancelar';
 
   @override
-  String get chooseWhichNotif => 'Elija qué notificaciones desea recibir de este miembro.';
+  String get chooseWhichNotif => 'Elija qué notificaciones desea recibir de este Vehículo.';
 
   @override
   String get cntinue => 'Continuar';
@@ -147,13 +147,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get confirm => 'Confirmar';
 
   @override
-  String get connectAMember => 'Conectar un miembro';
+  String get connectAMember => 'Conectar un Vehículo';
 
   @override
-  String get createNewGroup => 'Crear un nuevo grupo';
+  String get createNewGroup => 'Crear un nuevo Flota';
 
   @override
-  String get createOrJoin => 'Crear un nuevo grupo o unirse a un grupo existente';
+  String get createOrJoin => 'Crear un nuevo Flota o unirse a un Flota existente';
 
   @override
   String daysAgo(Object count) {
@@ -173,16 +173,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get dismiss => 'Cerrar';
 
   @override
-  String get enableAutostart => 'Habilitar LynraFamily Member en la lista de inicio automático';
+  String get enableAutostart => 'Habilitar LynraFleet Vehicle en la lista de inicio automático';
 
   @override
-  String get enteryourname => 'Introduzca su nombre (otros miembros verán este nombre).';
+  String get enteryourname => 'Introduzca su nombre (otros Vehículo verán este nombre).';
 
   @override
-  String get enterMemberCode => 'Introducir código del miembro';
+  String get enterMemberCode => 'Introducir código del Vehículo';
 
   @override
-  String get enterMemberName => 'Introducir nombre del miembro';
+  String get enterMemberName => 'Introducir nombre del Vehículo';
 
   @override
   String get familyHome => 'Familia, Hogar...';
@@ -205,7 +205,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get gpsOffAlert => 'Alerta de GPS desactivado';
 
   @override
-  String get groupInfo => 'Información del grupo';
+  String get groupInfo => 'Información del Flota';
 
   @override
   String get granted => 'Concedido';
@@ -214,16 +214,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get grantRequiredPermissions => 'Conceder permisos requeridos';
 
   @override
-  String get group => 'Grupo';
+  String get group => 'Flota';
 
   @override
-  String get groupCode => 'Código del grupo';
+  String get groupCode => 'Código del Flota';
 
   @override
-  String get groupName => 'Nombre del grupo';
+  String get groupName => 'Nombre del Flota';
 
   @override
-  String get groupQRCode => 'Código QR del grupo';
+  String get groupQRCode => 'Código QR del Flota';
 
   @override
   String get hello => 'Hola';
@@ -245,7 +245,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get joinGroup => 'Unirse al grupo';
+  String get joinGroup => 'Unirse al Flota';
 
   @override
   String get joinInstantlyWithCamera => 'Unirse instantáneamente con la cámara';
@@ -281,22 +281,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get locationPermissionTitle => 'Permiso de ubicación';
 
   @override
-  String get locationPermissionDescription => 'LynraFamily usa tu ubicación solo para calcular la distancia entre tú y los miembros vinculados.\n\nTu ubicación no se comparte con los miembros ni con otros usuarios.';
+  String get locationPermissionDescription => 'LynraFleet usa tu ubicación solo para calcular la distancia entre tú y los miembros vinculados.\n\nTu ubicación no se comparte con los miembros ni con otros usuarios.';
 
   @override
-  String get locationPermissionDescForLocator => 'LynraFamily Member necesita acceso a la ubicación para que tus familiares de confianza puedan solicitar tu ubicación cuando sea necesario.\n\nEl acceso a la ubicación en segundo plano permite que estas solicitudes funcionen incluso cuando la aplicación está cerrada.\n\nTu ubicación solo se comparte con familiares de confianza.';
+  String get locationPermissionDescForLocator => 'LynraFleet Vehicle necesita acceso a la ubicación para que tus familiares de confianza puedan solicitar tu ubicación cuando sea necesario.\n\nEl acceso a la ubicación en segundo plano permite que estas solicitudes funcionen incluso cuando la aplicación está cerrada.\n\nTu ubicación solo se comparte con familiares de confianza.';
 
   @override
-  String get locatorGuide1 => 'Para compartir tu ubicación, primero debes unirte a un grupo familiar.';
+  String get locatorGuide1 => 'Para compartir tu ubicación, primero debes unirte a un Flota.';
 
   @override
-  String get locatorGuide2 => 'Comparte tu Código de Miembro con el administrador de tu familia para recibir una solicitud de vinculación.';
+  String get locatorGuide2 => 'Comparte tu Código de Vehículo con el administrador de tu flota para recibir una solicitud de vinculación.';
 
   @override
-  String get locatorGuide3 => 'Puedes encontrar tu Código de Miembro abriendo el panel Información del Grupo.';
+  String get locatorGuide3 => 'Puedes encontrar tu Código de Vehículo abriendo el panel Información del Flota.';
 
   @override
-  String get locatorGuide4 => 'Utiliza el botón Llámame cuando quieras que los administradores de tu familia se pongan en contacto contigo.';
+  String get locatorGuide4 => 'Utiliza el botón Llámame cuando quieras que los administradores de tu flota se pongan en contacto contigo.';
 
   @override
   String get manufacturerSettings => 'AJUSTES DEL FABRICANTE';
@@ -314,37 +314,37 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maximum5Places => 'Máximo 5 lugares permitidos';
 
   @override
-  String get member => 'Miembro';
+  String get member => 'Vehículo';
 
   @override
-  String get members => 'Miembros';
+  String get members => 'Vehículos';
 
   @override
-  String get memberAlreadyPaired => 'Este miembro ya está vinculado.';
+  String get memberAlreadyPaired => 'Este Vehículo ya está vinculado.';
 
   @override
-  String get memberCode => 'Código del miembro';
+  String get memberCode => 'Código del Vehículo';
 
   @override
-  String get memberlimitreached => 'Límite de miembros alcanzado';
+  String get memberlimitreached => 'Límite de Vehículos alcanzado';
 
   @override
-  String get memberNotifications => 'Notificaciones del miembro';
+  String get memberNotifications => 'Notificaciones del Vehículo';
 
   @override
-  String get memberNotFound => 'Miembro no encontrado';
+  String get memberNotFound => 'Vehículo no encontrado';
 
   @override
-  String get memberpaired => 'Miembro vinculado correctamente';
+  String get memberpaired => 'Vehículo vinculado correctamente';
 
   @override
-  String get memberQRCode => 'Código QR del miembro';
+  String get memberQRCode => 'Código QR del Vehículo';
 
   @override
-  String get memberremoved => 'Miembro eliminado';
+  String get memberremoved => 'Vehículo eliminado';
 
   @override
-  String get memberSettings => 'Configuración del miembro';
+  String get memberSettings => 'Configuración del Vehículo';
 
   @override
   String get memoryLock => 'Bloqueo de memoria';
@@ -353,10 +353,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get memoryProtection => 'Protección de memoria';
 
   @override
-  String get memoryProtectionInstructions => 'Para ayudar a que LynraFamily Member siga funcionando en segundo plano, siga estos pasos:\n\n• Xiaomi: Abra la aplicación Seguridad > Aumentar velocidad > Ajustes > Bloqueo de aplicaciones y active LynraFamily Member.\n• Otros dispositivos Android: Abra la pantalla de Aplicaciones recientes y toque o mantenga presionado el icono de LynraFamily Member para abrir la información de la aplicación.\nSi su dispositivo lo permite, active la opción para mantener la aplicación en memoria o mantenerla abierta.';
+  String get memoryProtectionInstructions => 'Para ayudar a que LynraFleet Vehicle siga funcionando en segundo plano, siga estos pasos:\n\n• Xiaomi: Abra la aplicación Seguridad > Aumentar velocidad > Ajustes > Bloqueo de aplicaciones y active LynraFleet Member.\n• Otros dispositivos Android: Abra la pantalla de Aplicaciones recientes y toque o mantenga presionado el icono de LynraFleet Member para abrir la información de la aplicación.\nSi su dispositivo lo permite, active la opción para mantener la aplicación en memoria o mantenerla abierta.';
 
   @override
-  String get memberReady => 'Miembro listo';
+  String get memberReady => 'Vehículo listo';
 
   @override
   String minutesAgo(Object count) {
@@ -387,10 +387,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noActiveWatchers => 'No hay observadores activos';
 
   @override
-  String get noGroupYet => 'Aún no hay grupo';
+  String get noGroupYet => 'Aún no hay Flota';
 
   @override
-  String get noPairedMemberYet => 'Aún no hay miembros vinculados.';
+  String get noPairedMemberYet => 'Aún no hay vehículos.';
 
   @override
   String get noPairedRequester => 'No hay administrador vinculado';
@@ -411,7 +411,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notifyMovement => 'Notificar cuando haya movimiento';
 
   @override
-  String get notifyPlaces => 'Notificar cuando un miembro entre o salga de lugares';
+  String get notifyPlaces => 'Notificar cuando un vehículo entre o salga de lugares';
 
   @override
   String get offlineNow => 'Hace un momento';
@@ -441,10 +441,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get otherApps => 'Otras aplicaciones';
 
   @override
-  String get pairedMember => 'Miembro vinculado';
+  String get pairedMember => 'Vehículo vinculado';
 
   @override
-  String get pairedMembers => 'Miembros vinculados';
+  String get pairedMembers => 'Vehículos vinculados';
 
   @override
   String get pairingRejected => 'Solicitud de vinculación rechazada';
@@ -456,7 +456,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get pairedRequesters => 'Administradores vinculados';
 
   @override
-  String get pairingRequestPending => 'Este miembro ya tiene una solicitud de vinculación pendiente.';
+  String get pairingRequestPending => 'Este vehículo ya tiene una solicitud de vinculación pendiente.';
 
   @override
   String get permissions => 'Permisos';
@@ -465,7 +465,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get permissionIntroTitle => 'Antes de comenzar';
 
   @override
-  String get permissionIntroSubtitle => 'LynraFamily necesita algunos permisos para funcionar de forma segura y correcta.';
+  String get permissionIntroSubtitle => 'LynraFleet necesita algunos permisos para funcionar de forma segura y correcta.';
 
   @override
   String get permissionsRequired => 'Permisos requeridos';
@@ -489,7 +489,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get placeSaved => 'Lugar guardado';
 
   @override
-  String get preventSystemKillDescription => 'Evitar que el sistema cierre LynraFamily Member';
+  String get preventSystemKillDescription => 'Evitar que el sistema cierre LynraFleet Vehicle';
 
   @override
   String get purchase => 'Comprar';
@@ -501,7 +501,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get rateOnPlayStore => 'Valorar en Play Store';
 
   @override
-  String get receiveCallMe => 'Recibir solicitudes de llamada de este miembro';
+  String get receiveCallMe => 'Recibir solicitudes de llamada de este vehículo';
 
   @override
   String get receiveGPSalerts => 'Recibir alertas de GPS desactivado';
@@ -522,28 +522,28 @@ class AppLocalizationsEs extends AppLocalizations {
   String get remove => 'Eliminar';
 
   @override
-  String get removeFromGroup => 'Eliminar del grupo';
+  String get removeFromGroup => 'Eliminar del flota';
 
   @override
-  String get removeMember => 'Eliminar miembro';
+  String get removeMember => 'Eliminar vehículo';
 
   @override
   String get requester => 'Ejecutivo';
 
   @override
-  String get requesters => 'Administradores';
+  String get requesterGuide1 => 'Crea un fluto o únete a uno existente.';
 
   @override
-  String get requesterGuide1 => 'Crea un grupo familiar o únete a uno existente.';
+  String get requesterGuide2 => 'Invita a los vehículos introduciendo su Código de Vehículo o escaneando su código QR.';
 
   @override
-  String get requesterGuide2 => 'Invita a los miembros introduciendo su Código de Miembro o escaneando su código QR.';
-
-  @override
-  String get requesterGuide3 => 'Espera a que los miembros aprueben tu solicitud de vinculación antes de solicitar su ubicación.';
+  String get requesterGuide3 => 'Espera a que los vehículos aprueben tu solicitud de vinculación antes de solicitar su ubicación.';
 
   @override
   String get requesterGuide4 => 'Utiliza Ubicación en Vivo y Llámame solo cuando sea necesario.';
+
+  @override
+  String get requesters => 'Administradores';
 
   @override
   String get requiredForMotion => 'Requerido para detección de movimiento';
@@ -558,19 +558,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saved => 'Guardado';
 
   @override
-  String get saveMemberLocation => 'Guardar ubicación del miembro como lugar';
+  String get saveMemberLocation => 'Guardar ubicación del vehículo como lugar';
 
   @override
   String get saveSettings => 'Guardar configuración';
 
   @override
-  String get scanMemberCodeWithCamera => 'Escanear código del miembro con la cámara';
+  String get scanMemberCodeWithCamera => 'Escanear código del vehículo con la cámara';
 
   @override
   String get scanQRCode => 'Escanear código QR';
 
   @override
-  String get scanTheMember => 'Escanee el código QR del miembro o introduzca su código corto manualmente.';
+  String get scanTheMember => 'Escanee el código QR del vehículo o introduzca su código corto manualmente.';
 
   @override
   String secondsAgo(Object count) {
@@ -605,7 +605,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get systemPermissions => 'PERMISOS DEL SISTEMA';
 
   @override
-  String get thismember => 'Este miembro será eliminado de su lista vinculada.';
+  String get thismember => 'Este vehículo será eliminado de su lista vinculada.';
 
   @override
   String get title => 'LynraFleet';
@@ -631,10 +631,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateAvailable => 'Actualización disponible';
 
   @override
-  String get upgradeToAddMoreMembers => 'Actualiza tu plan para agregar más miembros.';
+  String get upgradeToAddMoreMembers => 'Actualiza tu plan para agregar más vehículos.';
 
   @override
-  String get upgradeToContinue => 'Actualice a Premium para seguir supervisando a los miembros de su familia.';
+  String get upgradeToContinue => 'Suscríbete a Premium para seguir realizando el seguimiento de tu flota.';
 
   @override
   String get version => 'Versión';
@@ -676,5 +676,5 @@ class AppLocalizationsEs extends AppLocalizations {
   String get yourname => 'Nombre';
 
   @override
-  String get yourrequest => 'Su solicitud ha sido enviada al administrador principal del grupo.';
+  String get yourrequest => 'Su solicitud ha sido enviada al administrador principal del flota.';
 }
