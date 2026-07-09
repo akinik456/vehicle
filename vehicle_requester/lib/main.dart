@@ -1,3 +1,11 @@
+/*
+referans beacon
+commit 1a2ebd1966991da02ffbd8a79ac2894ade0a7359 (HEAD -> main, origin/main)
+Author: Abdullah KINIK <akinik456@gmail.com>
+Date:   Thu Jul 9 00:42:03 2026 +0300
+
+    locator presence e speed eklendi*/
+
 // keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
 // Aa147852
 import 'package:flutter/material.dart';
