@@ -183,18 +183,8 @@ class _LocatorNotifyPageState extends State<LocatorNotifyPage> {
                   style: AppFonts.caption,
                 ),
 
-                const SizedBox(height: 26),
-
-                _NotifySwitchCard(
-                  title: l10n.callme,
-                  subtitle: l10n.receiveCallMe,
-                  value: callMe,
-                  enabled: true,
-                  onChanged: (v) => setState(() => callMe = v),
-                ),
-
-                const SizedBox(height: 12),
-
+                const SizedBox(height: 26),                
+                
                 _NotifySwitchCard(
                   title: l10n.gpsOffAlert,
                   subtitle: gpsOffEnabledByMaster
