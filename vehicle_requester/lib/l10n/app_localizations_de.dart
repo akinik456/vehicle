@@ -608,6 +608,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get somePermissions => 'Einige Berechtigungen fehlen. Bitte öffnen Sie die Berechtigungsseite und erlauben Sie die erforderlichen Berechtigungen.';
 
   @override
+  String get speed => 'Speed';
+
+  @override
   String get sva => 'Speichern';
 
   @override

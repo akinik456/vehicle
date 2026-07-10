@@ -1245,6 +1245,12 @@ abstract class AppLocalizations {
   /// **'Some permissions are missing. Please open the permissions page and allow the required permissions.'**
   String get somePermissions;
 
+  /// No description provided for @speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get speed;
+
   /// No description provided for @sva.
   ///
   /// In en, this message translates to:

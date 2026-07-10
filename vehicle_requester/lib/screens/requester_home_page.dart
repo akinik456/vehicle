@@ -1518,6 +1518,7 @@ Widget _buildGroupHome({
 																							final locatorPlate = locator['locatorPlate'] ?? '------';
 																							final status = locator['status'] ?? 'offline';
 																							final battery = locator['battery'] ?? 0;
+																							final speed = locator['speedKmh'] ?? 0;
 																							final gpsEnabled = locator['gpsEnabled'] == true;																	
 																							final stationarySince =
 																							locator['stationarySince'] is int
@@ -1543,6 +1544,7 @@ Widget _buildGroupHome({
 																								gpsEnabled: gpsEnabled,
 																								lastSeenText: lastSeenText,
 																								distanceText: distanceText,
+																								speed: speed,
 																								onOpenMaps: () async {
 																									final lat = locator['lat']?.toDouble();
 																									final lng = locator['lng']?.toDouble();

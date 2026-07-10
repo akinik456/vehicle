@@ -608,6 +608,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get somePermissions => 'Bazı izinler eksik. Lütfen izinler sayfasını açın ve gerekli izinleri verin.';
 
   @override
+  String get speed => 'Hız';
+
+  @override
   String get sva => 'Kaydet';
 
   @override

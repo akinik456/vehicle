@@ -46,6 +46,8 @@ Log.d(
   final gpsEnabled = await Geolocator.isLocationServiceEnabled();
 
   Position? position;
+		double speedKmh = 0;
+		double speedMph = 0;
 
   if (gpsEnabled) {
     try {
@@ -55,23 +57,28 @@ Log.d(
     } catch (e) {
       Log.e("BEACON PRESENCE => getCurrentPosition failed => $e");
     }
-		double speedKmh = 0;
 
-			if (position != null) {
-				final speedMps = position.speed;
+		if (position != null) {
+			final speedMps = position.speed;
 
-				final speedKmh = speedMps >= 0
+			speedKmh = speedMps >= 0
 					? speedMps * 3.6
 					: 0.0;
 
-				SmartPresenceScheduler.setSpeedKmh(speedKmh);
-
-				Log.d(
-					"BEACON PRESENCE => "
-					"speed=${speedKmh.toStringAsFixed(1)} km/h",
-				);
-				SmartPresenceScheduler.setSpeedKmh(speedKmh);
+			if (speedKmh < 3) {
+				speedKmh = 0;
 			}
+
+			speedMph = speedKmh * 0.621371;
+
+			SmartPresenceScheduler.setSpeedKmh(speedKmh);
+
+			Log.d(
+				"BEACON PRESENCE => "
+				"speed=${speedKmh.toStringAsFixed(1)} km/h "
+				"(${speedMph.toStringAsFixed(1)} mph)",
+			);
+		}
 		
   }
 
@@ -124,6 +131,8 @@ Log.d(
 		'lng': position?.longitude,
 		'accuracy': position?.accuracy,
 		'movedSinceLastUpdateMeters': movedMeters?.round(),
+		'speedKmh': speedKmh.round(),
+		'speedMph': speedMph.round(),
 		'updateCount': ServerValue.increment(1),
 	};
 

@@ -18,6 +18,7 @@ class LocatorStatusCard extends StatelessWidget {
 	final String locatorPlate;
 	final String status;
 	final int battery;
+	final int speed;
 
 	final bool gpsEnabled;
 	final String lastSeenText;
@@ -49,6 +50,7 @@ class LocatorStatusCard extends StatelessWidget {
 		required this.onRemove,
 		required this.stationarySince,
 		required this.offlineSince,
+		required this.speed,
 	});
 	
 	String _locationDurationText(
@@ -193,6 +195,33 @@ class LocatorStatusCard extends StatelessWidget {
 					const SizedBox(height: 8),
 					Row(
 						children: [
+									Text(
+										"${l10n.speed}: $speed kmh",
+										style: AppFonts.caption.copyWith(
+											color: AppColors.accent,
+											fontSize:18,
+										),
+									),	
+							const SizedBox(width: 32),
+									Icon(
+										gpsEnabled
+												? Icons.gps_fixed_rounded
+												: Icons.gps_off_rounded,
+										size: 18,
+										color: gpsEnabled
+											? AppColors.accent
+											: AppColors.danger,
+									),
+									const SizedBox(width: 4),
+									Text(
+										gpsEnabled ? 'GPS ON' : 'GPS OFF',
+										style: AppFonts.caption.copyWith(
+											color: gpsEnabled
+													? AppColors.accent
+													: AppColors.danger,
+										),
+									),	
+						const SizedBox(width: 32),
 							 Icon(
 								battery >= 90
 									? Icons.battery_full_rounded
@@ -220,25 +249,7 @@ class LocatorStatusCard extends StatelessWidget {
 										),
 									),
 							
-									const SizedBox(width: 32),
-									Icon(
-										gpsEnabled
-												? Icons.gps_fixed_rounded
-												: Icons.gps_off_rounded,
-										size: 18,
-										color: gpsEnabled
-											? AppColors.accent
-											: AppColors.danger,
-									),
-									const SizedBox(width: 4),
-									Text(
-										gpsEnabled ? 'GPS ON' : 'GPS OFF',
-										style: AppFonts.caption.copyWith(
-											color: gpsEnabled
-													? AppColors.accent
-													: AppColors.danger,
-										),
-									),	
+									
 
 									
 								],
