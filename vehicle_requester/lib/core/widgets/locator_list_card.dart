@@ -86,11 +86,14 @@ class LocatorListCard extends StatelessWidget {
 													rootData['locatorCode'] ??
 													deviceData['locatorCode'] ??
 													'';
+											final plate =
+													rootData['locatorPlate'] ??
+													deviceData['locatorPlate'] ??
+													'';
 
 											return Padding(
 												padding: const EdgeInsets.only(bottom: 0),
-												child: SizedBox(
-													height: 30,
+												
 													child: Row(
 														children: [
 															Icon(
@@ -99,8 +102,13 @@ class LocatorListCard extends StatelessWidget {
 																size: 18,
 															),
 															const SizedBox(width: 6),
+															
 															Expanded(
-																child: RichText(
+															child: Column(
+																mainAxisAlignment: MainAxisAlignment.center,
+																crossAxisAlignment: CrossAxisAlignment.start,
+																children: [
+																RichText(
 																	overflow: TextOverflow.ellipsis,
 																	text: TextSpan(
 																		children: [
@@ -123,9 +131,20 @@ class LocatorListCard extends StatelessWidget {
 																		],
 																	),
 																),
-															),
-
-															if (isMaster)
+																if (plate.toString().trim().isNotEmpty)
+																Text(
+																	plate,
+																	overflow: TextOverflow.ellipsis,
+																	style: AppFonts.caption.copyWith(
+																		color: AppColors.textPrimary,
+																		fontWeight: FontWeight.w700,
+																		letterSpacing: 1.0,
+																	),
+																),
+																],
+																),
+																),
+																if (isMaster)
 																	TextButton.icon(
 																	onPressed: () async {
 																		final groupRef = FirebaseFirestore.instance
@@ -207,7 +226,7 @@ class LocatorListCard extends StatelessWidget {
 																),
 														],
 													),
-												),
+
 											);
 										},
 									);

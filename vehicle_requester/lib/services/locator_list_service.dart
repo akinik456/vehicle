@@ -72,6 +72,11 @@ class LocatorListService {
 						locatorDoc.data()?['locatorName'] ??
 						pairData['locatorName'] ??
 						'-';
+				final locatorPlate =
+						rootLocatorData['locatorPlate'] ??
+						locatorDoc.data()?['locatorPlate'] ??
+						pairData['locatorPlate'] ??
+						'-';		
 
         final presenceSnapshot = await _rtdb
 						.ref('presence/groups/$groupId/locators/$locatorId')
@@ -106,13 +111,13 @@ class LocatorListService {
 				result.add({
 					'locatorId': locatorId,
 					'locatorName': locatorName,
+					'locatorPlate': locatorPlate,
 					'address': '',
 					...locatorDoc.data()!,
 					...pairData,
 					...presenceData,
 					'movementAlert': settingsData['movementAlert'] ?? true,
 					'movement': notifyData['movement'] ?? true,
-					'locatorName': locatorName,
 				});
 			Log.d("BEACON LOCATOR LIST => loading locatorId=$locatorId");
 			

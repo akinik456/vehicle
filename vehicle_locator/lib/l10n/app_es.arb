@@ -1,6 +1,11 @@
 {
 "@@locale": 													"es",
 
+"enterVehicleInfo": 									"Introduzca la Información del Vehículo",
+"vehicleName": 												"Nombre del vehículo",
+"plate": 															"Matrícula",
+
+
 "actionRequired": 										"Acción requerida",
 "activeWatchers": 										"Observadores activos",
 "addAdmin": 													"Agregar administrador",

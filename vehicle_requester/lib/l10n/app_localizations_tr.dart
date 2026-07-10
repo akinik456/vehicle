@@ -9,6 +9,15 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get enterVehicleInfo => 'Araç Bilgilerini Gir';
+
+  @override
+  String get vehicleName => 'Araç İsmi';
+
+  @override
+  String get plate => 'Plaka';
+
+  @override
   String get actionRequired => 'İşlem Gerekli';
 
   @override

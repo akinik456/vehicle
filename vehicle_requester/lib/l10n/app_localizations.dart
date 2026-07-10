@@ -99,6 +99,24 @@ abstract class AppLocalizations {
     Locale('tr')
   ];
 
+  /// No description provided for @enterVehicleInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Vehicle Info'**
+  String get enterVehicleInfo;
+
+  /// No description provided for @vehicleName.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Name'**
+  String get vehicleName;
+
+  /// No description provided for @plate.
+  ///
+  /// In en, this message translates to:
+  /// **'Plate'**
+  String get plate;
+
   /// No description provided for @actionRequired.
   ///
   /// In en, this message translates to:

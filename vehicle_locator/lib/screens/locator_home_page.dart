@@ -26,8 +26,6 @@ import '../services/locator_permission_service.dart';
 import '../services/smart_presence_scheduler.dart';
 import '../services/pairing_request_service.dart';
 import '../services/pairing_approval_service.dart';
-import '../services/call_me_service.dart';
-import '../core/widgets/call_me_overlay.dart';
 import '../services/alert_service.dart';
 import '../services/alert_monitor_service.dart';
 import '../services/geofence_service.dart';
@@ -152,7 +150,6 @@ Future<void> _startLocatorHome() async {
 
   ActiveWatcherService.startUiOnly();
 
-  _listenCallMe();
 }
   @override
   void dispose() {
@@ -391,60 +388,7 @@ Future<void> _startNativePresenceIfAllowed() async {
 		);
 	}
 	
-	void _listenCallMe() async {
-		final groupId = await IdentityService.getGroupId();
-
-		final locatorId = await IdentityService.getLocatorId();
-
-		if (groupId == null || locatorId == null) {
-			return;
-		}
-
-		final sub = FirebaseFirestore.instance
-				.collection('groups')
-				.doc(groupId)
-				.collection('call_me')
-				.doc(locatorId)
-				.collection('items')
-				.snapshots()
-				.listen((snapshot) {
-			for (final change in snapshot.docChanges) {
-				if (change.type != DocumentChangeType.added) {
-					continue;
-				}
-
-				final data = change.doc.data();
-
-				if (data == null) continue;
-
-				if (data['status'] != 'pending') {
-					continue;
-				}
-
-				final item = {
-					...data,
-					'callMeId': change.doc.id,
-				};
-
-				if (!mounted) return;
-
-				setState(() {
-					final alreadyExists = _pendingCallMeQueue.any(
-						(x) => x['callMeId'] == item['callMeId'],
-					);
-
-					if (!alreadyExists) {
-						_pendingCallMeQueue.add(item);
-					}
-
-					_callMeData ??= item;
-				});
-			}
-		});
-
-		_subscriptions.add(sub);
-	}
-
+	
 Future<void> _clearLocatorGroupIfNoRequester() async {
   if (_clearingGroupAfterUnpair) return;
 
@@ -505,7 +449,7 @@ Future<Map<String, String>> _loadLocatorCodeData() async {
   final locatorId = await IdentityService.getLocatorId() ?? '';
   final locatorCode = await IdentityService.getLocatorCode() ?? '------';
   final locatorName = await IdentityService.getLocatorName() ?? 'Member';
-
+  final locatorPlate = await IdentityService.getLocatorPlate() ?? '------';
   final groupId = await IdentityService.getGroupId() ?? '';
 
   String groupName = '';
@@ -523,6 +467,7 @@ Future<Map<String, String>> _loadLocatorCodeData() async {
     'locatorId': locatorId,
     'locatorCode': locatorCode,
     'locatorName': locatorName,
+		'locatorPlate': locatorPlate,
     'groupId': groupId,
     'groupName': groupName,
   };
@@ -807,85 +752,10 @@ Widget _pairedRequesterCard() {
 												),
 											),											
                     ),
-                    OutlinedButton.icon(
-                      onPressed: requesterId.isEmpty
-                          ? null
-                          : () async {
-													final groupId =
-															await IdentityService.getGroupId();
-
-													if (groupId == null) return;
-
-													await CallMeService.createCallMe(
-														groupId: groupId,
-														targetRequesterId: requesterId,
-													);
-
-													if (!context.mounted) return;													
-													AppBanner.success(
-														context,
-														l10n.callMeSent,
-													);
-												},
-                      icon: Icon(
-                        Icons.call_rounded,
-                        color: AppColors.primary,
-                      ),
-                      label: Text(
-                        l10n.callme,
-                        style: AppFonts.button.copyWith(
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               );
             }),
-
-            const SizedBox(height: 4),
-						if (requesters.length > 1) ...[
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: OutlinedButton.icon(
-                onPressed: () async {
-                  final groupId =
-                      await IdentityService.getGroupId();
-
-                  if (groupId == null) return;
-
-                  for (final requester in requesters) {
-                    final requesterId =
-                        requester['requesterId'] ?? '';
-
-                    if (requesterId.isEmpty) continue;
-
-                    await CallMeService.createCallMe(
-                      groupId: groupId,
-                      targetRequesterId: requesterId,
-                    );
-                  }
-
-                  if (!context.mounted) return;             
-									AppBanner.success(
-										context,
-										l10n.callMeSentAll,
-									);
-                },
-                icon: Icon(
-                  Icons.campaign_outlined,
-                  color: AppColors.primary,
-                ),
-                label: Text(
-                  l10n.askEverybody,
-                  style: AppFonts.button.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-            ),
-						],
           ],
         ),
       );
@@ -1125,8 +995,9 @@ final l10n = AppLocalizations.of(context)!;
           builder: (context, snapshot) {
  					final l10n = AppLocalizations.of(context)!;
            final locatorId = snapshot.data?['locatorId'] ?? '';
-            final locatorCode = snapshot.data?['locatorCode'] ?? '------';
             final locatorName = snapshot.data?['locatorName'] ?? l10n.member;
+            final locatorCode = snapshot.data?['locatorCode'] ?? '------';
+            final locatorPlate = snapshot.data?['locatorPlate'] ?? '------';
 						final groupId = snapshot.data?['groupId'] ?? '';
 						final groupName = snapshot.data?['groupName'] ?? '';
 						final langCode =
@@ -1265,6 +1136,7 @@ final l10n = AppLocalizations.of(context)!;
 															groupName: groupName,
 															locatorName: locatorName,
 															locatorCode: locatorCode,
+															locatorPlate: locatorPlate,
 															langCode: langCode,
 															onLocatorNameChanged: () {
 																setState(() {});
@@ -1408,37 +1280,7 @@ final l10n = AppLocalizations.of(context)!;
 						),
 					),
 				),
-				if (_callMeData != null)
-					Positioned.fill(
-						child: CallMeOverlay(
-							data: _callMeData!,
-							onDismiss: () async {
-								final callMeId = _callMeData!['callMeId'];
-
-								final groupId = _callMeData!['groupId'];
-
-								final locatorId = _callMeData!['targetLocatorId'];
-
-								await FirebaseFirestore.instance
-										.collection('groups')
-										.doc(groupId)
-										.collection('call_me')
-										.doc(locatorId)
-										.collection('items')
-										.doc(callMeId)
-										.delete();
-								if (!mounted) return;
-								setState(() {
-									_pendingCallMeQueue.removeWhere(
-										(x) => x['callMeId'] == callMeId,
-									);
-									_callMeData = _pendingCallMeQueue.isNotEmpty
-											? _pendingCallMeQueue.first
-											: null;
-								});
-							},
-						),	
-				),
+				
 							if (!_hasFullAccess && _hasGroup)
 								const LocatorSubscriptionExpiredOverlay(),
 						],

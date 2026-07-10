@@ -1,6 +1,11 @@
 {
 "@@locale": 													"tr",
 
+"enterVehicleInfo": 									"Araç Bilgilerini Gir",
+"vehicleName": 												"Araç İsmi",
+"plate": 															"Plaka",
+
+
 "actionRequired":											"İşlem Gerekli",
 "activeWatchers":											"Aktif İzleyenler",
 "addAdmin": 													"Yönetici ekle",

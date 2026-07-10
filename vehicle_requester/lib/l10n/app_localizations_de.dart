@@ -9,6 +9,15 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
+  String get enterVehicleInfo => 'Enter Vehicle Info';
+
+  @override
+  String get vehicleName => 'Vehicle Name';
+
+  @override
+  String get plate => 'Plate';
+
+  @override
   String get actionRequired => 'Aktion erforderlich';
 
   @override

@@ -1,0 +1,30 @@
+| LynraFamily | LynraFleet   |
+| ----------- | ------------ |
+| Group       | Fleet        |
+| Member      | Vehicle      |
+| Requester   | Manager      |
+| Locator     | Vehicle      |
+| Group Code  | Fleet Code   |
+| Member Code | Vehicle Code |
+| Pair Member | Add Vehicle  |
+
+
+| English           | Español                     |
+| ----------------- | --------------------------- |
+| Fleet             | **Flota**                   |
+| Vehicle           | **Vehículo**                |
+| Fleet Manager     | **Administrador de Flota**  |
+| Vehicle Code      | **Código del Vehículo**     |
+| Fleet Code        | **Código de Flota**         |
+| Add Vehicle       | **Agregar Vehículo**        |
+| Vehicles          | **Vehículos**               |
+| Fleet Information | **Información de la Flota** |
+
+
+🚗 Speed Alert
+🚗 Ignition / Driving Started (ileride)
+🚗 Vehicle Stopped
+🚗 Offline Alert
+🚗 Geofence
+🚗 Battery Low
+🚗 GPS Off

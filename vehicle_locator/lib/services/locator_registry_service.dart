@@ -43,6 +43,9 @@ class LocatorRegistryService {
 					
 			final locatorName = 
 					await IdentityService.getLocatorName();
+					
+			final locatorPlate = 
+					await IdentityService.getLocatorPlate();		
 
       final topic = "locator_$locatorId";
 
@@ -52,6 +55,7 @@ class LocatorRegistryService {
           .set({
 						'locatorCode': locatorCode,
 						'locatorName': locatorName,
+						'locatorPlate': locatorPlate,
 						'platform': Platform.operatingSystem,
 						'appVersion': packageInfo.version,
 						'buildNumber': packageInfo.buildNumber,

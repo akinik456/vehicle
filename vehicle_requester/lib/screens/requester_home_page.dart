@@ -34,7 +34,6 @@ import '../utils/address_helper.dart';
 import '../services/active_watcher_service.dart';
 import '../services/join_request_service.dart';
 import 'locator_notify_page.dart';
-import '../core/widgets/call_me_overlay.dart';
 import '../core/widgets/alert_overlay.dart';
 import '../core/widgets/requester_list_card.dart';
 import '../core/widgets/join_request_card.dart';
@@ -329,7 +328,6 @@ Log.d("loadLocators called");
 			);
 		await _addActiveWatchers();	
 		}
-	_listenCallMe();
 	_listenAlerts();
 	}
 	
@@ -539,63 +537,6 @@ static Future<void> cleanupInvalidPairedLocators() async {
 				});
 				_updateRequesterPositionIfNeeded();
 			});
-		_subscriptions.add(sub);
-	}
-	
-	void _listenCallMe() async {
-
-		final groupId =
-				await GroupService.getLocalGroupId();
-
-		final requesterId =
-				await IdentityService.getRequesterId();
-
-		if (groupId == null ||
-				requesterId == null) {
-			return;
-		}
-
-		final sub = FirebaseFirestore.instance
-				.collection('groups')
-				.doc(groupId)
-				.collection('call_me')
-				.doc(requesterId)
-				.collection('items')
-				.snapshots()
-				.listen((snapshot) {
-					for (final change in snapshot.docChanges) {
-						if (change.type != DocumentChangeType.added) {
-							continue;
-						}
-
-						final data = change.doc.data();
-
-						if (data == null) continue;
-
-						if (data['status'] != 'pending') {
-							continue;
-						}
-
-						final item = {
-							...data,
-							'callMeId': change.doc.id,
-						};
-
-						if (!mounted) return;
-
-						setState(() {
-							final alreadyExists = _pendingCallMeQueue.any(
-								(x) => x['callMeId'] == item['callMeId'],
-							);
-
-							if (!alreadyExists) {
-								_pendingCallMeQueue.add(item);
-							}
-
-							_callMeData ??= item;
-						});
-					}
-				});
 		_subscriptions.add(sub);
 	}
 	
@@ -1574,6 +1515,7 @@ Widget _buildGroupHome({
 																							final locatorId = locator['locatorId'] ?? '-';															
 																							final locatorName = locator['locatorName'] ?? 'Member';
 																							final locatorCode = locator['locatorCode'] ?? '------';
+																							final locatorPlate = locator['locatorPlate'] ?? '------';
 																							final status = locator['status'] ?? 'offline';
 																							final battery = locator['battery'] ?? 0;
 																							final gpsEnabled = locator['gpsEnabled'] == true;																	
@@ -1595,6 +1537,7 @@ Widget _buildGroupHome({
 																								locatorId: locatorId,
 																								locatorName: locatorName,
 																								locatorCode: locatorCode,
+																								locatorPlate: locatorPlate,
 																								status: status,
 																								battery: battery,
 																								gpsEnabled: gpsEnabled,
@@ -1895,42 +1838,7 @@ Widget build(BuildContext context) {
 																		),
 																		),
 																	),								
-																	if (_callMeData != null)
-																	CallMeOverlay(
-																		data: _callMeData!,
-																		onDismiss: () async {
-
-																			final callMeId =
-																					_callMeData!['callMeId'];
-
-																			final groupId =
-																					_callMeData!['groupId'];
-
-																			final requesterId =
-																					_callMeData!['targetRequesterId'];
-
-																			await FirebaseFirestore.instance
-																		.collection('groups')
-																		.doc(groupId)
-																		.collection('call_me')
-																		.doc(requesterId)
-																		.collection('items')
-																		.doc(callMeId)
-																		.delete();
-
-																			if (!mounted) return;
-
-																			setState(() {
-																				_pendingCallMeQueue.removeWhere(
-																	(x) => x['callMeId'] == callMeId,
-																);
-
-																_callMeData = _pendingCallMeQueue.isNotEmpty
-																		? _pendingCallMeQueue.first
-																		: null;
-																			});
-																		},
-																	),	
+																	
 																	if (_alertData != null)
 																	AlertOverlay(
 																		data: _alertData!,

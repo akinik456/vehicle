@@ -1,6 +1,10 @@
 {
 "@@locale": 													"en",
 
+"enterVehicleInfo": 									"Enter Vehicle Info",
+"vehicleName": 												"Vehicle Name",
+"plate": 															"Plate",
+
 "actionRequired":											"Action Required",
 "activeWatchers":											"Active Watchers",
 "addAdmin":														"Add admin",

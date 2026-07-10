@@ -5,7 +5,6 @@ import '../theme/app_fonts.dart';
 import 'app_card.dart';
 import 'app_banner.dart';
 
-import '../../services/call_me_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/group_service.dart';
 
@@ -16,7 +15,7 @@ class LocatorStatusCard extends StatelessWidget {
 	final String locatorId;
 	final String locatorName;
 	final String locatorCode;
-
+	final String locatorPlate;
 	final String status;
 	final int battery;
 
@@ -37,6 +36,7 @@ class LocatorStatusCard extends StatelessWidget {
 		required this.locatorId,
 		required this.locatorName,
 		required this.locatorCode,
+		required this.locatorPlate,
 		required this.status,
 		required this.battery,
 		required this.gpsEnabled,
@@ -127,8 +127,18 @@ class LocatorStatusCard extends StatelessWidget {
 									overflow: TextOverflow.ellipsis,
 									text: TextSpan(
 										children: [
+										TextSpan(
+												text: locatorPlate.isNotEmpty
+												? '$locatorPlate'
+												: '',
+												style: AppFonts.subtitle.copyWith(
+													color: AppColors.primary,
+													fontSize:18,
+												),
+											),
 											TextSpan(
-												text: locatorName,
+												text: '    $locatorName',
+												
 												style: AppFonts.subtitle.copyWith(
 													color: AppColors.primary,
 													fontWeight: FontWeight.w700
@@ -142,6 +152,8 @@ class LocatorStatusCard extends StatelessWidget {
 													fontSize:12,
 												),
 											),
+											
+											
 										],
 									),
 								),
@@ -176,47 +188,7 @@ class LocatorStatusCard extends StatelessWidget {
 										color: AppColors.danger,
 									),
 								),
-							const SizedBox(width: 24),
-							SizedBox(
-							width: 90,
-							child: 
-							OutlinedButton.icon(
-								onPressed: locatorId.isEmpty
-										? null
-										: () async {
-												final groupId =
-														await GroupService.getLocalGroupId();
-
-												if (groupId == null || groupId.isEmpty) {
-													return;
-												}
-
-												await CallMeService.createCallMe(
-													groupId: groupId,
-													targetLocatorId: locatorId,
-												);
-												if (!context.mounted) return;
-
-												AppBanner.success(
-													context,
-													l10n.callMeSent,
-												);
-											},
-											icon: Icon(
-												Icons.call_rounded,
-												size: 16,
-												color: AppColors.primary,
-											),
-											label: Text(
-												l10n.callme,
-												style: AppFonts.button.copyWith(
-													color: AppColors.primary,
-													fontSize: 12,
-												),
-											),
-										),
-										),
-						],
+							],
 					),
 					const SizedBox(height: 8),
 					Row(

@@ -180,4 +180,48 @@ static Future<String?> getGroupId() async {
 		);
 	}
 	
+	static const String _locatorPlateKey = 'locator_plate';
+	
+	static Future<void> setLocatorPlate(
+		String plate,
+	) async {
+		final prefs =
+				await SharedPreferences.getInstance();
+
+		await prefs.setString(
+			_locatorPlateKey,
+			plate.trim().toUpperCase(),
+		);
+
+		Log.d(
+			"BEACON IDENTITY => locatorPlate "
+			"saved => $plate",
+		);
+	}
+
+	static Future<String?> getLocatorPlate() async {
+		final prefs =
+				await SharedPreferences.getInstance();
+
+		final locatorPlate =
+				prefs.getString(_locatorPlateKey);
+
+		if (locatorPlate != null &&
+				locatorPlate.isNotEmpty) {
+			Log.d(
+				"BEACON IDENTITY => locatorPlate "
+				"found => $locatorPlate",
+			);
+
+			return locatorPlate;
+		}
+
+		Log.d(
+			"BEACON IDENTITY => locatorPlate "
+			"not found",
+		);
+
+		return null;
+	}
+	
 }

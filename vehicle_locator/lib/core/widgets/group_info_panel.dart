@@ -12,6 +12,7 @@ class GroupInfoPanel extends StatelessWidget {
     required this.groupName,
     required this.locatorName,
     required this.locatorCode,
+		required this.locatorPlate,
     required this.langCode,
     required this.onLocatorNameChanged,
     required this.onShowLocatorQr,
@@ -21,6 +22,7 @@ class GroupInfoPanel extends StatelessWidget {
   final String groupName;
   final String locatorName;
   final String locatorCode;
+	final String locatorPlate;
   final String langCode;
   final VoidCallback onLocatorNameChanged;
   final VoidCallback onShowLocatorQr;
@@ -55,7 +57,7 @@ class GroupInfoPanel extends StatelessWidget {
 									child: Text(
 										l10n.memberCode,
 										style: AppFonts.button.copyWith(
-											color: AppColors.textSecondary,
+											color: AppColors.accent,
 										),
 										overflow: TextOverflow.ellipsis,
 									),
@@ -65,7 +67,7 @@ class GroupInfoPanel extends StatelessWidget {
 									child: Text(
 										locatorCode,
 										style: AppFonts.subtitle.copyWith(
-											color: AppColors.textSecondary,
+											color: AppColors.accent,
 											letterSpacing: 2,
 										),
 										overflow: TextOverflow.ellipsis,
@@ -120,64 +122,86 @@ class GroupInfoPanel extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-									groupName.isEmpty
-											? AppLocalizations.of(context)!.noGroupYet
-											: groupName,
-									overflow: TextOverflow.ellipsis,
-									style: AppFonts.title.copyWith(
-										fontSize: 20,
-										color: AppColors.textSecondary,
-									),
+        children: [				
+          Column(
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: [
+							Text(
+								groupName.isEmpty
+										? AppLocalizations.of(context)!.noGroupYet
+										: groupName,
+								overflow: TextOverflow.ellipsis,
+								maxLines: 1,
+								style: AppFonts.title.copyWith(
+									fontSize: 20,
+									color: AppColors.accent,
 								),
-              ),
-              Expanded(
-								child: InkWell(
-									borderRadius: BorderRadius.circular(12),
-									onTap: () async {
-										final changed = await LocatorNameEditor.edit(context);
+							),
 
-										if (changed) {
-											onLocatorNameChanged();
-										}
-									},
-									child: Padding(
-										padding: const EdgeInsets.symmetric(
-											horizontal: 6,
-											vertical: 6,
-										),
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.end,
-											children: [
-												Flexible(
-													child: Text(
-														locatorName,
-														overflow: TextOverflow.ellipsis,
-														textAlign: TextAlign.right,
-														style: AppFonts.title.copyWith(
-															fontSize: 20,
-															color: AppColors.textSecondary,
+							const SizedBox(height: 6),
+
+							InkWell(
+								borderRadius: BorderRadius.circular(12),
+								onTap: () async {
+									final changed = await LocatorNameEditor.edit(context);
+
+									if (changed) {
+										onLocatorNameChanged();
+									}
+								},
+								child: Padding(
+									padding: const EdgeInsets.symmetric(
+										horizontal: 6,
+										vertical: 6,
+									),
+									child: Row(
+										children: [
+											Expanded(
+												child: Column(
+													crossAxisAlignment: CrossAxisAlignment.start,
+													children: [
+														Text(
+															locatorName,
+															overflow: TextOverflow.ellipsis,
+															maxLines: 1,
+															style: AppFonts.title.copyWith(
+																fontSize: 20,
+																color: AppColors.accent,
+															),
 														),
-													),
+
+														if (locatorPlate.trim().isNotEmpty) ...[
+															const SizedBox(height: 2),
+															Text(
+																locatorPlate,
+																overflow: TextOverflow.ellipsis,
+																maxLines: 1,
+																style: AppFonts.caption.copyWith(
+																	color: AppColors.accent,
+																	fontWeight: FontWeight.w700,
+																	letterSpacing: 1.2,
+																),
+															),
+														],
+													],
 												),
-												const SizedBox(width: 4),
-												Icon(
-													Icons.edit_rounded,
-													size: 18,
-													color: AppColors.textSecondary,
-												),
-											],
-										),
+											),
+
+											const SizedBox(width: 8),
+
+											Icon(
+												Icons.edit_rounded,
+												size: 18,
+												color: AppColors.textSecondary,
+											),
+										],
 									),
 								),
 							),
-            ],
-          ),
-          const SizedBox(height: 8),
+						],
+					),
+          
+					const SizedBox(height: 8),
           _buildCodeRow(context),
         ],
       ),

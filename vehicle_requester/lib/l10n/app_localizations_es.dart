@@ -9,6 +9,15 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get enterVehicleInfo => 'Introduzca la Información del Vehículo';
+
+  @override
+  String get vehicleName => 'Nombre del vehículo';
+
+  @override
+  String get plate => 'Matrícula';
+
+  @override
   String get actionRequired => 'Acción requerida';
 
   @override
