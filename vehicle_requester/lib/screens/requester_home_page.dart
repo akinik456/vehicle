@@ -1531,7 +1531,11 @@ Widget _buildGroupHome({
 																							final lastSeenText = TimeHelper.formatLastSeen(
 																								locator['lastSeen'],
 																								l10n,
-																							);															
+																							);		
+																							final geoInside = locator['geoInside'] == true;
+																							final geoPlaceName =
+																									(locator['geoPlaceName'] ?? '').toString().trim();
+																							
 																							final distanceMeters = LocationHelper.distanceMeters(fromLat: _myLat,fromLng: _myLng,toLat: locator['lat']?.toDouble(),toLng: locator['lng']?.toDouble(),);
 																							final distanceText = distanceMeters == null ? '-' : '${distanceMeters.round()} m';
 																							return LocatorStatusCard(
@@ -1542,6 +1546,9 @@ Widget _buildGroupHome({
 																								status: status,
 																								battery: battery,
 																								gpsEnabled: gpsEnabled,
+																								addressText: locator['address'] ?? l10n.addressNotAvailable,
+																								geoInside: geoInside,
+																								placeName: geoPlaceName.toUpperCase(),
 																								lastSeenText: lastSeenText,
 																								distanceText: distanceText,
 																								speed: speed,
@@ -1555,7 +1562,6 @@ Widget _buildGroupHome({
 																									);
 																								},
 																								
-																								addressText: locator['address'] ?? l10n.addressNotAvailable,
 																								onNotificationSettings: () {
 																									 Navigator.push(
 																										context,

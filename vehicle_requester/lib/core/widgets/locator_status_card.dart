@@ -1,57 +1,84 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'app_card.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_fonts.dart';
-import 'app_card.dart';
 import 'app_banner.dart';
+import 'app_card.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../services/group_service.dart';
 
-
-
-class LocatorStatusCard extends StatelessWidget {
-
-	final String locatorId;
-	final String locatorName;
-	final String locatorCode;
-	final String locatorPlate;
-	final String status;
-	final int battery;
-	final int speed;
-
-	final bool gpsEnabled;
-	final String lastSeenText;
-	final int? stationarySince;
-	final int? offlineSince;
-	
-	final String distanceText;
-	final VoidCallback onOpenMaps;
-	final String addressText;
-	final VoidCallback? onNotificationSettings;
-	final VoidCallback? onSettings;
-	final VoidCallback? onRemove;
-	
-	const LocatorStatusCard({
-		super.key,
-		required this.locatorId,
-		required this.locatorName,
-		required this.locatorCode,
+class LocatorStatusCard extends StatefulWidget {
+  const LocatorStatusCard({
+    super.key,
+    required this.locatorId,
+    required this.locatorName,
+    required this.locatorCode,
 		required this.locatorPlate,
-		required this.status,
-		required this.battery,
-		required this.gpsEnabled,
-		required this.lastSeenText,
-		required this.distanceText,
-		required this.onOpenMaps,
-		required this.addressText,
-		required this.onNotificationSettings,
-		required this.onSettings,
-		required this.onRemove,
-		required this.stationarySince,
-		required this.offlineSince,
+    required this.status,
+    required this.battery,
+    required this.gpsEnabled,
+    required this.geoInside,
+		required this.placeName,
+    required this.lastSeenText,
+    required this.stationarySince,
+    required this.offlineSince,
+    required this.distanceText,
+    required this.onOpenMaps,
+    required this.addressText,
 		required this.speed,
-	});
+    this.onNotificationSettings,
+    this.onSettings,
+    this.onRemove,
+  });
+
+  final String locatorId;
+  final String locatorName;
+  final String locatorCode;
+	final String locatorPlate;
+  final String status;
+  final int battery;
+	final int speed;
+	
+  final bool gpsEnabled;
+  final bool geoInside;
+	final String placeName;
+  final String lastSeenText;
+  final int? stationarySince;
+  final int? offlineSince;
+
+  final String distanceText;
+  final VoidCallback onOpenMaps;
+  final String addressText;
+  final VoidCallback? onNotificationSettings;
+  final VoidCallback? onSettings;
+  final VoidCallback? onRemove;
+
+  @override
+  State<LocatorStatusCard> createState() =>
+      _LocatorStatusCardState();
+}
+
+class _LocatorStatusCardState
+    extends State<LocatorStatusCard> {
+		
+	bool _showRealAddress = false;
+  Timer? _addressTimer;
+
+	String get displayAddressText {
+		if (!widget.geoInside) {
+			return widget.addressText;
+		}
+
+		if (_showRealAddress) {
+			return widget.addressText;
+		}
+
+		return widget.placeName;
+	}	
+
 	
 	String _locationDurationText(
 		BuildContext context,
@@ -107,15 +134,40 @@ class LocatorStatusCard extends StatelessWidget {
 		return l10n.offlineHoursMinutes(hours, minutes);
 	}
 	
+	void _showAddressTemporarily() {
+		_addressTimer?.cancel();
+
+		setState(() {
+			_showRealAddress = true;
+		});
+
+		_addressTimer = Timer(
+			const Duration(seconds: 5),
+			() {
+				if (!mounted) return;
+
+				setState(() {
+					_showRealAddress = false;
+				});
+			},
+		);
+	}	
+	
+	@override
+	void dispose() {
+		_addressTimer?.cancel();
+		super.dispose();
+	}	
+	
   @override
 	Widget build(BuildContext context) {
 	final l10n = AppLocalizations.of(context)!;
-	final stationaryText = _locationDurationText(context,stationarySince);
-	final offlineText = _offlineDurationText(context,offlineSince);
+	final stationaryText = _locationDurationText(context,widget.stationarySince);
+	final offlineText = _offlineDurationText(context,widget.offlineSince);
 	
   return GestureDetector(
     child: AppCard(
-			borderColor: status == 'online'
+			borderColor: widget.status == 'online'
       ? AppColors.accent.withValues(alpha: 0.70)
       : AppColors.danger.withValues(alpha: 0.70),
   borderWidth: 3.0,
@@ -130,8 +182,8 @@ class LocatorStatusCard extends StatelessWidget {
 									text: TextSpan(
 										children: [
 										TextSpan(
-												text: locatorPlate.isNotEmpty
-												? '$locatorPlate'
+												text: widget.locatorPlate.isNotEmpty
+												? '${widget.locatorPlate}'
 												: '',
 												style: AppFonts.subtitle.copyWith(
 													color: AppColors.primary,
@@ -139,7 +191,7 @@ class LocatorStatusCard extends StatelessWidget {
 												),
 											),
 											TextSpan(
-												text: '    $locatorName',
+												text: '    ${widget.locatorName}',
 												
 												style: AppFonts.subtitle.copyWith(
 													color: AppColors.primary,
@@ -148,14 +200,12 @@ class LocatorStatusCard extends StatelessWidget {
 											),
 
 											TextSpan(
-												text: ' - $locatorCode',
+												text: ' - ${widget.locatorCode}',
 												style: AppFonts.subtitle.copyWith(
 													color: AppColors.textSecondary,
 													fontSize:12,
 												),
-											),
-											
-											
+											),									
 										],
 									),
 								),
@@ -169,21 +219,21 @@ class LocatorStatusCard extends StatelessWidget {
 									vertical: 4,
 								),
 								decoration: BoxDecoration(
-									color: status == 'online'
+									color: widget.status == 'online'
 											? Colors.green.withValues(alpha: 0.15)
 											: Colors.red.withValues(alpha: 0.15),
 									borderRadius: BorderRadius.circular(20),
 								),
 								child: Text(
-									status.toUpperCase(),
+									widget.status.toUpperCase(),
 									style: AppFonts.caption.copyWith(
-										color: status == 'online'
+										color: widget.status == 'online'
 												? AppColors.accent
 												: AppColors.danger,
 									),
 								),
 							),
-							if (status != 'online' && offlineText.isNotEmpty)
+							if (widget.status != 'online' && offlineText.isNotEmpty)
 								Text(
 									offlineText,
 									style: AppFonts.caption.copyWith(
@@ -196,7 +246,7 @@ class LocatorStatusCard extends StatelessWidget {
 					Row(
 						children: [
 									Text(
-										"${l10n.speed}: $speed kmh",
+										"${l10n.speed}: ${widget.speed} kmh",
 										style: AppFonts.caption.copyWith(
 											color: AppColors.accent,
 											fontSize:18,
@@ -204,36 +254,36 @@ class LocatorStatusCard extends StatelessWidget {
 									),	
 							const SizedBox(width: 32),
 									Icon(
-										gpsEnabled
+										widget.gpsEnabled
 												? Icons.gps_fixed_rounded
 												: Icons.gps_off_rounded,
 										size: 18,
-										color: gpsEnabled
+										color: widget.gpsEnabled
 											? AppColors.accent
 											: AppColors.danger,
 									),
 									const SizedBox(width: 4),
 									Text(
-										gpsEnabled ? 'GPS ON' : 'GPS OFF',
+										widget.gpsEnabled ? 'GPS ON' : 'GPS OFF',
 										style: AppFonts.caption.copyWith(
-											color: gpsEnabled
+											color: widget.gpsEnabled
 													? AppColors.accent
 													: AppColors.danger,
 										),
 									),	
 						const SizedBox(width: 32),
 							 Icon(
-								battery >= 90
+								widget.battery >= 90
 									? Icons.battery_full_rounded
-									: battery >= 70
+									: widget.battery >= 70
 											? Icons.battery_6_bar_rounded
-											: battery >= 50
+											: widget.battery >= 50
 													? Icons.battery_4_bar_rounded
-													: battery >= 20
+													: widget.battery >= 20
 															? Icons.battery_2_bar_rounded
 															: Icons.battery_alert_rounded,
 										size: 18,
-										color: battery < 20
+										color: widget.battery < 20
 												? AppColors.danger
 												: AppColors.accent,
 									),
@@ -241,17 +291,13 @@ class LocatorStatusCard extends StatelessWidget {
 									const SizedBox(width: 4),
 
 									Text(
-										'$battery%',
+										"${widget.battery}%",
 										style: AppFonts.caption.copyWith(
-											color: battery < 20
+											color: widget.battery < 20
 													? AppColors.danger
 													: AppColors.accent,
 										),
-									),
-							
-									
-
-									
+									),					
 								],
 							),
 					Column(
@@ -260,14 +306,47 @@ class LocatorStatusCard extends StatelessWidget {
 							Row(
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: [
-									const SizedBox(width: 4),
+									const SizedBox(width: 10),
 
 									Expanded(
-										child: Text(
-											addressText,
-											style: AppFonts.body,
-											maxLines: 2,
-											overflow: TextOverflow.ellipsis,
+										child: GestureDetector(
+											onTap: widget.geoInside
+													? _showAddressTemporarily
+													: null,
+											child: Row(
+												crossAxisAlignment: CrossAxisAlignment.start,
+												children: [
+													Flexible(
+														child: Text(
+															displayAddressText,
+															style: AppFonts.body.copyWith(
+																fontWeight: widget.geoInside
+																		? FontWeight.w700
+																		: FontWeight.normal,
+																color: widget.geoInside
+																		? AppColors.primary
+																		: AppColors.textPrimary,
+																fontSize: widget.geoInside
+																		? 20
+																		: 16,
+															),
+															maxLines: 2,
+															overflow: TextOverflow.ellipsis,
+														),
+													),
+
+													if (widget.geoInside) ...[
+														const SizedBox(width: 6),
+														Icon(
+															_showRealAddress
+																	? Icons.location_on_rounded
+																	: Icons.touch_app_rounded,
+															size: 20,
+															color: AppColors.textSecondary,
+														),
+													],
+												],
+											),
 										),
 									),
 
@@ -282,13 +361,13 @@ class LocatorStatusCard extends StatelessWidget {
 									const SizedBox(width: 4),
 
 									Text(
-										distanceText,
+										widget.distanceText,
 										style: AppFonts.caption,
 									),
 								],
 							),
 
-							if (status == 'online' && stationaryText.isNotEmpty) ...[
+							if (widget.status == 'online' && stationaryText.isNotEmpty) ...[
 								const SizedBox(height: 4),
 								Padding(
 									padding: const EdgeInsets.only(left: 4),
@@ -301,7 +380,7 @@ class LocatorStatusCard extends StatelessWidget {
 								),
 							],
 
-							if (status == 'offline') ...[
+							if (widget.status == 'offline') ...[
 								const SizedBox(height: 4),
 								Padding(
 									padding: const EdgeInsets.only(left: 4),
@@ -323,25 +402,25 @@ class LocatorStatusCard extends StatelessWidget {
 								icon: Icons.map_rounded,
 								label: l10n.mapbutton,
 								color: AppColors.primary,
-								onTap: onOpenMaps,
+								onTap: widget.onOpenMaps,
 							),
 							_MiniAction(
 								icon: Icons.notifications_active_rounded,
 								label: l10n.notify,
 								color: AppColors.primary,
-								onTap: onNotificationSettings,
+								onTap: widget.onNotificationSettings,
 							),
 							_MiniAction(
 								icon: Icons.settings_rounded,
 								label: l10n.settings,
 								color: AppColors.primary,
-								onTap: onSettings,
+								onTap: widget.onSettings,
 							),
 							_MiniAction(
 								icon: Icons.car_rental_rounded,
 								label: l10n.remove,
 								color: AppColors.danger,
-								onTap: onRemove,
+								onTap: widget.onRemove,
 							),
 						],
 					),
