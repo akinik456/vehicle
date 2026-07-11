@@ -1004,15 +1004,14 @@ Widget _buildPendingHome({
 								),
 								children: [
 									TextSpan(text: l10n.title),
-
 									if (_isMaster)
-										TextSpan(
-											text: ' Ⓜ',
-											style: AppFonts.title.copyWith(
-												fontSize: 14, // biraz daha küçük
-												color: AppColors.primary.withValues(alpha: 0.85),
-											),
+									TextSpan(
+										text: '  M*',//' Ⓜ',
+										style: AppFonts.title.copyWith(
+											fontSize: 14, // biraz daha küçük
+											color: AppColors.primary,
 										),
+									),
 								],
 							),
 						),
@@ -1269,13 +1268,13 @@ Widget _buildGroupHome({
 																									TextSpan(text: l10n.title),
 
 																									if (_isMaster)
-																										TextSpan(
-																											text: ' Ⓜ',
-																											style: AppFonts.title.copyWith(
-																												fontSize: 14, // biraz daha küçük
-																												color: AppColors.primary.withValues(alpha: 0.85),
-																											),
+																									TextSpan(
+																										text: '  M*',//' Ⓜ',
+																										style: AppFonts.title.copyWith(
+																											fontSize: 14, // biraz daha küçük
+																											color: AppColors.primary,
 																										),
+																									),
 																								],
 																							),
 																						),
@@ -1535,7 +1534,14 @@ Widget _buildGroupHome({
 																							final geoInside = locator['geoInside'] == true;
 																							final geoPlaceName =
 																									(locator['geoPlaceName'] ?? '').toString().trim();
-																							
+																							final geoPlaceDistanceMeters =
+																									locator['geoPlaceDistanceMeters'] as int?;
+																							final placeName =
+																									geoInside && geoPlaceName.isNotEmpty
+																											? geoPlaceDistanceMeters != null
+																													? '${geoPlaceName.toUpperCase()} • ${geoPlaceDistanceMeters} m'
+																													: geoPlaceName.toUpperCase()
+																											: '';				
 																							final distanceMeters = LocationHelper.distanceMeters(fromLat: _myLat,fromLng: _myLng,toLat: locator['lat']?.toDouble(),toLng: locator['lng']?.toDouble(),);
 																							final distanceText = distanceMeters == null ? '-' : '${distanceMeters.round()} m';
 																							return LocatorStatusCard(
@@ -1548,7 +1554,7 @@ Widget _buildGroupHome({
 																								gpsEnabled: gpsEnabled,
 																								addressText: locator['address'] ?? l10n.addressNotAvailable,
 																								geoInside: geoInside,
-																								placeName: geoPlaceName.toUpperCase(),
+																								placeName: placeName,
 																								lastSeenText: lastSeenText,
 																								distanceText: distanceText,
 																								speed: speed,

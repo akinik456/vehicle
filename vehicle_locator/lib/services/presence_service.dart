@@ -49,9 +49,13 @@ static Future<void> updateOnline({
   final gpsEnabled =
       await Geolocator.isLocationServiceEnabled();
 
+  final batteryChanged =
+    _lastBatteryLevel == null ||
+    (batteryLevel - _lastBatteryLevel!).abs() >= 5;
+
   final deviceStatusChanged =
-      _lastBatteryLevel != batteryLevel ||
-      _lastGpsEnabled != gpsEnabled;
+			batteryChanged ||
+			_lastGpsEnabled != gpsEnabled;
 
   Position? position;
 
@@ -125,7 +129,7 @@ static Future<void> updateOnline({
       movedMeters != null &&
       movedMeters < 25;
 
-  // Hareket yok, pil/GPS de değişmedi:
+/*?*?   // Hareket yok, pil/GPS de değişmedi:
   // ne alert kontrolüne ne de RTDB write'a gerek var.
   if (shouldSkipSmallMove &&
       !deviceStatusChanged) {
@@ -136,7 +140,7 @@ static Future<void> updateOnline({
       "moved=${movedMeters?.toStringAsFixed(1)}m",
     );
     return;
-  }
+  }*/
 
   // Hareket yok ama pil veya GPS durumu değişti:
   // yalnızca status alanlarını güncelle.
