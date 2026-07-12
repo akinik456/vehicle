@@ -79,11 +79,15 @@ class _LocatorHomePageState extends State<LocatorHomePage>
 	String _currentAddress = '';	
 	double? _lastUiLat;
 	double? _lastUiLng;
+	Stream<List<Map<String, String>>>? _pairedRequesterStream;
+	late Future<Map<String, String>> _locatorCodeDataFuture;
 	
 	
  @override
 void initState() {
   super.initState();
+	_pairedRequesterStream = _watchPairedRequesterData().asBroadcastStream();
+	_locatorCodeDataFuture = _loadLocatorCodeData();
 	_loadTheme();
 	//MotionService.start();
   unawaited(_startLocatorHome());
@@ -726,7 +730,7 @@ Stream<List<Map<String, String>>> _watchPairedRequesterData() async* {
 
 Widget _pairedRequesterCard() {
   return StreamBuilder<List<Map<String, String>>>(
-    stream: _watchPairedRequesterData(),
+    stream: _pairedRequesterStream,
     builder: (context, snapshot) {
       final requesters = snapshot.data ?? [];
 			final l10n = AppLocalizations.of(context)!;
@@ -1129,8 +1133,8 @@ final l10n = AppLocalizations.of(context)!;
       children: [
         SafeArea(
         child: FutureBuilder<Map<String, String>>(
-          future: _loadLocatorCodeData(),
-          builder: (context, snapshot) {
+				future: _locatorCodeDataFuture,
+				builder: (context, snapshot) {
  					final l10n = AppLocalizations.of(context)!;
            final locatorId = snapshot.data?['locatorId'] ?? '';
             final locatorName = snapshot.data?['locatorName'] ?? l10n.member;
