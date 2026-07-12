@@ -65,7 +65,10 @@ class _AddLocatorPageState extends State<AddLocatorPage> {
 			  centerTitle: true,
         backgroundColor: AppColors.background,
         surfaceTintColor: AppColors.background,
-        elevation: 0,
+				elevation: 0,
+				iconTheme: IconThemeData(
+					color: AppColors.primary,
+				),
         title: Text(
           l10n.addMember,          
 					style: AppFonts.title.copyWith(
@@ -320,7 +323,10 @@ class _QrScanPageState extends State<_QrScanPage> {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         surfaceTintColor: AppColors.background,
-        elevation: 0,
+				elevation: 0,
+				iconTheme: IconThemeData(
+					color: AppColors.primary,
+				),
         title: Text(
           l10n.scanTheMember,
           style: AppFonts.title.copyWith(

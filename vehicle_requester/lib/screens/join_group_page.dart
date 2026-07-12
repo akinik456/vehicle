@@ -87,7 +87,10 @@ class _JoinGroupPageState extends State<JoinGroupPage> {
 			  centerTitle: true,
         backgroundColor: AppColors.background,
         surfaceTintColor: AppColors.background,
-        elevation: 0,
+				elevation: 0,
+				iconTheme: IconThemeData(
+					color: AppColors.primary,
+				),
         title: Text(
           l10n.joinGroup,
           style: AppFonts.title.copyWith(
@@ -217,7 +220,10 @@ class _QrScanPageState extends State<_QrScanPage> {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         surfaceTintColor: AppColors.background,
-        elevation: 0,
+				elevation: 0,
+				iconTheme: IconThemeData(
+					color: AppColors.primary,
+				),
         title: Text(
           l10n.scanQRCode,
           style: AppFonts.title,

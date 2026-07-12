@@ -42,7 +42,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 			  centerTitle: true,
         backgroundColor: AppColors.background,
         surfaceTintColor: AppColors.background,
-        elevation: 0,
+				elevation: 0,
+				iconTheme: IconThemeData(
+					color: AppColors.primary,
+				),
         title: Text(
           l10n.createNewGroup,
           style: AppFonts.title.copyWith(
