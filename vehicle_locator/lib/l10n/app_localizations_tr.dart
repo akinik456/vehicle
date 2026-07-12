@@ -165,6 +165,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get createOrJoin => 'Yeni bir filo oluşturun veya mevcut bir filo katılın.';
 
   @override
+  String get currentLocation => 'Mevcut Konum';
+
+  @override
   String daysAgo(Object count) {
     return '$count gün önce';
   }
@@ -254,7 +257,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get joinGroup => 'Filo katıl';
+  String get joinGroup => 'Filoya katıl';
 
   @override
   String get joinInstantlyWithCamera => 'Kamerayla anında katılın';
@@ -608,13 +611,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get somePermissions => 'Bazı izinler eksik. Lütfen izinler sayfasını açın ve gerekli izinleri verin.';
 
   @override
+  String get speed => 'Hız';
+
+  @override
   String get sva => 'Kaydet';
 
   @override
   String get systemPermissions => 'SİSTEM İZİNLERİ';
 
   @override
+  String get thisadmin => 'Bu yönetici gruptan çıkarılacaktır.';
+
+  @override
   String get thismember => 'Bu Vehicle listenizden kaldırılacaktır.';
+
+  @override
+  String get thismemberfromgroup => 'Bu üye gruptan çıkarılacaktır.';
 
   @override
   String get title => 'LynraFleet';

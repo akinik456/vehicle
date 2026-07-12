@@ -399,6 +399,12 @@ abstract class AppLocalizations {
   /// **'Create a new fleet or join an existing fleet'**
   String get createOrJoin;
 
+  /// No description provided for @currentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get currentLocation;
+
   /// No description provided for @daysAgo.
   ///
   /// In en, this message translates to:
@@ -1245,6 +1251,12 @@ abstract class AppLocalizations {
   /// **'Some permissions are missing. Please open the permissions page and allow the required permissions.'**
   String get somePermissions;
 
+  /// No description provided for @speed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get speed;
+
   /// No description provided for @sva.
   ///
   /// In en, this message translates to:
@@ -1257,11 +1269,23 @@ abstract class AppLocalizations {
   /// **'SYSTEM PERMISSIONS'**
   String get systemPermissions;
 
+  /// No description provided for @thisadmin.
+  ///
+  /// In en, this message translates to:
+  /// **'This Admin will be removed from group.'**
+  String get thisadmin;
+
   /// No description provided for @thismember.
   ///
   /// In en, this message translates to:
   /// **'This Vehicle will be removed from your paired list.'**
   String get thismember;
+
+  /// No description provided for @thismemberfromgroup.
+  ///
+  /// In en, this message translates to:
+  /// **'This Member will be removed from group.'**
+  String get thismemberfromgroup;
 
   /// No description provided for @title.
   ///

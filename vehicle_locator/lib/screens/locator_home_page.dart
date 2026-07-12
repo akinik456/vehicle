@@ -47,6 +47,10 @@ import '../core/widgets/app_banner.dart';
 import '../services/theme_service.dart';
 import '../services/rtdb_auth_mapping_service.dart';
 import '../utils/log.dart';
+import '../services/presence_cache_service.dart';
+import '../utils/map_helper.dart';
+import '../utils/address_helper.dart';
+import '../core/widgets/locator_status_card.dart';
 
 
 class LocatorHomePage extends StatefulWidget {
@@ -71,6 +75,11 @@ class _LocatorHomePageState extends State<LocatorHomePage>
 	bool _isDarkTheme = true;
 	bool _clearingGroupAfterUnpair = false;
 	bool _hadPairedRequester = false;
+	Map<String, dynamic> _cachedPresence = {};
+	String _currentAddress = '';	
+	double? _lastUiLat;
+	double? _lastUiLng;
+	
 	
  @override
 void initState() {
@@ -81,8 +90,13 @@ void initState() {
 
   unawaited(_loadVersion());
   unawaited(_checkForUpdate());
-	
-
+	_loadCachedPresence();
+	_presenceTimer = Timer.periodic(
+		const Duration(seconds: 30),
+		(_) {
+			_loadCachedPresence();
+		},
+	);
   WidgetsBinding.instance.addPostFrameCallback((_) {
     _checkPermissionsAndWarn();
   });
@@ -157,8 +171,41 @@ Future<void> _startLocatorHome() async {
 		LocatorSettingsService.stopListeners();
 		ActiveWatcherService.stop();
 		WidgetsBinding.instance.removeObserver(this);
+		_presenceTimer?.cancel();
     super.dispose();
   }
+	
+		Future<void> _loadCachedPresence() async {
+		final data =
+				await PresenceCacheService.load();
+
+		final lat =
+				data['lat'] as double?;
+
+		final lng =
+				data['lng'] as double?;
+
+		if (lat != null &&
+				lng != null &&
+				(lat != _lastUiLat || lng != _lastUiLng)) {
+
+			_currentAddress =
+					await AddressHelper.getAddressFromLatLng(
+				lat: lat,
+				lng: lng,
+			);
+
+			_lastUiLat = lat;
+			_lastUiLng = lng;
+		}
+
+		if (!mounted) return;
+
+		setState(() {
+			_cachedPresence = data;
+		});
+
+	}
 	
 	Future<void> _loadTheme() async {
 		final isDark = await ThemeService.isDarkTheme();
@@ -981,6 +1028,97 @@ Widget _activeWatchersCard() {
     },
   );
 }	
+Widget _currentLocationCard() {
+  final l10n = AppLocalizations.of(context)!;
+
+  final status =
+      _cachedPresence['status'] ?? 'offline';
+
+  final gpsEnabled =
+      _cachedPresence['gpsEnabled'] ?? false;
+
+  final geoInside =
+      _cachedPresence['geoInside'] == true;
+
+  final geoPlaceName =
+      (_cachedPresence['geoPlaceName'] ?? '')
+          .toString()
+          .trim();
+
+  final geoPlaceDistance =
+      _cachedPresence['geoPlaceDistanceMeters']
+          as int?;
+
+  final lat =
+      _cachedPresence['lat'] as double?;
+
+  final lng =
+      _cachedPresence['lng'] as double?;
+
+  final stationarySince =
+      _cachedPresence['stationarySince'] as int?;
+
+  final offlineSince =
+      _cachedPresence['offlineSince'] as int?;
+
+  if (_cachedPresence.isEmpty) {
+		return const SizedBox.shrink();
+	}
+
+  final placeName =
+      geoInside && geoPlaceName.isNotEmpty
+          ? geoPlaceDistance != null
+              ? '${geoPlaceName.toUpperCase()} • $geoPlaceDistance m'
+              : geoPlaceName.toUpperCase()
+          : '';
+	
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(
+          left: 4,
+          bottom: 8,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.location_on_rounded,
+              size: 20,
+              color: AppColors.primary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              l10n.currentLocation,
+              style: AppFonts.subtitle.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      LocatorCurrentLocationCard(
+        status: status,
+        gpsEnabled: gpsEnabled,
+        geoInside: geoInside,
+        placeName: placeName,
+        stationarySince: stationarySince,
+        offlineSince: offlineSince,
+        addressText: _currentAddress.isEmpty
+            ? l10n.addressNotAvailable
+            : _currentAddress,
+        onOpenMaps: () async {
+          await MapHelper.openInMaps(
+            lat: lat!,
+            lng: lng!,
+          );
+        },
+      ),
+    ],
+  );
+}
 
   @override
 Widget build(BuildContext context) {
@@ -1158,6 +1296,8 @@ final l10n = AppLocalizations.of(context)!;
 													_buildPairingArea(),
 													const SizedBox(height: 12),
 													_activeWatchersCard(),
+													const SizedBox(height: 12),
+													_currentLocationCard(),
 												],
 											),
 										),

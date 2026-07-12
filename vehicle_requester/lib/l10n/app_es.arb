@@ -54,6 +54,7 @@
 "connectAMember": 										"Conectar un Vehículo",
 "createNewGroup": 										"Crear un nuevo Flota",
 "createOrJoin": 											"Crear un nuevo Flota o unirse a un Flota existente",
+"currentLocation": 										"Ubicación actual",
 "daysAgo": 														"hace {count} días",
 "delete": 														"Eliminar",
 "deletePlaceConfirmation": 						"Quieres eliminar este lugar?",

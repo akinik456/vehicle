@@ -9,6 +9,7 @@ import 'locator_settings_service.dart';
 import 'movement_alert_service.dart';
 import '../utils/log.dart';
 import 'smart_presence_scheduler.dart';
+import 'presence_cache_service.dart';
 
 class PresenceService {
   PresenceService._();
@@ -153,6 +154,12 @@ static Future<void> updateOnline({
       'gpsEnabled': gpsEnabled,
       'updateCount': ServerValue.increment(1),
     });
+		
+		await PresenceCacheService.save({
+			'status': 'online',
+			'battery': batteryLevel,
+			'gpsEnabled': gpsEnabled,
+		});		
 
     _lastBatteryLevel = batteryLevel;
     _lastGpsEnabled = gpsEnabled;
@@ -182,6 +189,12 @@ static Future<void> updateOnline({
       'gpsEnabled': gpsEnabled,
       'updateCount': ServerValue.increment(1),
     });
+		
+		await PresenceCacheService.save({
+			'status': 'online',
+			'battery': batteryLevel,
+			'gpsEnabled': gpsEnabled,
+		});
 
     _lastBatteryLevel = batteryLevel;
     _lastGpsEnabled = gpsEnabled;
@@ -220,6 +233,12 @@ static Future<void> updateOnline({
         'gpsEnabled': gpsEnabled,
         'updateCount': ServerValue.increment(1),
       });
+			
+			await PresenceCacheService.save({
+				'status': 'online',
+				'battery': batteryLevel,
+				'gpsEnabled': gpsEnabled,
+			});
 
       _lastBatteryLevel = batteryLevel;
       _lastGpsEnabled = gpsEnabled;
@@ -249,6 +268,17 @@ static Future<void> updateOnline({
     'updateCount': ServerValue.increment(1),
     ...placeData,
   };
+	
+	final Map<String, dynamic> cacheData = {
+		'status': 'online',
+		'battery': 'battery',
+		'gpsEnabled': gpsEnabled,
+		'lat': position.latitude,
+		'lng': position.longitude,
+		...placeData,
+		'stationarySince': updateData['stationarySince'],
+		'offlineSince': null,
+	};
 
   if (movedMeters == null ||
       movedMeters >= 25) {
@@ -256,10 +286,9 @@ static Future<void> updateOnline({
         ServerValue.timestamp;
   }
 
-  await _db.child(path).update(
-    updateData,
-  );
-
+  await _db.child(path).update(updateData,);
+	await PresenceCacheService.save(cacheData);
+	
   _lastBatteryLevel = batteryLevel;
   _lastGpsEnabled = gpsEnabled;
   _lastLat = position.latitude;

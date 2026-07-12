@@ -53,6 +53,7 @@
 "connectAMember": 										"Connect A Vehicle",
 "createNewGroup": 										"Create a new fleet",
 "createOrJoin": 											"Create a new fleet or join an existing fleet",
+"currentLocation": 										"Current Location",
 "daysAgo": 														"{count} days ago",
 "delete": 														"Delete",
 "deletePlaceConfirmation": 						"Delete this place?",

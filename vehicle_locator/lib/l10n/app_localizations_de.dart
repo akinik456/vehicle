@@ -165,6 +165,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get createOrJoin => 'Neue Gruppe erstellen oder bestehender Gruppe beitreten';
 
   @override
+  String get currentLocation => 'Current Location';
+
+  @override
   String daysAgo(Object count) {
     return 'vor $count Tagen';
   }
@@ -608,13 +611,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get somePermissions => 'Einige Berechtigungen fehlen. Bitte öffnen Sie die Berechtigungsseite und erlauben Sie die erforderlichen Berechtigungen.';
 
   @override
+  String get speed => 'Speed';
+
+  @override
   String get sva => 'Speichern';
 
   @override
   String get systemPermissions => 'SYSTEMBERECHTIGUNGEN';
 
   @override
+  String get thisadmin => 'This Admin will be removed from group.';
+
+  @override
   String get thismember => 'Dieses Mitglied wird aus Ihrer gekoppelten Liste entfernt.';
+
+  @override
+  String get thismemberfromgroup => 'This Member will be removed from group.';
 
   @override
   String get title => 'LynraFamily';

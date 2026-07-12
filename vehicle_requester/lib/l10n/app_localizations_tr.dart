@@ -254,7 +254,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get joinGroup => 'Filo katıl';
+  String get joinGroup => 'Filoya katıl';
 
   @override
   String get joinInstantlyWithCamera => 'Kamerayla anında katılın';

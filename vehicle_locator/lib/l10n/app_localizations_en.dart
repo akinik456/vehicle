@@ -165,6 +165,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createOrJoin => 'Create a new fleet or join an existing fleet';
 
   @override
+  String get currentLocation => 'Current Location';
+
+  @override
   String daysAgo(Object count) {
     return '$count days ago';
   }
@@ -608,13 +611,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get somePermissions => 'Some permissions are missing. Please open the permissions page and allow the required permissions.';
 
   @override
+  String get speed => 'Speed';
+
+  @override
   String get sva => 'Save';
 
   @override
   String get systemPermissions => 'SYSTEM PERMISSIONS';
 
   @override
+  String get thisadmin => 'This Admin will be removed from group.';
+
+  @override
   String get thismember => 'This Vehicle will be removed from your paired list.';
+
+  @override
+  String get thismemberfromgroup => 'This Member will be removed from group.';
 
   @override
   String get title => 'LynraFleet';

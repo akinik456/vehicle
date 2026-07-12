@@ -54,6 +54,7 @@
 "connectAMember": 										"Bir araca bağlan",
 "createNewGroup": 										"Yeni filo oluştur",
 "createOrJoin": 											"Yeni bir filo oluşturun veya mevcut bir filo katılın.",
+"currentLocation": 										"Mevcut Konum",
 "daysAgo": 														"{count} gün önce",
 "delete": 														"Sil",
 "deletePlaceConfirmation": 						"Bu yeri silmek istiyor musunuz?",
