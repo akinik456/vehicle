@@ -617,7 +617,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get systemPermissions => 'PERMISOS DEL SISTEMA';
 
   @override
+  String get thisadmin => 'Este administrador será eliminado del grupo.';
+
+  @override
   String get thismember => 'Este vehículo será eliminado de su lista vinculada.';
+
+  @override
+  String get thismemberfromgroup => 'Este miembro será eliminado del grupo.';
 
   @override
   String get title => 'LynraFleet';

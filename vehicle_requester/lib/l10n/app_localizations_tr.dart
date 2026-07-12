@@ -617,7 +617,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get systemPermissions => 'SİSTEM İZİNLERİ';
 
   @override
+  String get thisadmin => 'Bu yönetici gruptan çıkarılacaktır.';
+
+  @override
   String get thismember => 'Bu Vehicle listenizden kaldırılacaktır.';
+
+  @override
+  String get thismemberfromgroup => 'Bu üye gruptan çıkarılacaktır.';
 
   @override
   String get title => 'LynraFleet';

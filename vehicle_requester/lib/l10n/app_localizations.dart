@@ -1263,11 +1263,23 @@ abstract class AppLocalizations {
   /// **'SYSTEM PERMISSIONS'**
   String get systemPermissions;
 
+  /// No description provided for @thisadmin.
+  ///
+  /// In en, this message translates to:
+  /// **'This Admin will be removed from group.'**
+  String get thisadmin;
+
   /// No description provided for @thismember.
   ///
   /// In en, this message translates to:
   /// **'This Vehicle will be removed from your paired list.'**
   String get thismember;
+
+  /// No description provided for @thismemberfromgroup.
+  ///
+  /// In en, this message translates to:
+  /// **'This Member will be removed from group.'**
+  String get thismemberfromgroup;
 
   /// No description provided for @title.
   ///
