@@ -7,6 +7,7 @@ import '../theme/app_fonts.dart';
 import 'app_card.dart';
 import '../../l10n/app_localizations.dart';
 import '../../utils/log.dart';
+import 'dialogs/app_confirm_dialog.dart';
 
 class LocatorListCard extends StatelessWidget {
   final String groupId;

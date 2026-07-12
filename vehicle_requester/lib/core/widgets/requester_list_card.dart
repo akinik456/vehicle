@@ -7,14 +7,17 @@ import 'app_card.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/identity_service.dart';
 import '../../utils/log.dart';
+import 'dialogs/app_confirm_dialog.dart';
 
 
 class RequesterListCard extends StatelessWidget {
   final String groupId;
-
+	final bool isMaster;
+	
   const RequesterListCard({
     super.key,
     required this.groupId,
+		required this.isMaster,
   });
 
   @override
@@ -121,12 +124,6 @@ class RequesterListCard extends StatelessWidget {
               const SizedBox(width: 6),
 
               Expanded(
-                /*child: Text(
-                  '$name - $code',
-                  style: AppFonts.body.copyWith(
-                    height: 1.0,
-                  ),
-                ),*/
 								
 								child: RichText(
 									overflow: TextOverflow.ellipsis,
@@ -161,9 +158,19 @@ class RequesterListCard extends StatelessWidget {
                     height: 1.0,
                   ),
                 )
-              else
+              else if (isMaster)
                 TextButton.icon(
                   onPressed: () async {
+										final result = await AppConfirmDialog.show(
+												context: context,
+												title: l10n.removeFromGroup,
+												message: l10n.thisadmin,
+												confirmText: l10n.remove,
+												cancelText: l10n.cancel,
+												confirmColor: AppColors.danger,
+											);
+											if (result != true) return;
+																	
                     final groupRef = FirebaseFirestore.instance
                         .collection('groups')
                         .doc(groupId);
