@@ -229,6 +229,7 @@ class _LocatorCurrentLocationCardState
 						child: Row(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: [
+							if (widget.geoInside) ...[
 								Padding(
 									padding: const EdgeInsets.only(top: 5),
 									child: Icon(
@@ -239,7 +240,7 @@ class _LocatorCurrentLocationCardState
 										color: AppColors.textSecondary,
 									),
 								),
-
+								],
 								const SizedBox(width: 6),
 
 								Expanded(
