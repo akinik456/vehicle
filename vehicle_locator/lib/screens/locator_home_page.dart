@@ -896,6 +896,14 @@ Widget _pairedRequesterCard() {
 															);
 
 															await _startLocatorHome();
+
+															if (!mounted) return;
+
+															setState(() {
+																_pairedRequesterStream =
+																		_watchPairedRequesterData().asBroadcastStream();
+															});
+
 															await SmartPresenceScheduler.boostAndUpdateNow(
 																reason: 'pairing_approved',
 															);

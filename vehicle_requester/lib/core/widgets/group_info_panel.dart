@@ -51,7 +51,8 @@ class GroupInfoPanel  extends StatelessWidget {
     final newName = await AppInputDialog.show(
 			context: context,
 			title: l10n.groupName,
-			hintText: l10n.groupName,
+			initialText: currentGroupName,
+			hintText: currentGroupName,
 			confirmText: l10n.sva,
 			cancelText: l10n.cancel,
 			maxLength: 20,
