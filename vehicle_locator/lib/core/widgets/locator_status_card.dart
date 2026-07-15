@@ -305,7 +305,7 @@ class _LocatorCurrentLocationCardState
           const SizedBox(height: 12),
 
           Align(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.centerLeft,
             child: _MiniAction(
               icon: Icons.map_rounded,
               label: l10n.mapbutton,
