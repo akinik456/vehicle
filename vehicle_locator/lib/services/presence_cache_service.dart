@@ -16,6 +16,9 @@ class PresenceCacheService {
 
   static const String _gpsEnabledKey =
       'presence_gps_enabled';
+			
+	static const String _speedKey =
+      'speed';		
 
   static const String _geoInsideKey =
       'presence_geo_inside';
@@ -72,6 +75,15 @@ class PresenceCacheService {
       await prefs.setBool(
         _gpsEnabledKey,
         gpsEnabled,
+      );
+    }
+		
+		final speed = data['speed'];
+
+    if (speed != null) {
+      await prefs.setString(
+        _speedKey,
+        speed.toString(),
       );
     }
 
@@ -162,6 +174,9 @@ class PresenceCacheService {
       'gpsEnabled':
           prefs.getBool(_gpsEnabledKey) ??
               false,
+			'speed':
+          prefs.getString(_speedKey) ??
+              '',		
       'geoInside':
           prefs.getBool(_geoInsideKey) ??
               false,
@@ -199,6 +214,7 @@ class PresenceCacheService {
     await prefs.remove(_lngKey);
     await prefs.remove(_statusKey);
     await prefs.remove(_gpsEnabledKey);
+		await prefs.remove(_speedKey);
     await prefs.remove(_geoInsideKey);
     await prefs.remove(_geoPlaceNameKey);
     await prefs.remove(

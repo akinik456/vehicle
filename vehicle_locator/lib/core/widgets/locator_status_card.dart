@@ -14,6 +14,7 @@ class LocatorCurrentLocationCard extends StatefulWidget {
     super.key,
     required this.status,
     required this.gpsEnabled,
+		required this.speed,
     required this.geoInside,
     required this.placeName,
     required this.stationarySince,
@@ -24,7 +25,7 @@ class LocatorCurrentLocationCard extends StatefulWidget {
 
   final String status;
   final bool gpsEnabled;
-
+	final String speed;
   final bool geoInside;
   final String placeName;
   final String addressText;
@@ -173,11 +174,33 @@ class _LocatorCurrentLocationCardState
       context,
       widget.offlineSince,
     );
+		
+		final speed = 
+		(double.tryParse(widget.speed) ?? 0).round();
+
+		final speedColor =
+				speed < 90
+						? AppColors.accent
+						: speed < 120
+								? AppColors.warning
+								: AppColors.danger;
 
     return AppCard(
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+			Row(
+				mainAxisAlignment: MainAxisAlignment.center,
+				children: [
+					Text(
+						"${l10n.speed}: $speed kmh",
+						style: AppFonts.caption.copyWith(
+							color: speedColor,
+							fontSize: 48,
+						),
+					),
+				],
+			),
       Row(
         children: [
           Icon(
@@ -193,7 +216,8 @@ class _LocatorCurrentLocationCardState
               fontWeight: FontWeight.w700,
             ),
           ),
-
+					const SizedBox(width: 44),
+					
           const Spacer(),
 
           FutureBuilder<bool>(

@@ -290,6 +290,7 @@ Log.d(
 			'status': 'online',
 			'battery': batteryLevel,
 			'gpsEnabled': gpsEnabled,
+			'speed': speedKmh,
 		});		
 
     _lastBatteryLevel = batteryLevel;
@@ -325,6 +326,7 @@ Log.d(
 			'status': 'online',
 			'battery': batteryLevel,
 			'gpsEnabled': gpsEnabled,
+			'speed': speedKmh,
 		});
 
     _lastBatteryLevel = batteryLevel;
@@ -369,6 +371,7 @@ Log.d(
 				'status': 'online',
 				'battery': batteryLevel,
 				'gpsEnabled': gpsEnabled,
+				'speed': speedKmh,
 			});
 
       _lastBatteryLevel = batteryLevel;
@@ -402,6 +405,7 @@ Log.d(
 		'status': 'online',
 		'battery': batteryLevel,
 		'gpsEnabled': gpsEnabled,
+		'speed': speedKmh,
 		'lat': position.latitude,
 		'lng': position.longitude,
 		...placeData,

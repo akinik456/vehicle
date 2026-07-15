@@ -1048,6 +1048,9 @@ Widget _currentLocationCard() {
 
   final gpsEnabled =
       _cachedPresence['gpsEnabled'] ?? false;
+			
+	final speed =
+      _cachedPresence['speed'] ?? '';
 
   final geoInside =
       _cachedPresence['geoInside'] == true;
@@ -1090,6 +1093,7 @@ Widget _currentLocationCard() {
       LocatorCurrentLocationCard(
         status: status,
         gpsEnabled: gpsEnabled,
+				speed: speed,
         geoInside: geoInside,
         placeName: placeName,
         stationarySince: stationarySince,
@@ -1283,9 +1287,9 @@ final l10n = AppLocalizations.of(context)!;
 													const SizedBox(height: 12),
 													_buildPairingArea(),
 													const SizedBox(height: 12),
-													_activeWatchersCard(),
-													const SizedBox(height: 12),
 													_currentLocationCard(),
+													const SizedBox(height: 12),
+													_activeWatchersCard(),
 												],
 											),
 										),
