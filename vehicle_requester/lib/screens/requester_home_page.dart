@@ -1551,7 +1551,7 @@ Widget _buildGroupHome({
 																									locator['geoPlaceDistanceMeters'] as int?;
 																							final placeName =
 																									geoInside && geoPlaceName.isNotEmpty
-																											? geoPlaceDistanceMeters != null
+																											? geoPlaceDistanceMeters != null && geoPlaceDistanceMeters >= 20
 																													? '${geoPlaceName.toUpperCase()} • ${geoPlaceDistanceMeters} m'
 																													: geoPlaceName.toUpperCase()
 																											: '';				

@@ -1079,7 +1079,7 @@ Widget _currentLocationCard() {
 
   final placeName =
       geoInside && geoPlaceName.isNotEmpty
-          ? geoPlaceDistance != null
+          ? geoPlaceDistance != null && geoPlaceDistance >= 20
               ? '${geoPlaceName.toUpperCase()} • $geoPlaceDistance m'
               : geoPlaceName.toUpperCase()
           : '';
