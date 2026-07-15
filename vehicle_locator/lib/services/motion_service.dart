@@ -146,4 +146,13 @@ class MotionService {
     _sub?.cancel();
     _sub = null;
   }
+	
+	static bool wasRecentlyMoving({
+		int withinSeconds = 20,
+	}) {
+		return DateTime.now()
+						.difference(_lastMotion)
+						.inSeconds <
+				withinSeconds;
+	}	
 }
