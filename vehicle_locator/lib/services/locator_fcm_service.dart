@@ -5,6 +5,9 @@ import 'identity_service.dart';
 import 'smart_presence_scheduler.dart';
 import 'active_watcher_service.dart';
 import '../utils/log.dart';
+import '../utils/time_helper.dart';
+import 'notification_service.dart';
+
 
 class FCMService {
   FCMService._();
@@ -113,6 +116,11 @@ static int _initAttempt = 0;
 					"BEACON FCM => ACTIVE WATCHERS updated",
 				);
 				break;
+				
+			default:
+				Log.d(
+					"BEACON FCM => unknown foreground type => $type",
+				);
 		}
 	});
 	

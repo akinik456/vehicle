@@ -29,6 +29,7 @@ import 'screens/requester_home_page.dart';
 import 'services/identity_service.dart';
 import 'services/group_service.dart';
 import 'services/notification_service.dart';
+import 'utils/time_helper.dart';
 
 String _localizedAlertType(String alertType, String langCode) {
   switch (langCode) {
@@ -106,16 +107,32 @@ Future<void> firebaseMessagingBackgroundHandler(
 
   final locatorName = data['locatorName'] ?? 'Member';
   final alertType = data['alertType'] ?? '';
+	
+	final createdAtMillis = int.tryParse(
+		data['createdAt'] ?? '',
+	);
 
+	final timeText = TimeHelper.formatDateTime(
+		createdAtMillis,
+	);
+	
 	final placeName =
     (data['placeName'] ?? '').toString().trim();
-	final body =
-    (alertType == 'place_enter' ||
-     alertType == 'place_exit') &&
-    placeName.isNotEmpty
-        ? '$locatorName • ${placeName.toUpperCase()}: ${_localizedAlertType(alertType, langCode)}'
-        : '$locatorName: ${_localizedAlertType(alertType, langCode)}';
-  
+		
+	final alertText =
+			(alertType == 'place_enter' ||
+			 alertType == 'place_exit') &&
+			placeName.isNotEmpty
+					? '$locatorName • ${placeName.toUpperCase()}: '
+						'${_localizedAlertType(alertType, langCode)}'
+					: '$locatorName: '
+						'${_localizedAlertType(alertType, langCode)}';
+
+	final body = timeText.isNotEmpty
+			? '$alertText\n$timeText'
+			: alertText;  
+		
+		
 		await NotificationService.showAlert(
 		title: _localizedAlertTitle(langCode),
 		body: body,

@@ -1,0 +1,171 @@
+Brom araç donanımına bağlanmadan, sadece sürücünün telefonu ile yapabileceğimiz şeyler yine bayağı güçlü. Ama ürünü doğru konumlandırmak lazım:
+
+Araçtan telemetri alan sistem değil; telefon tabanlı filo konum, sürüş ve operasyon takip sistemi.
+
+LynraFamily’den farklılaşacak ana özellikler bence şunlar:
+
+Canlı filo ekranı
+
+Tek kişiyi değil, tüm araçları aynı haritada gösteririz:
+
+Plaka, sürücü, hız
+Hareket ediyor / duruyor
+Son görülme
+GPS ve telefon pil durumu
+Son adres
+Kontak bilgisi yerine “sürüş aktif/pasif”
+Otomatik sürüş algılama
+
+Telefon hareketi ve GPS hızından sürüş oturumu çıkarabiliriz:
+
+Araç hareket etti → yolculuk başladı
+Uzun süre durdu → yolculuk bitti
+
+Her yolculuk için:
+
+Başlangıç ve bitiş zamanı
+Başlangıç ve bitiş adresi
+Mesafe
+Süre
+Ortalama hız
+Maksimum hız
+Bekleme süresi
+İzlenen rota
+Hız ihlalleri
+
+Firma genel limit belirler:
+
+Şehir içi limit: 50
+Firma limiti: 90
+
+Aşılırsa:
+
+Anlık uyarı
+İhlal zamanı ve konumu
+Kaç saniye sürdüğü
+Ulaşılan maksimum hız
+Sürücü bazlı ihlal raporu
+
+Burada yolun gerçek hız limitini donanım olmadan kesin bilemeyiz; ilk sürümde firma tarafından belirlenen sabit limit daha güvenilir olur.
+
+Duraklama ve rölanti benzeri analiz
+
+Motorun çalıştığını bilemeyiz; dolayısıyla gerçek “rölanti” diyemeyiz. Ama şunu söyleyebiliriz:
+
+Araç aynı noktada ne kadar kaldı
+Teslimat noktasında bekleme süresi
+Mesai içinde uzun duraklama
+Plan dışı duruş
+
+Ürün dilinde de “rölanti” değil, bekleme/duraklama demek gerekir.
+
+Bölge ve rota kontrolü
+
+Geofence’i işletme mantığına taşırız:
+
+Depoya giriş/çıkış
+Müşteri noktasına varış
+Yasak bölgeye giriş
+Mesai alanı dışına çıkış
+Belirlenen rotadan uzaklaşma
+Şube ziyaret süresi
+Mesai sistemi
+
+Sürücü vardiyayı başlatıp bitirir veya otomatik algılanır:
+
+Mesaiye başlama
+Mesaiyi bitirme
+Günlük sürüş süresi
+Fazla mesai
+Mesai dışı araç hareketi
+Geç başlama
+Görev ve teslimat
+
+Web panelden sürücüye görev atanabilir:
+
+09:00 – Depodan çık
+10:30 – Müşteri A
+12:00 – Müşteri B
+
+Sürücü uygulamasında:
+
+Görevi kabul et
+Yola çıktım
+Vardım
+Teslim edildi
+Not veya fotoğraf ekle
+
+Bu özellik bizi basit araç takip uygulamasından çıkarıp operasyon ürününe yaklaştırır.
+
+Sürüş davranışı
+
+Telefon sensörlerinden yaklaşık olarak:
+
+Ani hızlanma
+Sert fren
+Sert dönüş
+Telefon kullanımı ihtimali
+Uzun kesintisiz sürüş
+
+çıkarılabilir. Ama bunları “kesin ihlal” değil, sürüş olayı / risk göstergesi şeklinde sunmak gerekir. Telefonun araç içinde sabitlenme biçimi sonucu etkiler.
+
+Telefon ve uygulama güvenilirliği
+
+Donanım olmadığı için bunu özellikle güçlü yapmalıyız:
+
+GPS kapatıldı
+Konum izni kaldırıldı
+Telefon kapandı/offline oldu
+Pil kritik seviyede
+Uygulama arka planda durduruldu
+Uzun süredir konum alınamıyor
+Sahte konum şüphesi
+Sürücü uygulamadan çıktı
+
+Firma sahibi “araç görünmüyor” yerine neden görünmediğini bilmeli.
+
+Raporlar
+
+Web tarafını değerli yapan bölüm burası:
+
+Günlük araç özeti
+Toplam mesafe
+Sürüş süresi
+Duraklama süresi
+Hız ihlalleri
+İlk hareket / son hareket
+Ziyaret edilen noktalar
+Sürücü ve araç karşılaştırması
+CSV/PDF dışa aktarma
+Yapamayacağımız veya iddia etmememiz gerekenler
+
+Araç donanımı olmadan şunları güvenilir biçimde bilemeyiz:
+
+Yakıt seviyesi ve tüketimi
+Kontak açık/kapalı
+Motor devri
+Arıza kodları
+Kilometre sayacı
+Motor sıcaklığı
+Kapı açık/kapalı
+Gerçek rölanti süresi
+Akü voltajı
+
+Bunları sunuyormuş gibi davranmamalıyız. Mesafe ve tüketim için ancak tahmin yapılabilir.
+
+Bence ürünün güçlü cümlesi şu olur:
+
+Ek donanım ve montaj gerektirmeden, sürücü telefonları üzerinden canlı filo ve saha operasyon takibi.
+
+Family’den temel farkı “nerede?” sorusuna ek olarak şunları cevaplaması olacak:
+
+Kim kullanıyor?
+Ne zaman başladı?
+Nereye gitti?
+Kaç kilometre yaptı?
+Ne kadar bekledi?
+Hız sınırını aştı mı?
+Görevini tamamladı mı?
+Takibin kesilme nedeni ne?
+
+İlk sürümde ben canlı harita, sürüş geçmişi, duraklamalar, firma hız limiti, geofence, mesai dışı hareket ve temel web raporlarına odaklanırdım. Bu paket tek başına satılabilir bir ürün olur brom.

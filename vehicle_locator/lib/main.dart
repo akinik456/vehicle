@@ -28,6 +28,8 @@ import 'services/presence_service.dart';
 import 'services/notification_service.dart';
 import 'services/native_presence_service.dart';
 import 'utils/log.dart';
+import 'utils/time_helper.dart';
+
 
 	@pragma('vm:entry-point')
 	Future<void> firebaseMessagingBackgroundHandler(
@@ -52,23 +54,6 @@ import 'utils/log.dart';
 
 				break;
 				
-			case 'call_me':
-				Log.d(
-					"BEACON FCM BG => CALL ME received",
-				);
-
-				if (message.notification == null) {
-					await NotificationService.showCallMe(
-						requesterName:
-								message.data['requesterName'] ?? 'Requester',
-						requesterCode:
-								message.data['requesterCode'] ?? '',
-					);
-				}
-
-				break;
-			
-
 			default:
 				Log.d(
 					"BEACON FCM BG => unknown type => $type",
