@@ -311,8 +311,8 @@ static Future<void> ensureLocatorDefaultSettings({
     'gpsOffAlert': true,
     'batteryLowAlert': true,
     'batteryLowLevel': 20,
-    'geofenceAlert': false,
-		'movementAlert': false,
+    'geofenceAlert': true,
+		'movementAlert': true,
     'createdAt': FieldValue.serverTimestamp(),
     'updatedAt': FieldValue.serverTimestamp(),
   }, SetOptions(merge: true));

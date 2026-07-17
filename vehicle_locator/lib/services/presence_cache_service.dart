@@ -10,6 +10,9 @@ class PresenceCacheService {
 
   static const String _lngKey =
       'presence_lng';
+			
+	static const String _addressKey =
+      'presence_address';		
 
   static const String _statusKey =
       'presence_status';
@@ -56,6 +59,15 @@ class PresenceCacheService {
       await prefs.setDouble(
         _lngKey,
         lng.toDouble(),
+      );
+    }
+		
+		final address = data['address'];
+
+    if (address != null) {
+      await prefs.setString(
+        _addressKey,
+        address.toString(),
       );
     }
 
@@ -168,6 +180,10 @@ class PresenceCacheService {
     final data = <String, dynamic>{
       'lat': prefs.getDouble(_latKey),
       'lng': prefs.getDouble(_lngKey),
+			
+			'address':
+          prefs.getString(_addressKey) ??
+              '',
       'status':
           prefs.getString(_statusKey) ??
               'offline',
@@ -212,6 +228,7 @@ class PresenceCacheService {
 
     await prefs.remove(_latKey);
     await prefs.remove(_lngKey);
+		await prefs.remove(_addressKey);
     await prefs.remove(_statusKey);
     await prefs.remove(_gpsEnabledKey);
 		await prefs.remove(_speedKey);

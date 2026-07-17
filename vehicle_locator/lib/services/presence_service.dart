@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,6 +16,8 @@ import 'smart_presence_scheduler.dart';
 import 'presence_cache_service.dart';
 import 'motion_service.dart';
 import 'gps_analysis_service.dart';
+import '../utils/address_helper.dart';
+
 
 class PresenceService {
   PresenceService._();
@@ -27,7 +33,7 @@ class PresenceService {
 	
 	static double? lastSpeedKmh;
 	static DateTime? _lastAcceptedLocationTime;
-
+	static String _currentAddress = '';
 
 
 	static Future<void> updateOnline({
@@ -386,6 +392,12 @@ Log.d(
 
     return;
   }
+	
+	_currentAddress =
+			await AddressHelper.getAddressFromLatLng(
+		lat: position.latitude,
+		lng: position.longitude,
+	);
 
   final Map<String, dynamic> updateData = {
     'status': 'online',
@@ -394,12 +406,14 @@ Log.d(
     'gpsEnabled': gpsEnabled,
     'lat': position.latitude,
     'lng': position.longitude,
+		'address': _currentAddress,
     'accuracy': position.accuracy,
     'movedSinceLastUpdateMeters':
         movedMeters?.round(),
     'updateCount': ServerValue.increment(1),
     ...placeData,
-  };
+  };	
+	
 	
 	final Map<String, dynamic> cacheData = {
 		'status': 'online',
@@ -408,6 +422,7 @@ Log.d(
 		'speed': speedKmh,
 		'lat': position.latitude,
 		'lng': position.longitude,
+		'address': _currentAddress,
 		...placeData,
 		'stationarySince': updateData['stationarySince'],
 		'offlineSince': null,

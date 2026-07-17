@@ -24,6 +24,7 @@ class MovementAlertService {
 
   static Position? _stationaryReference;
   static Position? _lastPosition;
+	static Position? _movementCandidate;
 
   static DateTime? _lastMeaningfulMoveAt;
 
@@ -32,42 +33,6 @@ class MovementAlertService {
     required String reason,
   }) async {
 	Log.d("MovementAlertService.checkNow");
-	
-/*	// DEBUG ONLY
-final groupId = await IdentityService.getGroupId();
-final locatorId = await IdentityService.getLocatorId();
-
-if (groupId != null && locatorId != null) {
-  final snap = await FirebaseDatabase.instance
-      .ref("presence/groups/$groupId/locators/$locatorId")
-      .get();
-
-  final data = snap.value;
-
-  if (data is Map) {
-    final lat = data["debugLat"];
-    final lng = data["debugLng"];
-
-    if (lat is num && lng is num) {
-	Log.d("latitude:$lat");
-	Log.d("longitude:$lng");
-      position = Position(
-        latitude: lat.toDouble(),
-        longitude: lng.toDouble(),
-        timestamp: DateTime.now(),
-        accuracy: position.accuracy,
-        altitude: position.altitude,
-        heading: position.heading,
-        speed: position.speed,
-        speedAccuracy: position.speedAccuracy,
-        altitudeAccuracy: position.altitudeAccuracy,
-        headingAccuracy: position.headingAccuracy,
-      );
-
-      Log.d("BEACON MOVEMENT ALERT => DEBUG POSITION");
-    }
-  }
-}*/
 	
     final now = DateTime.now();
 
@@ -120,22 +85,68 @@ if (groupId != null && locatorId != null) {
       );
 
       if (movedFromReference < _movementStartMeters) {
-        return;
-      }
-			
-			if(!isReliableMove ) return;
-			
-      await AlertService.sendMovementAlert(
-        movedMeters: movedFromReference,
-        detectedWhileOffline: false,
-      );
+				_movementCandidate = null;
+				return;
+			}
 
-      _state = _MovementState.moving;
-      _lastMeaningfulMoveAt = now;
-      _lastPosition = position;
+			if (!isReliableMove) {
+				_movementCandidate = null;
+				return;
+			}
 
-      Log.d("BEACON MOVEMENT ALERT => state=moving alert sent");
-      return;
+			final candidate = _movementCandidate;
+
+			if (candidate == null) {
+				_movementCandidate = position;
+
+				Log.d(
+					"BEACON MOVEMENT ALERT => "
+					"movement candidate set "
+					"movedFromRef=${movedFromReference.toStringAsFixed(1)}m",
+				);
+
+				return;
+			}
+
+			final distanceFromCandidate = Geolocator.distanceBetween(
+				candidate.latitude,
+				candidate.longitude,
+				position.latitude,
+				position.longitude,
+			);
+
+			final candidateConfirmed =
+					distanceFromCandidate <= 25 &&
+					movedFromReference >= _movementStartMeters;
+
+			if (!candidateConfirmed) {
+				_movementCandidate = position;
+
+				Log.d(
+					"BEACON MOVEMENT ALERT => "
+					"movement candidate replaced "
+					"distanceFromCandidate=${distanceFromCandidate.toStringAsFixed(1)}m",
+				);
+
+				return;
+			}
+
+			await AlertService.sendMovementAlert(
+				movedMeters: movedFromReference,
+				detectedWhileOffline: false,
+			);
+
+			_movementCandidate = null;
+			_state = _MovementState.moving;
+			_lastMeaningfulMoveAt = now;
+			_lastPosition = position;
+
+			Log.d(
+				"BEACON MOVEMENT ALERT => "
+				"state=moving confirmed alert sent",
+			);
+
+			return;
     }
 
     if (_state == _MovementState.moving) {

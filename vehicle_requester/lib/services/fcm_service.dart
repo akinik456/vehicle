@@ -7,7 +7,6 @@ import 'notification_service.dart';
 import '../utils/log.dart';
 import '../utils/time_helper.dart';
 
-
 class FCMService {
   FCMService._();
 
@@ -95,14 +94,34 @@ static Future<void> initialize() async {
   }
 // ================= FOREGROUND LISTENER =================
 
-		FirebaseMessaging.onMessage.listen((message) {
+		FirebaseMessaging.onMessage.listen((message) async {
 			Log.d("BEACON FCM => FOREGROUND MESSAGE RECEIVED");
-
 			Log.d("BEACON FCM => data => ${message.data}");
 
-			Log.d(
-				"BEACON FCM => notification => "
-				"${message.notification?.title}",
+			final data = message.data;
+			final type = data['type'];
+
+			if (type != 'call_me') return;
+
+			final createdAtMillis = int.tryParse(
+				data['createdAt'] ?? '',
+			);
+
+			final timeText = TimeHelper.formatDateTime(
+				createdAtMillis,
+			);
+
+			final title = data['title'] ?? 'Call Me';
+			final messageBody =
+					data['body'] ?? 'Someone wants you to call.';
+
+			final body = timeText.isNotEmpty
+					? '$messageBody\n$timeText'
+					: messageBody;
+
+			await NotificationService.showCallMe(
+				title: title,
+				body: body,
 			);
 		});
 

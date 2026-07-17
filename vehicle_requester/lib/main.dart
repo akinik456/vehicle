@@ -99,6 +99,8 @@ Future<void> firebaseMessagingBackgroundHandler(
   await NotificationService.initialize();
 
   final data = message.data;
+	
+	if (type != 'alert') return;
 
   if (data['type'] != 'alert') return;
 

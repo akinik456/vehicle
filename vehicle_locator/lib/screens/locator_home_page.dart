@@ -193,11 +193,11 @@ Future<void> _startLocatorHome() async {
 				lng != null &&
 				(lat != _lastUiLat || lng != _lastUiLng)) {
 
-			_currentAddress =
-					await AddressHelper.getAddressFromLatLng(
+			_currentAddress = data['address'];
+					/*await AddressHelper.getAddressFromLatLng(
 				lat: lat,
 				lng: lng,
-			);
+			);*/
 
 			_lastUiLat = lat;
 			_lastUiLng = lng;

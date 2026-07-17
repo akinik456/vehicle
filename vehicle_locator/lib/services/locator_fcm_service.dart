@@ -101,7 +101,8 @@ static int _initAttempt = 0;
 		Log.d("BEACON FCM => foreground message");
 		Log.d("BEACON FCM => data => ${message.data}");
 
-		final type = message.data['type'];
+		final data = message.data;
+		final type = data['type'];
 
 		switch (type) {
 
