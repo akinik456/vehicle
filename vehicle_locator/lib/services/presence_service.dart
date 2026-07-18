@@ -269,7 +269,7 @@ Log.d(
 
 	// Hareket yok, pil/GPS de değişmedi:
   // ne alert kontrolüne ne de RTDB write'a gerek var.
-  if (shouldSkipSmallMove &&
+  /*if (shouldSkipSmallMove &&
       !deviceStatusChanged) {
     Log.d(
       "BEACON PRESENCE => "
@@ -278,7 +278,7 @@ Log.d(
       "moved=${movedMeters?.toStringAsFixed(1)}m",
     );
     return;
-  }//?*?
+  }*///?*?
 
   // Hareket yok ama pil veya GPS durumu değişti:
   // yalnızca status alanlarını güncelle.

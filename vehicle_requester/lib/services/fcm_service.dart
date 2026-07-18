@@ -115,14 +115,6 @@ static Future<void> initialize() async {
 			final messageBody =
 					data['body'] ?? 'Someone wants you to call.';
 
-			final body = timeText.isNotEmpty
-					? '$messageBody\n$timeText'
-					: messageBody;
-
-			await NotificationService.showCallMe(
-				title: title,
-				body: body,
-			);
 		});
 
 		// ================= APP OPENED FROM NOTIFICATION =================
