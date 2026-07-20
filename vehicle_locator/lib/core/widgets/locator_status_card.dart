@@ -20,6 +20,7 @@ class LocatorCurrentLocationCard extends StatefulWidget {
     required this.stationarySince,
     required this.offlineSince,
     required this.addressText,
+		required this.onRefreshLocation,
     required this.onOpenMaps,
   });
 
@@ -32,7 +33,8 @@ class LocatorCurrentLocationCard extends StatefulWidget {
 
   final int? stationarySince;
   final int? offlineSince;
-
+	
+	final VoidCallback onRefreshLocation;
   final VoidCallback onOpenMaps;
 
   @override
@@ -327,16 +329,25 @@ class _LocatorCurrentLocationCardState
           ],
 
           const SizedBox(height: 12),
+					Row(
+						children: [
+							_MiniAction(
+								icon: Icons.my_location,
+								label: l10n.refreshMyLocation,
+								color: AppColors.primary,
+								onTap: widget.onRefreshLocation,
+							),
 
-          Align(
-            alignment: Alignment.centerLeft,
-            child: _MiniAction(
-              icon: Icons.map_rounded,
-              label: l10n.mapbutton,
-              color: AppColors.primary,
-              onTap: widget.onOpenMaps,
-            ),
-          ),
+							const Spacer(),
+
+							_MiniAction(
+								icon: Icons.map_rounded,
+								label: l10n.mapbutton,
+								color: AppColors.primary,
+								onTap: widget.onOpenMaps,
+							),
+						],
+					),
         ],
       ),
     );

@@ -284,6 +284,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get lifeTimeAccess => 'Ömür boyu erişim';
 
   @override
+  String get liveTrack => 'Canlı Takip';
+
+  @override
   String get locationAccess => 'Konum Erişimi';
 
   @override
@@ -523,6 +526,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get receiveMovement => 'Hareket uyarılarını al';
+
+  @override
+  String get refreshMyLocation => 'Konumu Güncelle';
 
   @override
   String get reject => 'Reddet';

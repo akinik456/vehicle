@@ -16,6 +16,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_fonts.dart';
@@ -209,6 +210,34 @@ Future<void> _startLocatorHome() async {
 			_cachedPresence = data;
 		});
 
+	}
+	
+	Future<void> _refreshMyLocation() async {
+		try {
+			final position = await Geolocator.getCurrentPosition(
+				desiredAccuracy: LocationAccuracy.high,
+			);
+
+			final address =
+					await AddressHelper.getAddressFromLatLng(
+				lat: position.latitude,
+				lng: position.longitude,
+			);
+
+			if (!mounted) return;
+
+			setState(() {
+				_currentAddress = address;
+			});
+			Log.d(
+				"LOCATOR HOME => refresh my location success",
+			);
+		} catch (e) {
+			Log.e(
+				"LOCATOR HOME => refresh my location failed"
+				"error: $e",
+			);
+		}
 	}
 	
 	Future<void> _loadTheme() async {
@@ -1101,6 +1130,7 @@ Widget _currentLocationCard() {
         addressText: _currentAddress.isEmpty
             ? l10n.addressNotAvailable
             : _currentAddress,
+				onRefreshLocation: _refreshMyLocation,
         onOpenMaps: () async {
           await MapHelper.openInMaps(
             lat: lat!,

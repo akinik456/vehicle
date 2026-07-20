@@ -284,6 +284,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get lifeTimeAccess => 'Lifetime access';
 
   @override
+  String get liveTrack => 'Live Track';
+
+  @override
   String get locationAccess => 'Standortzugriff';
 
   @override
@@ -523,6 +526,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get receiveMovement => 'Receive movement alerts';
+
+  @override
+  String get refreshMyLocation => 'Refresh My Location';
 
   @override
   String get reject => 'Ablehnen';
