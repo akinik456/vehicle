@@ -165,6 +165,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createOrJoin => 'Create a new fleet or join an existing fleet';
 
   @override
+  String get currentLocation => 'Current Location';
+
+  @override
   String daysAgo(Object count) {
     return '$count days ago';
   }
@@ -279,6 +282,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lifeTimeAccess => 'Lifetime access';
+
+  @override
+  String get liveTrack => 'Live Track';
 
   @override
   String get locationAccess => 'Location Access';

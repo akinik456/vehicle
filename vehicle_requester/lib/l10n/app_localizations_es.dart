@@ -165,6 +165,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get createOrJoin => 'Crear un nuevo Flota o unirse a un Flota existente';
 
   @override
+  String get currentLocation => 'Ubicación actual';
+
+  @override
   String daysAgo(Object count) {
     return 'hace $count días';
   }
@@ -279,6 +282,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get lifeTimeAccess => 'Acceso de por vida';
+
+  @override
+  String get liveTrack => 'Seguimiento en vivo';
 
   @override
   String get locationAccess => 'Acceso a ubicación';

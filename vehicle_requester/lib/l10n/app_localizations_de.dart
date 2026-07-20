@@ -165,6 +165,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get createOrJoin => 'Neue Gruppe erstellen oder bestehender Gruppe beitreten';
 
   @override
+  String get currentLocation => 'Current Location';
+
+  @override
   String daysAgo(Object count) {
     return 'vor $count Tagen';
   }
@@ -279,6 +282,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get lifeTimeAccess => 'Lifetime access';
+
+  @override
+  String get liveTrack => 'Live Track';
 
   @override
   String get locationAccess => 'Standortzugriff';

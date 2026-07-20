@@ -53,6 +53,8 @@ import '../core/widgets/dialogs/app_input_dialog.dart';
 import '../services/theme_service.dart';
 import '../services/rtdb_auth_mapping_service.dart';
 import '../utils/log.dart';
+import 'live_tracking_map_page.dart';
+
 
 class RequesterHomePage extends StatefulWidget {
   const RequesterHomePage({super.key});
@@ -1533,6 +1535,12 @@ Widget _buildGroupHome({
 																							final battery = locator['battery'] ?? 0;
 																							final speed = locator['speedKmh'] ?? 0;
 																							final gpsEnabled = locator['gpsEnabled'] == true;																	
+																							final locatorNames = <String, String>{
+																								for (final item in _locators)
+																									(item['locatorId'] ?? '') as String:
+																											(item['locatorName'] ?? 'Member') as String,
+																							};		
+																							
 																							final stationarySince =
 																							locator['stationarySince'] is int
 																								? locator['stationarySince'] as int
@@ -1558,6 +1566,8 @@ Widget _buildGroupHome({
 																											: '';				
 																							final distanceMeters = LocationHelper.distanceMeters(fromLat: _myLat,fromLng: _myLng,toLat: locator['lat']?.toDouble(),toLng: locator['lng']?.toDouble(),);
 																							final distanceText = distanceMeters == null ? '-' : '${distanceMeters.round()} m';
+																							final lat = locator['lat']?.toDouble();
+																							final lng = locator['lng']?.toDouble();
 																							return LocatorStatusCard(
 																								locatorId: locatorId,
 																								locatorName: locatorName,
@@ -1573,15 +1583,28 @@ Widget _buildGroupHome({
 																								distanceText: distanceText,
 																								speed: speed,
 																								onOpenMaps: () async {
-																									final lat = locator['lat']?.toDouble();
-																									final lng = locator['lng']?.toDouble();
 																									if (lat == null || lng == null) return;
 																									await MapHelper.openInMaps(
 																										lat: lat,
 																										lng: lng,
 																									);
 																								},
-																								
+																								onLiveTrack: () {																									
+																								 Navigator.push(
+																										context,
+																										MaterialPageRoute(
+																											builder: (_) => LiveTrackingMapPage(
+																												groupId: groupId,
+																												locatorId: locatorId,
+																												locatorName: locatorName,
+																												latitude: lat,
+																												longitude: lng,
+																												address: locator['address'] ?? l10n.addressNotAvailable,
+																												locatorNames: locatorNames,
+																											),
+																										),
+																									);
+																								},
 																								onNotificationSettings: () {
 																									 Navigator.push(
 																										context,

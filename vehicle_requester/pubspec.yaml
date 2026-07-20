@@ -1,7 +1,7 @@
 name: vehicle_requester
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+21
+version: 1.0.0+22
 
 environment:
   sdk: ^3.12.0
@@ -32,6 +32,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   geocoding: ^4.0.0
   firebase_auth: ^5.7.0
+  google_maps_flutter: ^2.13.1
   
 dev_dependencies:
   flutter_test:
@@ -49,7 +50,10 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   generate: true
-  
+
+  assets:
+    - assets/images/
+    
 flutter_native_splash:
   color: "#091220"
   image: assets/images/splash_logo.png

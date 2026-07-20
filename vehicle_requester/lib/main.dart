@@ -8,6 +8,11 @@ Date:   Thu Jul 9 00:42:03 2026 +0300
 
 // keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
 // Aa147852
+
+// SHA1: E2:27:9D:BA:30:43:60:D0:5F:34:F2:53:8F:22:6D:52:75:7A:1F:13
+// SHA-256: 1A:2F:74:DB:86:89:A6:84:D7:F3:54:BB:96:77:4F:51:8C:AF:75:2E:2D:02:C1:BB:B8:E4:A7:16:53:0A:A0:F0
+// AIzaSyCkairHqEl6kGkOdR_03sDYct-gmhc_NZM
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

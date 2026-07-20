@@ -399,6 +399,12 @@ abstract class AppLocalizations {
   /// **'Create a new fleet or join an existing fleet'**
   String get createOrJoin;
 
+  /// No description provided for @currentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get currentLocation;
+
   /// No description provided for @daysAgo.
   ///
   /// In en, this message translates to:
@@ -614,6 +620,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lifetime access'**
   String get lifeTimeAccess;
+
+  /// No description provided for @liveTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Track'**
+  String get liveTrack;
 
   /// No description provided for @locationAccess.
   ///

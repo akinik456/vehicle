@@ -165,6 +165,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get createOrJoin => 'Yeni bir filo oluşturun veya mevcut bir filo katılın.';
 
   @override
+  String get currentLocation => 'Mevcut Konum';
+
+  @override
   String daysAgo(Object count) {
     return '$count gün önce';
   }
@@ -279,6 +282,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get lifeTimeAccess => 'Ömür boyu erişim';
+
+  @override
+  String get liveTrack => 'Canlı Takip';
 
   @override
   String get locationAccess => 'Konum Erişimi';
