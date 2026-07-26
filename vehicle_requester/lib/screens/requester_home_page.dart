@@ -70,10 +70,8 @@ class _RequesterHomePageState
 		
 	List<Map<String, dynamic>> _locators = [];
 	final List<StreamSubscription> _subscriptions = [];
-	Map<String, dynamic>? _callMeData;
-	List<Map<String, dynamic>> _pendingCallMeQueue = [];
 	Map<String, dynamic>? _alertData;
-	Map<String, dynamic>? _movementAlertData;
+	List<Map<String, dynamic>> _pendingAlertQueue = [];
 	late Future<Map<String, dynamic>?> _homeDataFuture;
 	
 	String? _groupId;
@@ -542,49 +540,74 @@ static Future<void> cleanupInvalidPairedLocators() async {
 		_subscriptions.add(sub);
 	}
 	
-	void _listenAlerts() async {
-		final groupId = await GroupService.getLocalGroupId();
-		final requesterId = await IdentityService.getRequesterId();
+		void _listenAlerts() async {
+  final groupId = await GroupService.getLocalGroupId();
+  final requesterId = await IdentityService.getRequesterId();
 
-		if (groupId == null || requesterId == null) {
-			return;
-		}
+  if (groupId == null || requesterId == null) {
+    return;
+  }
 
-		final sub = FirebaseFirestore.instance
-				.collection('groups')
-				.doc(groupId)
-				.collection('alerts')
-				.doc(requesterId)
-				.collection('items')
-				.snapshots()
-				.listen((snapshot) {
-			for (final change in snapshot.docChanges) {
-				if (change.type != DocumentChangeType.added) {
-					continue;
-				}
+  final sub = FirebaseFirestore.instance
+      .collection('groups')
+      .doc(groupId)
+      .collection('alerts')
+      .doc(requesterId)
+      .collection('items')
+      .orderBy(
+        'createdAt',
+        descending: false,
+      )
+      .snapshots()
+      .listen((snapshot) {
+    for (final change in snapshot.docChanges) {
+      if (change.type != DocumentChangeType.added) {
+        continue;
+      }
 
-				final data = change.doc.data();
+      final data = change.doc.data();
 
-				if (data == null) continue;
+      if (data == null) continue;
 
-				if (data['status'] != 'pending') {
-					continue;
-				}
-				
-				if (!mounted) return;
-				setState(() {
-					_alertData = {
-						...data,
-						'alertDocId': change.doc.id,
-					};
-				});
+      if (data['status'] != 'pending') {
+        continue;
+      }
 
-				Log.d("BEACON ALERT => ${change.doc.id} => $data");
-			}
-		});
+      final item = {
+        ...data,
+        'alertDocId': change.doc.id,
+      };
 
-		_subscriptions.add(sub);
-	}	
+      if (!mounted) return;
+
+      setState(() {
+        final alreadyExists = _pendingAlertQueue.any(
+          (x) => x['alertDocId'] == item['alertDocId'],
+        );
+
+        if (!alreadyExists) {
+          _pendingAlertQueue.add(item);
+        }
+
+        _pendingAlertQueue.sort((a, b) {
+          final aTime = a['createdAt'] as Timestamp?;
+          final bTime = b['createdAt'] as Timestamp?;
+
+          return (aTime?.millisecondsSinceEpoch ?? 0)
+              .compareTo(
+            bTime?.millisecondsSinceEpoch ?? 0,
+          );
+        });
+
+        _alertData = _pendingAlertQueue.isNotEmpty
+            ? _pendingAlertQueue.last
+            : null;
+      });
+    }
+  });
+
+  _subscriptions.add(sub);
+}
 	
 
   Future<void> _loadGroupCode() async {
@@ -1888,53 +1911,42 @@ Widget build(BuildContext context) {
 																				
 																		),
 																		),
-																	),								
-																	
+																	),						
 																	if (_alertData != null)
 																	AlertOverlay(
 																		data: _alertData!,
 																		onDismiss: () async {
-																			final alertDocId = _alertData!['alertDocId'];
-																			final groupId = _alertData!['groupId'];
-																			final requesterId = _alertData!['targetRequesterId'];
+																			final alertDocId =
+																					_alertData!['alertDocId'];
+
+																			final groupId =
+																					_alertData!['groupId'];
+
+																			final requesterId =
+																					_alertData!['targetRequesterId'];
 
 																			await FirebaseFirestore.instance
-																				.collection('groups')
-																				.doc(groupId)
-																				.collection('alerts')
-																				.doc(requesterId)
-																				.collection('items')
-																				.doc(alertDocId)
-																				.delete();
+																					.collection('groups')
+																					.doc(groupId)
+																					.collection('alerts')
+																					.doc(requesterId)
+																					.collection('items')
+																					.doc(alertDocId)
+																					.delete();
 
 																			if (!mounted) return;
 
 																			setState(() {
-																				_alertData = null;
+																				_pendingAlertQueue.removeWhere(
+																					(x) => x['alertDocId'] == alertDocId,
+																				);
+
+																				_alertData = _pendingAlertQueue.isNotEmpty
+																						? _pendingAlertQueue.last
+																						: null;
 																			});
-																		},		
-																	),	
-																	if (_movementAlertData != null)
-																	AlertOverlay(
-																		data: _movementAlertData!,																		
-																		onDismiss: () async {
-																			final movementalertDocId = _alertData!['movementalertDocId'];
-																			final groupId = _alertData!['groupId'];
-																			final requesterId = _alertData!['targetRequesterId'];
-																			await FirebaseFirestore.instance
-																				.collection('groups')
-																				.doc(groupId)
-																				.collection('alerts')
-																				.doc(requesterId)
-																				.collection('items')
-																				.doc(movementalertDocId)
-																				.delete();
-																			if (!mounted) return;
-																			setState(() {
-																				_alertData = null;
-																			});
-																		},																		
-																	),
+																		},
+																	),																		
 																	if (!_hasFullAccess && _hasGroup)
 																	SubscriptionExpiredOverlay(
 																		isMaster: _isMaster,

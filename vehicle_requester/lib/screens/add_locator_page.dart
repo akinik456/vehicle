@@ -76,8 +76,11 @@ class _AddLocatorPageState extends State<AddLocatorPage> {
 					),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
+      body: SafeArea(
+			child: SingleChildScrollView(
+				padding: const EdgeInsets.all(20),
+				keyboardDismissBehavior:
+						ScrollViewKeyboardDismissBehavior.onDrag,
         child: Column(
           children: [
             AppCard(
@@ -156,7 +159,7 @@ class _AddLocatorPageState extends State<AddLocatorPage> {
               ),
             ),
 
-            const Spacer(),
+            const SizedBox(height: 32),
 
             SizedBox(
               width: double.infinity,
@@ -289,6 +292,7 @@ class _AddLocatorPageState extends State<AddLocatorPage> {
               ),
             ),
           ],
+				),
         ),
       ),
     );

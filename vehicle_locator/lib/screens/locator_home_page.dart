@@ -1155,7 +1155,7 @@ final l10n = AppLocalizations.of(context)!;
 				builder: (context, snapshot) {
  					final l10n = AppLocalizations.of(context)!;
            final locatorId = snapshot.data?['locatorId'] ?? '';
-            final locatorName = snapshot.data?['locatorName'] ?? l10n.member;
+            final locatorName = snapshot.data?['locatorName'] ?? l10n.name;
             final locatorCode = snapshot.data?['locatorCode'] ?? '------';
             final locatorPlate = snapshot.data?['locatorPlate'] ?? '------';
 						final groupId = snapshot.data?['groupId'] ?? '';

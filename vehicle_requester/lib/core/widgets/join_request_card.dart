@@ -170,8 +170,6 @@ class JoinRequestCard extends StatelessWidget {
 															}
 															tx.set(requesterRef, {
 																'requesterCode': joinData['requesterCode'],
-																'requesterName': joinData['requesterName'],
-																'name': joinData['requesterName'],
 																'role': 'requester',
 																'isMaster': false,
 																'active': true,
