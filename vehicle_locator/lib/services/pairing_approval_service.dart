@@ -30,6 +30,21 @@ class PairingApprovalService {
     Log.d("BEACON APPROVE ERROR => invalid request data");
     return 'invalid_request_data';
   }
+	
+	final localGroupId =
+    await IdentityService.getGroupId();
+		
+	if (localGroupId != null &&
+			localGroupId != groupId) {
+		Log.d(
+			"BEACON APPROVE ERROR => "
+			"group mismatch "
+			"local=$localGroupId "
+			"request=$groupId",
+		);
+
+		return 'group_mismatch';
+	}	
 
   final requestRef = _firestore
       .collection('locators')
@@ -82,9 +97,10 @@ class PairingApprovalService {
 
       tx.set(deviceRef, {
         'active': true,
+        'joinedAt': FieldValue.serverTimestamp(),
+				'isEntitled': true,
 				'role': 'locator',
 				'locatorCode': locatorCode,
-        'joinedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
       tx.update(groupRef, {

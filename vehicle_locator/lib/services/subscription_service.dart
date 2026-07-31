@@ -32,17 +32,28 @@ class SubscriptionService {
 		
 		Log.d("hasFullAccess planStatus$planStatus");
 
-    if (purchaseStatus == 'lifetime') {
-      return true;
-    }
-
     if (planStatus == 'trial' &&
         trialEndsAt is Timestamp) {
       return DateTime.now().isBefore(
         trialEndsAt.toDate(),
       );
     }
+		
+		final locatorId =
+				await IdentityService.getLocatorId();
 
-    return false;
-  }
+		if (locatorId == null) {
+			return false;
+		}
+
+
+		final deviceDoc = await _firestore
+				.collection('groups')
+				.doc(groupId)
+				.collection('devices')
+				.doc(locatorId)
+				.get();
+
+		return deviceDoc.data()?['isEntitled'] == true;
+		}
 }
