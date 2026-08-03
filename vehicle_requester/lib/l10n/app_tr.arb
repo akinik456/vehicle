@@ -1,6 +1,7 @@
 {
 "@@locale": 													"tr",
 
+
 "howToAddMember": "Üye nasıl eklenir?",
 "memberSetupStepOne": "Konumu paylaşılacak kişinin telefonuna \"LynraFamily Member\" uygulamasını yükleyin.",
 "memberSetupStepTwo": "Member uygulamasını açın ve Üye Kodunu veya QR kodunu alın.",
