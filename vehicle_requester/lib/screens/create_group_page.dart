@@ -20,7 +20,8 @@ class CreateGroupPage extends StatefulWidget {
 class _CreateGroupPageState extends State<CreateGroupPage> {
   final groupNameCtrl = TextEditingController();
   bool get canConfirm => groupNameCtrl.text.trim().isNotEmpty ;
-
+	bool _isCreating = false;
+	
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
 			  centerTitle: true,
         backgroundColor: AppColors.background,
         surfaceTintColor: AppColors.background,
-				elevation: 0,
+        elevation: 0,
 				iconTheme: IconThemeData(
 					color: AppColors.primary,
 				),
@@ -64,6 +65,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                     controller: groupNameCtrl,
                     label: l10n.groupName,
                     hint: l10n.familyHome,
+										autofocus: true,
 										maxLength: 20,
                   ),
                   const SizedBox(height: 18),
@@ -77,29 +79,46 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
               width: double.infinity,
               height: 58,
               child: ElevatedButton(
-                onPressed: canConfirm 
-									? () async {
-										
-										final _requesterName = await IdentityService.getRequesterName();
-										final _requesterCode = await IdentityService.getRequesterCode();
-										Log.d("_CreateGroupPageState IdentityService.getRequesterName");
+                onPressed: canConfirm && !_isCreating
+								? () async {
+										setState(() {
+											_isCreating = true;
+										});
 
-										
-										final groupId  =await GroupService.createGroup(
-											groupName: groupNameCtrl.text,
-										);
-										
-										await GroupService.setLocalIsMaster(true);
-									
-										if (!context.mounted) return;
+										try {
+											final requesterName =
+													await IdentityService.getRequesterName();
 
-										if (groupId.isNotEmpty) {
-											Navigator.pushReplacement(
-												context,
-												MaterialPageRoute(
-													builder: (_) => RequesterHomePage(),
-												),
+											final requesterCode =
+													await IdentityService.getRequesterCode();
+
+											Log.d(
+												"_CreateGroupPageState "
+												"IdentityService.getRequesterName",
 											);
+
+											final groupId = await GroupService.createGroup(
+												groupName: groupNameCtrl.text,
+											);
+
+											await GroupService.setLocalIsMaster(true);
+
+											if (!context.mounted) return;
+
+											if (groupId.isNotEmpty) {
+												Navigator.pushReplacement(
+													context,
+													MaterialPageRoute(
+														builder: (_) => RequesterHomePage(),
+													),
+												);
+											}
+										} finally {
+											if (mounted) {
+												setState(() {
+													_isCreating = false;
+												});
+											}
 										}
 									}
 								: null,
@@ -132,12 +151,14 @@ class _InputField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final String hint;
+	final bool autofocus;
 	final int? maxLength;
 
   const _InputField({
     required this.controller,
     required this.label,
     required this.hint,
+		this.autofocus = false,
 		this.maxLength,
   });
 
@@ -145,12 +166,13 @@ class _InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+			autofocus: autofocus,
 			maxLength: maxLength,
       style: AppFonts.body,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        labelStyle: AppFonts.caption,
+				labelStyle: AppFonts.caption,
         hintStyle: AppFonts.caption,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: AppColors.border),

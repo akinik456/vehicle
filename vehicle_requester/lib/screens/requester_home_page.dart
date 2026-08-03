@@ -1700,10 +1700,65 @@ Widget _buildGroupHome({
 																	Expanded(
 																		child: _locators.isEmpty
 																				? Center(
-																						child: Text(
-																							l10n.noPairedMemberYet,
-																							style: AppFonts.caption,
-																							textAlign: TextAlign.center,
+																						child: Padding(
+																							padding: const EdgeInsets.symmetric(horizontal: 24),
+																							child: AppCard(
+																								child: Column(
+																									mainAxisSize: MainAxisSize.min,
+																									crossAxisAlignment: CrossAxisAlignment.start,
+																									children: [
+																										Row(
+																											children: [
+																												Icon(
+																													Icons.devices_rounded,
+																													size: 28,
+																													color: AppColors.primary,
+																												),
+																												const SizedBox(width: 10),
+																												Expanded(
+																													child: Text(
+																														l10n.howToAddMember,
+																														style: AppFonts.subtitle.copyWith(
+																															color: AppColors.primary,
+																														),
+																													),
+																												),
+																											],
+																										),
+
+																										const SizedBox(height: 16),
+
+																										_MemberSetupStep(
+																											number: '1',
+																											text: l10n.memberSetupStepOne,
+																										),
+
+																										const SizedBox(height: 12),
+
+																										_MemberSetupStep(
+																											number: '2',
+																											text: l10n.memberSetupStepTwo,
+																										),
+
+																										const SizedBox(height: 12),
+
+																										_MemberSetupStep(
+																											number: '3',
+																											text: l10n.memberSetupStepThree,
+																										),
+
+																										const SizedBox(height: 14),
+
+																										Text(
+																											l10n.memberAppFreeHint,
+																											style: AppFonts.caption.copyWith(
+																												color: AppColors.textSecondary,
+																												height: 1.4,
+																											),
+																										),
+																									],
+																								),
+																							),
 																						),
 																					)
 																				: ListView.separated(
@@ -2247,6 +2302,50 @@ class _FeedbackItem extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+class _MemberSetupStep extends StatelessWidget {
+  final String number;
+  final String text;
+
+  const _MemberSetupStep({
+    required this.number,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 28,
+          height: 28,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.12),
+            shape: BoxShape.circle,
+          ),
+          child: Text(
+            number,
+            style: AppFonts.caption.copyWith(
+              color: AppColors.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            text,
+            style: AppFonts.body.copyWith(
+              color: AppColors.textSecondary,
+              height: 1.4,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

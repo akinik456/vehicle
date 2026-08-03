@@ -9,6 +9,24 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get howToAddMember => 'How to add a member';
+
+  @override
+  String get memberSetupStepOne => 'Install \"LynraFamily Member\" on the phone of the person whose location will be shared.';
+
+  @override
+  String get memberSetupStepTwo => 'Open the Member app and get the Member Code or QR code.';
+
+  @override
+  String get memberSetupStepThree => 'Tap Add Member and send a pairing request.';
+
+  @override
+  String get memberAppFreeHint => '\"LynraFamily Member\" is free for your family members.';
+
+  @override
+  String get memberAppInfo => 'Family members use the free \"LynraFamily Member\" app on their own phones.';
+
+  @override
   String get enterVehicleInfo => 'Enter Vehicle Info';
 
   @override
@@ -120,7 +138,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get batteryOptimization => 'Battery Optimization';
 
   @override
-  String get batteryOptimizationDescription => 'Set to \"No Restrictions\" for background operation';
+  String get batteryOptimizationDescription => 'Set the battery mode to \"No restrictions\", then check it again under App info > Battery.';
 
   @override
   String get beingWatched => 'Being watched';

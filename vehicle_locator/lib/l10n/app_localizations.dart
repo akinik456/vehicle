@@ -99,6 +99,42 @@ abstract class AppLocalizations {
     Locale('tr')
   ];
 
+  /// No description provided for @howToAddMember.
+  ///
+  /// In en, this message translates to:
+  /// **'How to add a member'**
+  String get howToAddMember;
+
+  /// No description provided for @memberSetupStepOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Install \"LynraFamily Member\" on the phone of the person whose location will be shared.'**
+  String get memberSetupStepOne;
+
+  /// No description provided for @memberSetupStepTwo.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the Member app and get the Member Code or QR code.'**
+  String get memberSetupStepTwo;
+
+  /// No description provided for @memberSetupStepThree.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Add Member and send a pairing request.'**
+  String get memberSetupStepThree;
+
+  /// No description provided for @memberAppFreeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'\"LynraFamily Member\" is free for your family members.'**
+  String get memberAppFreeHint;
+
+  /// No description provided for @memberAppInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Family members use the free \"LynraFamily Member\" app on their own phones.'**
+  String get memberAppInfo;
+
   /// No description provided for @enterVehicleInfo.
   ///
   /// In en, this message translates to:
@@ -312,7 +348,7 @@ abstract class AppLocalizations {
   /// No description provided for @batteryOptimizationDescription.
   ///
   /// In en, this message translates to:
-  /// **'Set to \"No Restrictions\" for background operation'**
+  /// **'Set the battery mode to \"No restrictions\", then check it again under App info > Battery.'**
   String get batteryOptimizationDescription;
 
   /// No description provided for @beingWatched.

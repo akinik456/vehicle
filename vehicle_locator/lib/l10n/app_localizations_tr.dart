@@ -9,6 +9,24 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get howToAddMember => 'Üye nasıl eklenir?';
+
+  @override
+  String get memberSetupStepOne => 'Konumu paylaşılacak kişinin telefonuna \"LynraFamily Member\" uygulamasını yükleyin.';
+
+  @override
+  String get memberSetupStepTwo => 'Member uygulamasını açın ve Üye Kodunu veya QR kodunu alın.';
+
+  @override
+  String get memberSetupStepThree => 'Üye Ekle seçeneğine dokunup eşleştirme isteği gönderin.';
+
+  @override
+  String get memberAppFreeHint => '\"LynraFamily Member\", aile üyeleriniz için ücretsizdir.';
+
+  @override
+  String get memberAppInfo => 'Aile üyeleri kendi telefonlarında ücretsiz \"LynraFamily Member\" uygulamasını kullanır.';
+
+  @override
   String get enterVehicleInfo => 'Araç Bilgilerini Gir';
 
   @override
@@ -120,7 +138,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get batteryOptimization => 'Pil Kısıtlaması';
 
   @override
-  String get batteryOptimizationDescription => 'Arka planda çalışabilmesi için \"Kısıtlama Yok\" olarak ayarlayın';
+  String get batteryOptimizationDescription => 'Pil ayarını \"Kısıtlama Yok\" olarak ayarlayın, ardından Uygulama Bilgisi > Pil bölümünden tekrar kontrol edin.';
 
   @override
   String get beingWatched => 'İzleniyorsun';
