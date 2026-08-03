@@ -102,37 +102,37 @@ abstract class AppLocalizations {
   /// No description provided for @howToAddMember.
   ///
   /// In en, this message translates to:
-  /// **'How to add a member'**
+  /// **'How to add a vehicle'**
   String get howToAddMember;
 
   /// No description provided for @memberSetupStepOne.
   ///
   /// In en, this message translates to:
-  /// **'Install \"LynraFamily Member\" on the phone of the person whose location will be shared.'**
+  /// **'Install \"LynraFleet Driver\" on the driver\'s phone.'**
   String get memberSetupStepOne;
 
   /// No description provided for @memberSetupStepTwo.
   ///
   /// In en, this message translates to:
-  /// **'Open the Member app and get the Member Code or QR code.'**
+  /// **'Open LynraFleet Driver and get the Driver Code or QR code.'**
   String get memberSetupStepTwo;
 
   /// No description provided for @memberSetupStepThree.
   ///
   /// In en, this message translates to:
-  /// **'Tap Add Member and send a pairing request.'**
+  /// **'Tap Add Vehicle and send a pairing request.'**
   String get memberSetupStepThree;
 
   /// No description provided for @memberAppFreeHint.
   ///
   /// In en, this message translates to:
-  /// **'\"LynraFamily Member\" is free for your family members.'**
+  /// **'\"LynraFleet Driver\" is free for your drivers.'**
   String get memberAppFreeHint;
 
   /// No description provided for @memberAppInfo.
   ///
   /// In en, this message translates to:
-  /// **'Family members use the free \"LynraFamily Member\" app on their own phones.'**
+  /// **'Drivers use the free \"LynraFleet Driver\" app on their own phones.'**
   String get memberAppInfo;
 
   /// No description provided for @enterVehicleInfo.

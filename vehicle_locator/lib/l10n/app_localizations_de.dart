@@ -9,22 +9,22 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get howToAddMember => 'How to add a member';
+  String get howToAddMember => 'How to add a vehicle';
 
   @override
-  String get memberSetupStepOne => 'Install \"LynraFamily Member\" on the phone of the person whose location will be shared.';
+  String get memberSetupStepOne => 'Install \"LynraFleet Driver\" on the driver\'s phone.';
 
   @override
-  String get memberSetupStepTwo => 'Open the Member app and get the Member Code or QR code.';
+  String get memberSetupStepTwo => 'Open LynraFleet Driver and get the Driver Code or QR code.';
 
   @override
-  String get memberSetupStepThree => 'Tap Add Member and send a pairing request.';
+  String get memberSetupStepThree => 'Tap Add Vehicle and send a pairing request.';
 
   @override
-  String get memberAppFreeHint => '\"LynraFamily Member\" is free for your family members.';
+  String get memberAppFreeHint => '\"LynraFleet Driver\" is free for your drivers.';
 
   @override
-  String get memberAppInfo => 'Family members use the free \"LynraFamily Member\" app on their own phones.';
+  String get memberAppInfo => 'Drivers use the free \"LynraFleet Driver\" app on their own phones.';
 
   @override
   String get enterVehicleInfo => 'Enter Vehicle Info';

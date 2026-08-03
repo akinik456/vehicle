@@ -1320,7 +1320,40 @@ Widget _buildPendingHome({
                   color: AppColors.textSecondary,
                 ),
               ),
+							
+							const SizedBox(height: 12),
 
+							Container(
+								width: double.infinity,
+								padding: const EdgeInsets.all(12),
+								decoration: BoxDecoration(
+									color: AppColors.primary.withValues(alpha: 0.08),
+									borderRadius: BorderRadius.circular(12),
+									border: Border.all(
+										color: AppColors.primary.withValues(alpha: 0.15),
+									),
+								),
+								child: Row(
+									crossAxisAlignment: CrossAxisAlignment.start,
+									children: [
+										Icon(
+											Icons.info_outline_rounded,
+											size: 20,
+											color: AppColors.primary,
+										),
+										const SizedBox(width: 10),
+										Expanded(
+											child: Text(
+												l10n.memberAppInfo,
+												style: AppFonts.caption.copyWith(
+													height: 1.4,
+												),
+											),
+										),
+									],
+								),
+							),
+							
               const SizedBox(height: 20),
 
               SizedBox(

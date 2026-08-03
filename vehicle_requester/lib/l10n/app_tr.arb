@@ -2,12 +2,12 @@
 "@@locale": 													"tr",
 
 
-"howToAddMember": "Üye nasıl eklenir?",
-"memberSetupStepOne": "Konumu paylaşılacak kişinin telefonuna \"LynraFamily Member\" uygulamasını yükleyin.",
-"memberSetupStepTwo": "Member uygulamasını açın ve Üye Kodunu veya QR kodunu alın.",
-"memberSetupStepThree": "Üye Ekle seçeneğine dokunup eşleştirme isteği gönderin.",
-"memberAppFreeHint": "\"LynraFamily Member\", aile üyeleriniz için ücretsizdir.",
-"memberAppInfo": "Aile üyeleri kendi telefonlarında ücretsiz \"LynraFamily Member\" uygulamasını kullanır.",
+"howToAddMember": "Araç nasıl eklenir?",
+"memberSetupStepOne": "\"LynraFleet Driver\" uygulamasını sürücünün telefonuna yükleyin.",
+"memberSetupStepTwo": "LynraFleet Driver uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.",
+"memberSetupStepThree": "Araç Ekle seçeneğine dokunup eşleştirme isteği gönderin.",
+"memberAppFreeHint": "\"LynraFleet Driver\" sürücüleriniz için ücretsizdir.",
+"memberAppInfo": "Sürücüler kendi telefonlarında ücretsiz \"LynraFleet Driver\" uygulamasını kullanır.",
 
 "enterVehicleInfo": 									"Araç Bilgilerini Gir",
 "vehicleName": 												"Araç İsmi",
@@ -61,7 +61,7 @@
 "confirm": 														"Onay",
 "connectAMember": 										"Bir araca bağlan",
 "createNewGroup": 										"Yeni filo oluştur",
-"createOrJoin": 											"Yeni bir filo oluşturun veya mevcut bir filo katılın.",
+"createOrJoin": 											"Yeni bir filo oluşturun veya mevcut bir filoya katılın.",
 "currentLocation": 										"Mevcut Konum",
 "daysAgo": 														"{count} gün önce",
 "delete": 														"Sil",

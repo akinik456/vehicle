@@ -9,22 +9,22 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get howToAddMember => 'Üye nasıl eklenir?';
+  String get howToAddMember => 'Araç nasıl eklenir?';
 
   @override
-  String get memberSetupStepOne => 'Konumu paylaşılacak kişinin telefonuna \"LynraFamily Member\" uygulamasını yükleyin.';
+  String get memberSetupStepOne => '\"LynraFleet Driver\" uygulamasını sürücünün telefonuna yükleyin.';
 
   @override
-  String get memberSetupStepTwo => 'Member uygulamasını açın ve Üye Kodunu veya QR kodunu alın.';
+  String get memberSetupStepTwo => 'LynraFleet Driver uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.';
 
   @override
-  String get memberSetupStepThree => 'Üye Ekle seçeneğine dokunup eşleştirme isteği gönderin.';
+  String get memberSetupStepThree => 'Araç Ekle seçeneğine dokunup eşleştirme isteği gönderin.';
 
   @override
-  String get memberAppFreeHint => '\"LynraFamily Member\", aile üyeleriniz için ücretsizdir.';
+  String get memberAppFreeHint => '\"LynraFleet Driver\" sürücüleriniz için ücretsizdir.';
 
   @override
-  String get memberAppInfo => 'Aile üyeleri kendi telefonlarında ücretsiz \"LynraFamily Member\" uygulamasını kullanır.';
+  String get memberAppInfo => 'Sürücüler kendi telefonlarında ücretsiz \"LynraFleet Driver\" uygulamasını kullanır.';
 
   @override
   String get enterVehicleInfo => 'Araç Bilgilerini Gir';
@@ -180,7 +180,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get createNewGroup => 'Yeni filo oluştur';
 
   @override
-  String get createOrJoin => 'Yeni bir filo oluşturun veya mevcut bir filo katılın.';
+  String get createOrJoin => 'Yeni bir filo oluşturun veya mevcut bir filoya katılın.';
 
   @override
   String get currentLocation => 'Mevcut Konum';
