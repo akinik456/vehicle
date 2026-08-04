@@ -31,75 +31,154 @@ class GroupService {
 		return prefs.getBool(_isMasterKey) ?? false;
 	}
 	
+	
 
   static Future<String> createGroup({
-    required String groupName,
-  }) async {
-    final requesterId = await IdentityService.getRequesterId();
-    final requesterCode = await IdentityService.getRequesterCode();
-    final groupId = const Uuid().v4();
-    final groupCode = CodeService.shortCodeFromId(groupId);
+		required String groupName,
+	}) async {
+		final requesterId = await IdentityService.getRequesterId();
+		final requesterCode = await IdentityService.getRequesterCode();
 
-    final groupRef = _firestore.collection('groups').doc(groupId);
-    final requesterRef = groupRef.collection('devices').doc(requesterId);
-		final locale =
-				PlatformDispatcher.instance.locale;
-		final countryCode =
-				locale.countryCode;
+		if (requesterId == null || requesterId.isEmpty) {
+			throw Exception('Requester ID not found');
+		}
 
-    final now = FieldValue.serverTimestamp();
+		final groupId = const Uuid().v4();
+		final groupCode = CodeService.shortCodeFromId(groupId);
 
-    await _firestore.runTransaction((tx) async {
-      tx.set(groupRef, {
+		final groupRef =
+				_firestore.collection('groups').doc(groupId);
+
+		final requesterDeviceRef =
+				groupRef.collection('devices').doc(requesterId);
+
+		final globalRequesterRef =
+				_firestore.collection('requesters').doc(requesterId);
+
+		final locale = PlatformDispatcher.instance.locale;
+		final countryCode = locale.countryCode;
+
+		final now = FieldValue.serverTimestamp();
+	Log.d(
+		"CREATE GROUP => "
+		"requesterId=$requesterId "
+		"authUid=${AuthService.uid}",
+	);
+		final resultGroupId =
+				await _firestore.runTransaction<String>((tx) async {
+			final requesterSnapshot =
+					await tx.get(globalRequesterRef);
+
+			final existingGroupId =
+					requesterSnapshot.data()?['groupId']
+							?.toString()
+							.trim();
+
+			if (existingGroupId != null &&
+					existingGroupId.isNotEmpty) {
+				Log.d(
+					"BEACON GROUP => CREATE BLOCKED => "
+					"existingGroupId=$existingGroupId",
+				);
+
+				return existingGroupId;
+			}
+	Log.d("CREATE GROUP => transaction starting");
+
+			tx.set(groupRef, {
 				'activeRequesterCount': 1,
 				'countryCode': countryCode,
-        'createdAt': now,
-				'entitlementUpdatedAt': now,				
-        'groupId': groupId,
-        'groupCode': groupCode,
-        'groupName': groupName.trim(),
-        'masterRequesterId': requesterId,
-        'maxRequesters': 5,
-        'maxLocators': 5,
-        'planStatus': 'trial',
- 				'purchaseStatus': 'none',
+				'createdAt': now,
+				'entitlementUpdatedAt': now,
+				'groupId': groupId,
+				'groupCode': groupCode,
+				'groupName': groupName.trim(),
+				'masterRequesterId': requesterId,
+				'maxRequesters': 5,
+				'maxLocators': 5,
+				'planStatus': 'trial',
+				'purchaseStatus': 'none',
 				'purchaseOwnerRequesterId': null,
 				'purchasedAt': null,
-        'trialStartedAt': now,
+				'trialStartedAt': now,
 				'trialEndsAt': Timestamp.fromDate(
 					DateTime.now().add(
 						const Duration(days: 7),
 					),
 				),
-      });
+			});
 
-      tx.set(requesterRef, {
-        'active': true,
+			tx.set(requesterDeviceRef, {
+				'active': true,
 				'authUid': AuthService.uid,
-        'isMaster': true,
-        'joinedAt': now,
-        'pairedLocators': {},
-        'requesterCode': requesterCode,
-        'requesterId': requesterId,
-        'role': 'requester',
-				'updatedAt': FieldValue.serverTimestamp(),
-      });
-    });
-		
-		await RequesterRegistryService.registerRequester();
-		await _firestore.collection('requesters').doc(requesterId).set({
-			'groupId':groupId,
-			'updatedAt': FieldValue.serverTimestamp(),
-		}, SetOptions(merge: true));
+				'isMaster': true,
+				'joinedAt': now,
+				'pairedLocators': {},
+				'requesterCode': requesterCode,
+				'requesterId': requesterId,
+				'role': 'requester',
+				'updatedAt': now,
+			});
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_groupIdKey, groupId);
-    await prefs.setString('group_code', groupCode);
+			tx.set(
+				globalRequesterRef,
+				{
+					'groupId': groupId,
+					'updatedAt': now,
+				},
+				SetOptions(merge: true),
+			);
 
-    Log.d("BEACON GROUP => CREATE SUCCESS => $groupId");
+			return groupId;
+		});
+	Log.d("CREATE GROUP => transaction completed");
+	//  await RequesterRegistryService.registerRequester();
+	Log.d("CREATE GROUP => requester registered");
+		final prefs = await SharedPreferences.getInstance();
+		await prefs.setString(
+			_groupIdKey,
+			resultGroupId,
+		);
+	Log.d("CREATE GROUP => requester groupId written");
+		if (resultGroupId == groupId) {
+			await prefs.setString(
+				'group_code',
+				groupCode,
+			);
 
-    return groupId;
-  }
+			Log.d(
+				"BEACON GROUP => CREATE SUCCESS => "
+				"$resultGroupId",
+			);
+		} else {
+			final existingGroupSnapshot =
+					await _firestore
+							.collection('groups')
+							.doc(resultGroupId)
+							.get();
+
+			final existingGroupCode =
+					existingGroupSnapshot.data()?['groupCode']
+							?.toString();
+
+			if (existingGroupCode != null &&
+					existingGroupCode.isNotEmpty) {
+				await prefs.setString(
+					'group_code',
+					existingGroupCode,
+				);
+			}
+
+			Log.d(
+				"BEACON GROUP => EXISTING GROUP RETURNED => "
+				"$resultGroupId",
+			);
+		}
+		/*await AnalyticsService.logEvent(
+			'group_created',
+		);*/
+		return resultGroupId;
+	}
 
   static Future<String?> getLocalGroupId() async {
     final prefs = await SharedPreferences.getInstance();

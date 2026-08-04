@@ -114,7 +114,7 @@ abstract class AppLocalizations {
   /// No description provided for @memberSetupStepTwo.
   ///
   /// In en, this message translates to:
-  /// **'Open LynraFleet Driver and get the Driver Code or QR code.'**
+  /// **'Open \"LynraFleet Driver\" and get the Driver Code or QR code.'**
   String get memberSetupStepTwo;
 
   /// No description provided for @memberSetupStepThree.

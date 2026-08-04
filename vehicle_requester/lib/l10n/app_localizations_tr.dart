@@ -15,7 +15,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get memberSetupStepOne => '\"LynraFleet Driver\" uygulamasını sürücünün telefonuna yükleyin.';
 
   @override
-  String get memberSetupStepTwo => 'LynraFleet Driver uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.';
+  String get memberSetupStepTwo => '\"LynraFleet Driver\" uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.';
 
   @override
   String get memberSetupStepThree => 'Araç Ekle seçeneğine dokunup eşleştirme isteği gönderin.';
