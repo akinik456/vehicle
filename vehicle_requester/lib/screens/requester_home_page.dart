@@ -1806,7 +1806,7 @@ Widget _buildGroupHome({
 																							final locatorPlate = locator['locatorPlate'] ?? '------';
 																							final status = locator['status'] ?? 'offline';
 																							final battery = locator['battery'] ?? 0;
-																							final speed = locator['speedKmh'] ?? 0;
+																							final speed = (locator['speed'] as num?)?.toDouble() ?? 0.0;
 																							final gpsEnabled = locator['gpsEnabled'] == true;																	
 																							final locatorNames = <String, String>{
 																								for (final item in _locators)

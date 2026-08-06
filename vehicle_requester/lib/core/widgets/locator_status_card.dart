@@ -41,7 +41,7 @@ class LocatorStatusCard extends StatefulWidget {
 	final String locatorPlate;
   final String status;
   final int battery;
-	final int speed;
+	final double speed;
 	
   final bool gpsEnabled;
   final bool geoInside;
@@ -248,7 +248,7 @@ class _LocatorStatusCardState
 					Row(
 						children: [
 									Text(
-										"${l10n.speed}: ${widget.speed} kmh",
+										"${l10n.speed}: ${widget.speed.round()} km/h",
 										style: AppFonts.caption.copyWith(
 											color: AppColors.accent,
 											fontSize:18,
