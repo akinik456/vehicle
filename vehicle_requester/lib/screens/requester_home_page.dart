@@ -105,6 +105,7 @@ class _RequesterHomePageState
 	//final Map<String, DateTime> _lastMovementAlert = {};
 	Timer? _requesterPositionTimer;
 	DateTime? _lastRequesterLocationUpdate;
+	bool _locatorsLoaded = false;
 	
 		@override
 	void initState() {
@@ -436,42 +437,54 @@ class _RequesterHomePageState
 		);
 	}
 	
-	Future<void> _loadLocators() async {
-		_groupId = await GroupService.getLocalGroupId();
-		_requesterId = await IdentityService.getRequesterId();
-Log.d("loadLocators called");
-		if (_groupId == null || _groupId!.isEmpty) {
-			Log.d("BEACON HOME => no group yet, skip locator load");
-			return;
-		}
+Future<void> _loadLocators() async {
+  _groupId = await GroupService.getLocalGroupId();
+  _requesterId = await IdentityService.getRequesterId();
 
-		final position =
-				await LocationHelper.getCurrentPosition();
+  Log.d("loadLocators called");
 
-		_myLat = position?.latitude;
-		_myLng = position?.longitude;
+  if (_groupId == null || _groupId!.isEmpty) {
+    Log.d("BEACON HOME => no group yet, skip locator load");
+    return;
+  }
 
-		Log.d(
-			"BEACON REQUESTER POS => "
-			"$_myLat, $_myLng",
-		);
+  // Önce locatorları yükle, kartlar hemen açılsın
+  final locators =
+      await LocatorListService.loadLocators();
 
-		final locators =
-				await LocatorListService.loadLocators();
-						
+  if (!mounted) return;
 
-				setState(() {
-					_locators = locators;
-				});
-				for (final locator in locators) {
-			_listenLocatorPresence(
-				locator['locatorId'],
-			);
-		await _addActiveWatchers();	
-		}
-	_listenAlerts();
-	}
+  setState(() {
+    _locators = locators;
+		_locatorsLoaded = true;
+  });
+
+  // Presence listener'ları başlat
+  for (final locator in locators) {
+    _listenLocatorPresence(
+      locator['locatorId'],
+    );
+  }
+
+  // Active watcher
+  await _addActiveWatchers();
+
+  // Alert listener
+  _listenAlerts();
+
+  // GPS'i en sona bırak
+  final position =
+      await LocationHelper.getCurrentPosition();
+
+  _myLat = position?.latitude;
+  _myLng = position?.longitude;
+
+  Log.d(
+    "BEACON REQUESTER POS => "
+    "$_myLat, $_myLng",
+  );
 	
+}	
 	Future<void> _addActiveWatchers() async {
 		if (_groupId == null) return;
 		
@@ -1731,71 +1744,67 @@ Widget _buildGroupHome({
 																	const SizedBox(height: 4),
 
 																	Expanded(
-																		child: _locators.isEmpty
-																				? Center(
-																						child: Padding(
-																							padding: const EdgeInsets.symmetric(horizontal: 24),
-																							child: AppCard(
-																								child: Column(
-																									mainAxisSize: MainAxisSize.min,
-																									crossAxisAlignment: CrossAxisAlignment.start,
-																									children: [
-																										Row(
+																		child: !_locatorsLoaded
+																				? const Center(
+																						child: CircularProgressIndicator(),
+																					)
+																				: _locators.isEmpty
+																						? Center(
+																								child: Padding(
+																									padding: const EdgeInsets.symmetric(horizontal: 24),
+																									child: AppCard(
+																										child: Column(
+																											mainAxisSize: MainAxisSize.min,
+																											crossAxisAlignment: CrossAxisAlignment.start,
 																											children: [
-																												Icon(
-																													Icons.devices_rounded,
-																													size: 28,
-																													color: AppColors.primary,
-																												),
-																												const SizedBox(width: 10),
-																												Expanded(
-																													child: Text(
-																														l10n.howToAddMember,
-																														style: AppFonts.subtitle.copyWith(
+																												Row(
+																													children: [
+																														Icon(
+																															Icons.devices_rounded,
+																															size: 28,
 																															color: AppColors.primary,
 																														),
+																														const SizedBox(width: 10),
+																														Expanded(
+																															child: Text(
+																																l10n.howToAddMember,
+																																style: AppFonts.subtitle.copyWith(
+																																	color: AppColors.primary,
+																																),
+																															),
+																														),
+																													],
+																												),
+																												const SizedBox(height: 16),
+																												_MemberSetupStep(
+																													number: '1',
+																													text: l10n.memberSetupStepOne,
+																												),
+																												const SizedBox(height: 12),
+																												_MemberSetupStep(
+																													number: '2',
+																													text: l10n.memberSetupStepTwo,
+																												),
+																												const SizedBox(height: 12),
+																												_MemberSetupStep(
+																													number: '3',
+																													text: l10n.memberSetupStepThree,
+																												),
+																												const SizedBox(height: 14),
+																												Text(
+																													l10n.memberAppFreeHint,
+																													style: AppFonts.caption.copyWith(
+																														color: AppColors.textSecondary,
+																														height: 1.4,
 																													),
 																												),
 																											],
 																										),
-
-																										const SizedBox(height: 16),
-
-																										_MemberSetupStep(
-																											number: '1',
-																											text: l10n.memberSetupStepOne,
-																										),
-
-																										const SizedBox(height: 12),
-
-																										_MemberSetupStep(
-																											number: '2',
-																											text: l10n.memberSetupStepTwo,
-																										),
-
-																										const SizedBox(height: 12),
-
-																										_MemberSetupStep(
-																											number: '3',
-																											text: l10n.memberSetupStepThree,
-																										),
-
-																										const SizedBox(height: 14),
-
-																										Text(
-																											l10n.memberAppFreeHint,
-																											style: AppFonts.caption.copyWith(
-																												color: AppColors.textSecondary,
-																												height: 1.4,
-																											),
-																										),
-																									],
+																									),
 																								),
-																							),
-																						),
-																					)
-																				: ListView.separated(
-																						itemCount: _locators.length,//itemCount: _locators.isEmpty ? 0 : 4,//itemCount: _locators.length,
+																							)
+																						: ListView.separated(
+																								itemCount: _locators.length,
 																						separatorBuilder: (_, __) =>
 																								const SizedBox(height: 2),
 																						itemBuilder: (context, index) {
@@ -1841,6 +1850,16 @@ Widget _buildGroupHome({
 																							final distanceText = distanceMeters == null ? '-' : '${distanceMeters.round()} m';
 																							final lat = locator['lat']?.toDouble();
 																							final lng = locator['lng']?.toDouble();
+																							final totalDistanceKm =
+																									((locator['totalDistanceMeters'] ?? 0) as num)
+																											.toDouble() /
+																									1000.0;
+
+																							final tripDistanceKm =
+																									((locator['tripDistanceMeters'] ?? 0) as num)
+																											.toDouble() /
+																									1000.0;
+																							
 																							return LocatorStatusCard(
 																								locatorId: locatorId,
 																								locatorName: locatorName,
@@ -1855,6 +1874,38 @@ Widget _buildGroupHome({
 																								lastSeenText: lastSeenText,
 																								distanceText: distanceText,
 																								speed: speed,
+																								totalDistanceKm: totalDistanceKm,
+																								tripDistanceKm: tripDistanceKm,
+
+																								onEditTotalDistance: (newKm) async {
+																									final newMeters = (newKm * 1000).round();
+
+																									await FirebaseDatabase.instance
+																											.ref(
+																												'presence/groups/$groupId/locators/$locatorId',
+																											)
+																											.update({
+																												'totalDistanceMeters': newMeters,
+																											});
+
+																									setState(() {
+																										locator['totalDistanceMeters'] = newMeters;
+																									});
+																								},
+
+																								onResetTripDistance: () async {
+																									await FirebaseDatabase.instance
+																											.ref(
+																												'presence/groups/$groupId/locators/$locatorId',
+																											)
+																											.update({
+																												'tripDistanceMeters': 0,
+																											});
+
+																									setState(() {
+																										locator['tripDistanceMeters'] = 0;
+																									});
+																								},
 																								onOpenMaps: () async {
 																									if (lat == null || lng == null) return;
 																									await MapHelper.openInMaps(

@@ -12,6 +12,7 @@ class SmartPresenceScheduler {
   static DateTime? _fastUntil;
 
   static bool _hasActiveWatcher = false;
+	static bool _appInForeground = false;
   static bool _isUpdating = false;
 	
 	static const _vehiclePeriod =
@@ -36,6 +37,21 @@ class SmartPresenceScheduler {
 	
 	static bool get hasActiveWatcher =>
     _hasActiveWatcher;
+		
+
+	static void setAppForeground(bool value) {
+		if (_appInForeground == value) return;
+
+		_appInForeground = value;
+
+		_scheduleNext(
+			immediate: true,
+			reason: value
+					? 'app_foreground'
+					: 'app_background',
+		);
+		Log.d("setAppForeground _appInForeground:$_appInForeground");
+	}		
 
   static void start() {
     Log.d("SMART PRESENCE => start");
@@ -123,13 +139,13 @@ class SmartPresenceScheduler {
 		final now = DateTime.now();
 
 		final isFast =
-				_hasActiveWatcher ||
-				(_fastUntil != null && now.isBefore(_fastUntil!));
-
-		Duration period;
+			_appInForeground ||
+			_hasActiveWatcher ||
+			(_fastUntil != null && now.isBefore(_fastUntil!));
+			Duration period;
 
 		if (isFast) {
-			if (_hasActiveWatcher && _speedKmh >= 6) {
+			if ((_appInForeground  || _hasActiveWatcher ) && _speedKmh >= 6) {
 				period = _vehiclePeriod;
 			} else {
 				period = _fastPeriod;

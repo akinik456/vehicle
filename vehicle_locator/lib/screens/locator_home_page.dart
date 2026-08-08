@@ -15,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_fonts.dart';
@@ -50,6 +51,8 @@ import '../services/presence_cache_service.dart';
 import '../utils/map_helper.dart';
 import '../utils/address_helper.dart';
 import '../core/widgets/locator_status_card.dart';
+import '../services/presence_service.dart';
+import '../services/smart_presence_scheduler.dart';
 
 
 class LocatorHomePage extends StatefulWidget {
@@ -80,7 +83,7 @@ class _LocatorHomePageState extends State<LocatorHomePage>
 	double? _lastUiLng;
 	Stream<List<Map<String, String>>>? _pairedRequesterStream;
 	late Future<Map<String, String>> _locatorCodeDataFuture;
-	
+	double _tripKm = 18.4;
 	
  @override
 void initState() {
@@ -103,6 +106,9 @@ void initState() {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     _checkPermissionsAndWarn();
   });
+	WidgetsBinding.instance.addObserver(this);
+
+  SmartPresenceScheduler.setAppForeground(true);
 }
 Future<void> _startLocatorHome() async {
   final locatorId = await IdentityService.getLocatorId();
@@ -175,6 +181,7 @@ Future<void> _startLocatorHome() async {
 		ActiveWatcherService.stop();
 		WidgetsBinding.instance.removeObserver(this);
 		_presenceTimer?.cancel();
+		SmartPresenceScheduler.setAppForeground(false);
     super.dispose();
   }
 	
@@ -293,18 +300,33 @@ Future<void> _startNativePresenceIfAllowed() async {
 }
 
   Future<void> _checkPermissionsAndWarn() async {
-    final result = await LocatorPermissionService.hasAllRequiredPermissions();
+		final result =
+				await LocatorPermissionService.hasAllRequiredPermissions();
 
-    if (!mounted) return;
+		if (!mounted) return;
 
-    setState(() {
-      hasAllPermissions = result;
-    });
+		setState(() {
+			hasAllPermissions = result;
+		});
 
-    if (!result) {
-      _showMissingPermissionsDialog();
-    }
-  }
+		if (!result) {
+			final prefs = await SharedPreferences.getInstance();
+
+			final warningShown =
+					prefs.getBool('missing_permissions_warning_shown') ?? false;
+
+			if (!warningShown) {
+				await prefs.setBool(
+					'missing_permissions_warning_shown',
+					true,
+				);
+
+				if (!mounted) return;
+
+				_showMissingPermissionsDialog();
+			}
+		}
+	}
 	
 	static Future<void> cleanupInvalidPairedRequesters() async {
   final groupId = await IdentityService.getGroupId();
@@ -383,6 +405,12 @@ Future<void> _startNativePresenceIfAllowed() async {
     if (state == AppLifecycleState.resumed) {
       _checkPermissionsAndWarn();
     }
+		final isForeground =
+				state == AppLifecycleState.resumed;
+
+		SmartPresenceScheduler.setAppForeground(
+			isForeground,
+		);
   }
 
   void _showMissingPermissionsDialog() {
@@ -971,14 +999,14 @@ Widget _activeWatchersCard() {
               Icon(
                 Icons.check_circle_outline_rounded,
                 color: AppColors.primary,
-                size: 42,
+                size: 36,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 6),
               Text(
                 l10n.memberReady,
                 style: AppFonts.subtitle,
               ),
-              const SizedBox(height: 4),
+              //const SizedBox(height: 2),
               Text(
                 l10n.noActiveWatchers,
                 style: AppFonts.caption,
@@ -1102,7 +1130,13 @@ Widget _currentLocationCard() {
 
   final offlineSince =
       _cachedPresence['offlineSince'] as int?;
+			
+	final totalDistance =
+			(_cachedPresence['totalDistanceMeters'] as num?)?.toDouble() ?? 0.0;
 
+	final tripDistance =
+			(_cachedPresence['tripDistanceMeters'] as num?)?.toDouble() ?? 0.0;
+		
   if (_cachedPresence.isEmpty) {
 		return const SizedBox.shrink();
 	}
@@ -1128,6 +1162,33 @@ Widget _currentLocationCard() {
         addressText: _currentAddress.isEmpty
             ? l10n.addressNotAvailable
             : _currentAddress,
+				odometerKm: totalDistance / 1000,
+				tripKm: tripDistance,
+				onResetTrip: () async {
+					setState(() {
+						_tripKm = 0;
+					});
+
+					final groupId = await IdentityService.getGroupId();
+					final locatorId = await IdentityService.getLocatorId();
+
+					if (groupId == null || locatorId == null) return;
+
+					final path =
+							"presence/groups/$groupId/locators/$locatorId";
+
+					await FirebaseDatabase.instance
+							.ref()
+							.child(path)
+							.update({
+						'tripDistanceMeters': 0,
+					});
+
+					await PresenceCacheService.save({
+						'tripDistanceMeters': 0,
+					});
+					PresenceService.resetTripDistance();
+				},				
 				onRefreshLocation: _refreshMyLocation,
         onOpenMaps: () async {
           await MapHelper.openInMaps(
@@ -1324,7 +1385,7 @@ final l10n = AppLocalizations.of(context)!;
 									),	
 									const SizedBox(height: 12),
 									_permissionsButton(),
-									const SizedBox(height: 70),
+									const SizedBox(height: 20),
 									],	
                 ),
               );

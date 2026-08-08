@@ -22,6 +22,12 @@ class PresenceCacheService {
 			
 	static const String _speedKey =
       'speed';		
+			
+	static const String _totalDistanceMetersKey =
+      'totalDistanceMeters';		
+
+	static const String _tripDistanceMetersKey =
+      'tripDistanceMeters';					
 
   static const String _geoInsideKey =
       'presence_geo_inside';
@@ -98,6 +104,24 @@ class PresenceCacheService {
         speed.toString(),
       );
     }
+		
+		final totalDistanceMeters = data['totalDistanceMeters'];
+
+		if (totalDistanceMeters != null) {
+			await prefs.setInt(
+				_totalDistanceMetersKey,
+				(totalDistanceMeters as num).round(),
+			);
+		}
+
+		final tripDistanceMeters = data['tripDistanceMeters'];
+
+		if (tripDistanceMeters != null) {
+			await prefs.setInt(
+				_tripDistanceMetersKey,
+				(tripDistanceMeters as num).round(),
+			);
+		}
 
     final geoInside =
         data['geoInside'];
@@ -193,6 +217,13 @@ class PresenceCacheService {
 			'speed':
           prefs.getString(_speedKey) ??
               '',		
+							
+			'totalDistanceMeters':
+					prefs.getInt(_totalDistanceMetersKey) ?? 0,
+
+			'tripDistanceMeters':
+					prefs.getInt(_tripDistanceMetersKey) ?? 0,
+							
       'geoInside':
           prefs.getBool(_geoInsideKey) ??
               false,
@@ -232,6 +263,8 @@ class PresenceCacheService {
     await prefs.remove(_statusKey);
     await prefs.remove(_gpsEnabledKey);
 		await prefs.remove(_speedKey);
+		await prefs.remove(_totalDistanceMetersKey);
+		await prefs.remove(_tripDistanceMetersKey);
     await prefs.remove(_geoInsideKey);
     await prefs.remove(_geoPlaceNameKey);
     await prefs.remove(

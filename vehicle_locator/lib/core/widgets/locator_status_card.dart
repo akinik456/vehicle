@@ -22,6 +22,9 @@ class LocatorCurrentLocationCard extends StatefulWidget {
     required this.addressText,
 		required this.onRefreshLocation,
     required this.onOpenMaps,
+		required this.odometerKm,
+		required this.tripKm,
+		required this.onResetTrip,
   });
 
   final String status;
@@ -36,6 +39,10 @@ class LocatorCurrentLocationCard extends StatefulWidget {
 	
 	final VoidCallback onRefreshLocation;
   final VoidCallback onOpenMaps;
+	
+	final double odometerKm;
+	final double tripKm;
+	final VoidCallback onResetTrip;
 
   @override
   State<LocatorCurrentLocationCard> createState() =>
@@ -255,7 +262,7 @@ class _LocatorCurrentLocationCardState
       ),
 
 
-          const SizedBox(height: 14),
+          const SizedBox(height: 6),
 
           GestureDetector(
 						behavior: HitTestBehavior.opaque,
@@ -327,8 +334,65 @@ class _LocatorCurrentLocationCardState
               ),
             ),
           ],
+					const SizedBox(height: 6),
 
-          const SizedBox(height: 12),
+					Container(
+  padding: const EdgeInsets.symmetric(
+    horizontal: 14,
+    vertical: 12,
+  ),
+  decoration: BoxDecoration(
+    color: AppColors.surface.withOpacity(0.35),
+    borderRadius: BorderRadius.circular(14),
+    border: Border.all(
+      color: AppColors.border.withOpacity(0.5),
+    ),
+  ),
+  child: Row(
+    children: [
+      Icon(
+        Icons.route_rounded,
+        size: 18,
+        color: AppColors.primary,
+      ),
+      const SizedBox(width: 6),
+      Text(
+        '${widget.odometerKm.toStringAsFixed(1)} km',
+        style: AppFonts.subtitle.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+
+      const Spacer(),
+
+      Icon(
+        Icons.directions_car_rounded,
+        size: 18,
+        color: AppColors.primary,
+      ),
+      const SizedBox(width: 6),
+      Text(
+        '${widget.tripKm.toStringAsFixed(0)} mt',
+        style: AppFonts.subtitle.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      const SizedBox(width: 4),
+      InkWell(
+        onTap: widget.onResetTrip,
+        child: Icon(
+          Icons.refresh_rounded,
+          size: 16,
+          color: AppColors.warning,
+        ),
+      ),
+    ],
+  ),
+),
+
+          const SizedBox(height: 6),
 					Row(
 						children: [
 							_MiniAction(

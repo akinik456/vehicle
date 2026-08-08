@@ -30,6 +30,10 @@ class LocatorStatusCard extends StatefulWidget {
     required this.onOpenMaps,
     required this.addressText,
 		required this.speed,
+		required this.totalDistanceKm,
+		required this.tripDistanceKm,
+		required this.onEditTotalDistance,
+		required this.onResetTripDistance,		
     this.onNotificationSettings,
     this.onSettings,
     this.onRemove,
@@ -42,6 +46,11 @@ class LocatorStatusCard extends StatefulWidget {
   final String status;
   final int battery;
 	final double speed;
+	final double totalDistanceKm;
+	final double tripDistanceKm;
+
+	final ValueChanged<double> onEditTotalDistance;
+	final VoidCallback onResetTripDistance;
 	
   final bool gpsEnabled;
   final bool geoInside;
@@ -398,6 +407,102 @@ class _LocatorStatusCardState
 							],
 						],
 					),
+					const SizedBox(height: 8),
+
+					Row(
+						children: [
+							Icon(
+								Icons.route_rounded,
+								size: 18,
+								color: AppColors.primary,
+							),
+							const SizedBox(width: 6),
+							Text(
+								'${widget.totalDistanceKm.toStringAsFixed(1)} km',
+								style: AppFonts.caption.copyWith(
+									color: AppColors.textPrimary,
+									fontWeight: FontWeight.w700,
+								),
+							),
+							const SizedBox(width: 4),
+
+							InkWell(
+								onTap: () async {
+									final controller = TextEditingController(
+										text: widget.totalDistanceKm.toStringAsFixed(0),
+									);
+
+									final result = await showDialog<double>(
+										context: context,
+										builder: (dialogContext) {
+											return AlertDialog(
+												title: const Text('Odometer'),
+												content: TextField(
+													controller: controller,
+													keyboardType: TextInputType.number,
+													decoration: const InputDecoration(
+														suffixText: 'km',
+													),
+												),
+												actions: [
+													TextButton(
+														onPressed: () => Navigator.pop(dialogContext),
+														child: Text(l10n.cancel),
+													),
+													TextButton(
+														onPressed: () {
+															final value =
+																	double.tryParse(controller.text.trim());
+
+															if (value == null || value < 0) return;
+
+															Navigator.pop(dialogContext, value);
+														},
+														child: Text(l10n.save),
+													),
+												],
+											);
+										},
+									);
+
+									if (result == null) return;
+
+									widget.onEditTotalDistance(result);
+								},
+								child: Icon(
+									Icons.edit_rounded,
+									size: 16,
+									color: AppColors.primary,
+								),
+							),
+							const Spacer(),
+
+							Icon(
+								Icons.directions_car_rounded,
+								size: 18,
+								color: AppColors.accent,
+							),
+							const SizedBox(width: 6),
+							Text(
+								'${widget.tripDistanceKm.toStringAsFixed(1)} km',
+								style: AppFonts.caption.copyWith(
+									color: AppColors.textPrimary,
+									fontWeight: FontWeight.w700,
+								),
+							),
+							const SizedBox(width: 4),
+							InkWell(
+								onTap: widget.onResetTripDistance,
+								child: Icon(
+									Icons.refresh_rounded,
+									size: 16,
+									color: AppColors.warning,
+								),
+							),
+						],
+					),
+
+					
 					const SizedBox(height: 8),
 					Row(
 						mainAxisAlignment: MainAxisAlignment.spaceBetween,

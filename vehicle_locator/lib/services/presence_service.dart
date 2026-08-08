@@ -22,6 +22,7 @@ class PresenceService {
 
   static final _db = FirebaseDatabase.instance.ref();
 	static StreamSubscription<DatabaseEvent>? _connectedSub;
+	static StreamSubscription<DatabaseEvent>? _presenceSub;
 	static String? _serviceGroupId;
 	static String? _serviceLocatorId;
 	static double? _lastLat;
@@ -33,10 +34,16 @@ class PresenceService {
 	static DateTime? _lastAcceptedLocationTime;
 	static String _currentAddress = '';
 
+	static int _totalDistanceMeters = 0;
+	static int _tripDistanceMeters = 0;
+	static const double _distanceCorrection = 1.28;
+	
+	
 	static Future<void> updateOnline({
 		String reason = 'unknown',
 	}) async {
 	
+	Log.d("updateOnline_called");
   final groupId = _serviceGroupId ?? await IdentityService.getGroupId();
   final locatorId = _serviceLocatorId ?? await IdentityService.getLocatorId();
 		if (groupId == null || locatorId == null) {
@@ -53,6 +60,7 @@ class PresenceService {
   double speedKmh = 0;
   double? movedMeters;
 	double? elapsedSeconds;
+	
 
 		if (gpsEnabled) {
 			try {
@@ -265,6 +273,17 @@ class PresenceService {
 
 		// Motion alert ve geofence kontrolleri çalıştı.
 		// Aktif izleyen yoksa sırf motion nedeniyle presence konumu yazma.
+		
+		Log.d("movedMeters:$movedMeters");
+		if (movedMeters != null && movedMeters >= 25 && movedMeters <= 1000) {
+			final delta =
+				(movedMeters * _distanceCorrection).round();
+
+			_totalDistanceMeters += delta;
+			_tripDistanceMeters += delta;
+		Log.d("_totalDistanceMeters:$_totalDistanceMeters,_tripDistanceMeters:$_tripDistanceMeters");
+		}	
+		
 		if (reason == 'motion' && !SmartPresenceScheduler.hasActiveWatcher) 
 		{
 			if (deviceStatusChanged) 
@@ -275,6 +294,8 @@ class PresenceService {
 				'battery': batteryLevel,
 				'gpsEnabled': gpsEnabled,
 				'speed': speedKmh,
+				'totalDistanceMeters': _totalDistanceMeters,
+				'tripDistanceMeters': _tripDistanceMeters,
 				'updateCount': ServerValue.increment(1),
 			});
 			
@@ -283,6 +304,8 @@ class PresenceService {
 				'battery': batteryLevel,
 				'gpsEnabled': gpsEnabled,
 				'speed': speedKmh,
+				'totalDistanceMeters': _totalDistanceMeters,
+				'tripDistanceMeters': _tripDistanceMeters,
 			});
 			_lastBatteryLevel = batteryLevel;
 			_lastGpsEnabled = gpsEnabled;
@@ -303,6 +326,8 @@ class PresenceService {
 		'accuracy': position.accuracy,
 		'movedSinceLastUpdateMeters':
 				movedMeters?.round(),
+		'totalDistanceMeters': _totalDistanceMeters,
+		'tripDistanceMeters': _tripDistanceMeters,
 		'updateCount': ServerValue.increment(1),
 		...placeData,
 	};		
@@ -319,6 +344,8 @@ class PresenceService {
 		...placeData,
 		'stationarySince': updateData['stationarySince'],
 		'offlineSince': null,
+		'totalDistanceMeters': _totalDistanceMeters,
+		'tripDistanceMeters': _tripDistanceMeters,
 	};
 
 		if (movedMeters == null ||
@@ -332,7 +359,7 @@ class PresenceService {
 		} catch (e) {
 			rethrow;
 		}
-
+		
   _lastBatteryLevel = batteryLevel;
   _lastGpsEnabled = gpsEnabled;
   _lastLat = position.latitude;
@@ -413,6 +440,44 @@ static Future<void> startConnectionWatcher() async {
   final locatorRef = _db.child(
     "presence/groups/$groupId/locators/$locatorId",
   );
+	
+	await _presenceSub?.cancel();
+
+	_presenceSub = locatorRef.onValue.listen((event) async {
+	
+	Log.d(
+  "ODO LISTENER => "
+  "total=$_totalDistanceMeters "
+  "trip=$_tripDistanceMeters",
+);
+		final data = event.snapshot.value;
+
+		if (data is! Map) return;
+
+		final map = Map<String, dynamic>.from(data);
+
+		final totalDistanceMeters =
+				(map['totalDistanceMeters'] as num?)?.toInt();
+
+		final tripDistanceMeters =
+				(map['tripDistanceMeters'] as num?)?.toInt();
+
+		if (totalDistanceMeters != null) {
+			_totalDistanceMeters = totalDistanceMeters;
+		}
+
+		if (tripDistanceMeters != null) {
+			_tripDistanceMeters = tripDistanceMeters;
+		}
+
+		await PresenceCacheService.save({
+			if (totalDistanceMeters != null)
+				'totalDistanceMeters': totalDistanceMeters,
+
+			if (tripDistanceMeters != null)
+				'tripDistanceMeters': tripDistanceMeters,
+		});
+	});
 
   final connectedRef =
       FirebaseDatabase.instance.ref(".info/connected");
@@ -440,5 +505,19 @@ static Future<void> startConnectionWatcher() async {
 
     //Log.d("BEACON_PRESENCE => onDisconnect armed");
   });
+}
+
+static void resetTripDistance() {
+  _tripDistanceMeters = 0;
+}
+
+static Future<void> loadDistanceCache() async {
+  final cache = await PresenceCacheService.load();
+
+  _totalDistanceMeters =
+      (cache['totalDistanceMeters'] as num?)?.toInt() ?? 0;
+
+  _tripDistanceMeters =
+      (cache['tripDistanceMeters'] as num?)?.toInt() ?? 0;
 }
 }

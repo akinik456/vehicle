@@ -79,7 +79,7 @@ import 'utils/time_helper.dart';
 		Log.d(
 			"LYNRA_DART => locatorPresenceServiceMain",
 		);
-
+		await PresenceService.loadDistanceCache();
 		SmartPresenceScheduler.start();
 		LocatorSettingsService.startListeners();
 		final prefs = await SharedPreferences.getInstance();
@@ -139,7 +139,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   Locale? _locale;
 
   @override
