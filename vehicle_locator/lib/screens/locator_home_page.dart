@@ -53,6 +53,7 @@ import '../utils/address_helper.dart';
 import '../core/widgets/locator_status_card.dart';
 import '../services/presence_service.dart';
 import '../services/smart_presence_scheduler.dart';
+import '../services/native_presence_service.dart';
 
 
 class LocatorHomePage extends StatefulWidget {
@@ -108,7 +109,7 @@ void initState() {
   });
 	WidgetsBinding.instance.addObserver(this);
 
-  SmartPresenceScheduler.setAppForeground(true);
+  NativePresenceService.setAppForeground(true);
 }
 Future<void> _startLocatorHome() async {
   final locatorId = await IdentityService.getLocatorId();
@@ -181,7 +182,7 @@ Future<void> _startLocatorHome() async {
 		ActiveWatcherService.stop();
 		WidgetsBinding.instance.removeObserver(this);
 		_presenceTimer?.cancel();
-		SmartPresenceScheduler.setAppForeground(false);
+		NativePresenceService.setAppForeground(false);
     super.dispose();
   }
 	
@@ -293,10 +294,14 @@ Future<void> _startNativePresenceIfAllowed() async {
     return;
   }
 
-  await NativePresenceService.start(
-    groupId: groupId,
-    locatorId: locatorId,
-  );
+  Log.d("NATIVE SERVICE => start calling");
+
+await NativePresenceService.start(
+  groupId: groupId,
+  locatorId: locatorId,
+);
+
+Log.d("NATIVE SERVICE => start returned");
 }
 
   Future<void> _checkPermissionsAndWarn() async {
@@ -408,7 +413,7 @@ Future<void> _startNativePresenceIfAllowed() async {
 		final isForeground =
 				state == AppLifecycleState.resumed;
 
-		SmartPresenceScheduler.setAppForeground(
+		NativePresenceService.setAppForeground(
 			isForeground,
 		);
   }

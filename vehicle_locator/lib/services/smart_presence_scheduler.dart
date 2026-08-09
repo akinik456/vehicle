@@ -1,3 +1,6 @@
+import 'dart:isolate';
+import 'dart:io';
+
 import 'dart:async';
 
 import 'presence_service.dart';
@@ -39,20 +42,6 @@ class SmartPresenceScheduler {
     _hasActiveWatcher;
 		
 
-	static void setAppForeground(bool value) {
-		if (_appInForeground == value) return;
-
-		_appInForeground = value;
-
-		_scheduleNext(
-			immediate: true,
-			reason: value
-					? 'app_foreground'
-					: 'app_background',
-		);
-		Log.d("setAppForeground _appInForeground:$_appInForeground");
-	}		
-
   static void start() {
     Log.d("SMART PRESENCE => start");
 
@@ -60,6 +49,12 @@ class SmartPresenceScheduler {
       immediate: true,
       reason: 'start',
     );
+		
+		Log.d(
+  "SMART START => "
+  "iso=${Isolate.current.hashCode} "
+  "pid=$pid",
+);
   }
 
   static void stop() {

@@ -66,15 +66,38 @@ class LocatorPresenceForegroundService : Service() {
 							flutterEngine!!.dartExecutor.binaryMessenger,
 							"lynra/presence_service",
 					).setMethodCallHandler { call, result ->
-							if (call.method == "getPresenceIds") {
-									result.success(
-											mapOf(
-													"groupId" to groupId,
-													"locatorId" to locatorId,
+
+							when (call.method) {
+
+									"getPresenceIds" -> {
+											result.success(
+													mapOf(
+															"groupId" to groupId,
+															"locatorId" to locatorId,
+													)
 											)
-									)
-							} else {
-									result.notImplemented()
+									}
+
+									"setAppForeground" -> {
+											val value =
+													call.argument<Boolean>("value") ?: false
+
+											MethodChannel(
+													flutterEngine!!.dartExecutor.binaryMessenger,
+													"lynra/presence_service_dart",
+											).invokeMethod(
+													"setAppForeground",
+													mapOf(
+															"value" to value,
+													),
+											)
+
+											result.success(true)
+									}
+
+									else -> {
+											result.notImplemented()
+									}
 							}
 					}
 

@@ -1,3 +1,5 @@
+import 'dart:isolate';
+import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:firebase_database/firebase_database.dart';
@@ -37,11 +39,17 @@ class PresenceService {
 	static int _totalDistanceMeters = 0;
 	static int _tripDistanceMeters = 0;
 	static const double _distanceCorrection = 1.28;
-	
+	static bool _distanceInitialized = false;
 	
 	static Future<void> updateOnline({
 		String reason = 'unknown',
 	}) async {
+	
+	Log.d(
+  "UPDATE ONLINE => "
+  "iso=${Isolate.current.hashCode} "
+  "pid=$pid",
+);
 	
 	Log.d("updateOnline_called");
   final groupId = _serviceGroupId ?? await IdentityService.getGroupId();
@@ -196,7 +204,7 @@ class PresenceService {
 		SmartPresenceScheduler.setSpeedKmh(speedKmh,);
 		}
 
-  final shouldSkipSmallMove = (reason == 'timer' || reason == 'motion') && movedMeters != null && movedMeters < 25;
+  final shouldSkipSmallMove = false;//?*?(reason == 'timer' || reason == 'motion') && movedMeters != null && movedMeters < 25;
 
 	// Hareket yok, pil/GPS de değişmedi:
   // ne alert kontrolüne ne de RTDB write'a gerek var.
@@ -275,14 +283,32 @@ class PresenceService {
 		// Aktif izleyen yoksa sırf motion nedeniyle presence konumu yazma.
 		
 		Log.d("movedMeters:$movedMeters");
-		if (movedMeters != null && movedMeters >= 25 && movedMeters <= 1000) {
+		
+		
+		if (!_distanceInitialized) {
+			Log.d(
+  "ODO NOT INIT => "
+  "iso=${Isolate.current.hashCode} "
+  "pid=$pid "
+  "total=$_totalDistanceMeters "
+  "trip=$_tripDistanceMeters",
+);
+		} else if (
+				movedMeters != null /*?*?&&
+				movedMeters >= 25 &&
+				movedMeters <= 1000*/
+		){
 			final delta =
-				(movedMeters * _distanceCorrection).round();
+					(movedMeters * _distanceCorrection).round();
 
 			_totalDistanceMeters += delta;
 			_tripDistanceMeters += delta;
-		Log.d("_totalDistanceMeters:$_totalDistanceMeters,_tripDistanceMeters:$_tripDistanceMeters");
-		}	
+
+			Log.d(
+				"ODO => total=$_totalDistanceMeters "
+				"trip=$_tripDistanceMeters",
+			);
+		}		
 		
 		if (reason == 'motion' && !SmartPresenceScheduler.hasActiveWatcher) 
 		{
@@ -298,6 +324,7 @@ class PresenceService {
 				'tripDistanceMeters': _tripDistanceMeters,
 				'updateCount': ServerValue.increment(1),
 			});
+		Log.d("km_update1 totalDistanceMeters:$_totalDistanceMeters");
 			
 			await PresenceCacheService.save({
 				'status': 'online',
@@ -307,6 +334,8 @@ class PresenceService {
 				'totalDistanceMeters': _totalDistanceMeters,
 				'tripDistanceMeters': _tripDistanceMeters,
 			});
+				Log.d("km_update5 totalDistanceMeters:$_totalDistanceMeters");
+
 			_lastBatteryLevel = batteryLevel;
 			_lastGpsEnabled = gpsEnabled;
 			}
@@ -331,6 +360,7 @@ class PresenceService {
 		'updateCount': ServerValue.increment(1),
 		...placeData,
 	};		
+		Log.d("km_update4 totalDistanceMeters:$_totalDistanceMeters");
 	
 	final Map<String, dynamic> cacheData = 
 	{
@@ -347,6 +377,8 @@ class PresenceService {
 		'totalDistanceMeters': _totalDistanceMeters,
 		'tripDistanceMeters': _tripDistanceMeters,
 	};
+		Log.d("km_update3 totalDistanceMeters:$_totalDistanceMeters");
+
 
 		if (movedMeters == null ||
 				movedMeters >= 25) {
@@ -426,58 +458,106 @@ static void setServiceIds({
   );*/
 }
 static Future<void> startConnectionWatcher() async {
-//Log.d("BEACON_PRESENCE => startConnectionWatcher called");
   final groupId = await IdentityService.getGroupId();
   final locatorId = await IdentityService.getLocatorId();
-	
-	//Log.d("BEACON_PRESENCE => watcher ids group=$groupId locator=$locatorId",);
 
   if (groupId == null || locatorId == null) {
-    //Log.d("BEACON_PRESENCE => watcher missing group/locator");
     return;
   }
 
   final locatorRef = _db.child(
     "presence/groups/$groupId/locators/$locatorId",
   );
-	
-	await _presenceSub?.cancel();
 
-	_presenceSub = locatorRef.onValue.listen((event) async {
-	
-	Log.d(
-  "ODO LISTENER => "
+  // İlk açılışta serverdaki km değerlerini kesin al
+  try {
+    final snapshot = await locatorRef.get();
+    final data = snapshot.value;
+		
+		Log.d(
+  "ODO GET => value=${snapshot.value} "
+  "type=${snapshot.value.runtimeType}",
+);
+
+    if (data is Map) {
+      final map = Map<String, dynamic>.from(data);
+
+      final totalDistanceMeters =
+          (map['totalDistanceMeters'] as num?)?.toInt();
+
+      final tripDistanceMeters =
+          (map['tripDistanceMeters'] as num?)?.toInt();
+
+      if (totalDistanceMeters != null) {
+        _totalDistanceMeters = totalDistanceMeters;
+      }
+
+      if (tripDistanceMeters != null) {
+        _tripDistanceMeters = tripDistanceMeters;
+      }
+
+      await PresenceCacheService.save({
+        'totalDistanceMeters': _totalDistanceMeters,
+        'tripDistanceMeters': _tripDistanceMeters,
+      });
+				Log.d("km_update2 totalDistanceMeters:$_totalDistanceMeters");
+
+    }
+
+    _distanceInitialized = true;
+
+    Log.d(
+  "ODO INIT => "
+  "iso=${Isolate.current.hashCode} "
+  "pid=$pid "
   "total=$_totalDistanceMeters "
   "trip=$_tripDistanceMeters",
 );
-		final data = event.snapshot.value;
+  } catch (e) {
+    Log.e("ODO INIT ERROR => $e");
 
-		if (data is! Map) return;
+    // Server okunamadıysa cache ile devam et
+    _distanceInitialized = true;
+  }
 
-		final map = Map<String, dynamic>.from(data);
+  await _presenceSub?.cancel();
 
-		final totalDistanceMeters =
-				(map['totalDistanceMeters'] as num?)?.toInt();
+  _presenceSub = locatorRef.onValue.listen((event) async {
+    final data = event.snapshot.value;
 
-		final tripDistanceMeters =
-				(map['tripDistanceMeters'] as num?)?.toInt();
+    if (data is! Map) return;
 
-		if (totalDistanceMeters != null) {
-			_totalDistanceMeters = totalDistanceMeters;
-		}
+    final map = Map<String, dynamic>.from(data);
 
-		if (tripDistanceMeters != null) {
-			_tripDistanceMeters = tripDistanceMeters;
-		}
+    final totalDistanceMeters =
+        (map['totalDistanceMeters'] as num?)?.toInt();
 
-		await PresenceCacheService.save({
-			if (totalDistanceMeters != null)
-				'totalDistanceMeters': totalDistanceMeters,
+    final tripDistanceMeters =
+        (map['tripDistanceMeters'] as num?)?.toInt();
 
-			if (tripDistanceMeters != null)
-				'tripDistanceMeters': tripDistanceMeters,
-		});
-	});
+    if (totalDistanceMeters != null) {
+      _totalDistanceMeters = totalDistanceMeters;
+    }
+
+    if (tripDistanceMeters != null) {
+      _tripDistanceMeters = tripDistanceMeters;
+    }
+
+    Log.d(
+  "ODO LISTENER => "
+  "iso=${Isolate.current.hashCode} "
+  "pid=$pid "
+  "total=$_totalDistanceMeters "
+  "trip=$_tripDistanceMeters",
+);
+
+    await PresenceCacheService.save({
+      if (totalDistanceMeters != null)
+        'totalDistanceMeters': totalDistanceMeters,
+      if (tripDistanceMeters != null)
+        'tripDistanceMeters': tripDistanceMeters,
+    });
+  });
 
   final connectedRef =
       FirebaseDatabase.instance.ref(".info/connected");
@@ -487,23 +567,20 @@ static Future<void> startConnectionWatcher() async {
   _connectedSub = connectedRef.onValue.listen((event) async {
     final connected =
         event.snapshot.value as bool? ?? false;
-	//Log.d("BEACON_PRESENCE => connected=$connected");
 
     if (!connected) return;
 
     await locatorRef.onDisconnect().update({
-			'status': 'offline',
-			'lastSeen': ServerValue.timestamp,
-			'offlineSince': ServerValue.timestamp,
-		});
-		
+      'status': 'offline',
+      'lastSeen': ServerValue.timestamp,
+      'offlineSince': ServerValue.timestamp,
+    });
+
     await locatorRef.update({
       'status': 'online',
       'lastSeen': ServerValue.timestamp,
-			'offlineSince': null,
+      'offlineSince': null,
     });
-
-    //Log.d("BEACON_PRESENCE => onDisconnect armed");
   });
 }
 

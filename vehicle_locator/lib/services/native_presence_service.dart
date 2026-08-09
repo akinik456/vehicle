@@ -12,6 +12,10 @@ class NativePresenceService {
 		required String locatorId,
 	}) async {
 		try {
+		Log.d(
+  "NATIVE SERVICE => invokeMethod "
+  "group=$groupId locator=$locatorId",
+);
 			await _channel.invokeMethod(
 				'startPresenceService',
 				{
@@ -19,7 +23,7 @@ class NativePresenceService {
 					'locatorId': locatorId,
 				},
 			);
-
+Log.d("NATIVE SERVICE => invokeMethod done");
 			Log.d(
 				"NATIVE PRESENCE => service start requested "
 				"group=$groupId locator=$locatorId",
@@ -30,7 +34,16 @@ class NativePresenceService {
 			);
 		}
 	}
-	
+	static Future<void> setAppForeground(
+  bool value,
+) async {
+  await _channel.invokeMethod(
+    'setAppForeground',
+    {
+      'value': value,
+    },
+  );
+}
 	static Future<Map<String, String>?> getPresenceIds() async {
 		try {
 			final result = await _channel.invokeMethod<Map>(

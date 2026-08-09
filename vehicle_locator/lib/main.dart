@@ -5,6 +5,8 @@ Author: Abdullah KINIK <akinik456@gmail.com>
 Date:   Thu Jul 9 00:42:03 2026 +0300
 
     locator presence e speed eklendi*/
+import 'dart:isolate';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +31,7 @@ import 'services/notification_service.dart';
 import 'services/native_presence_service.dart';
 import 'utils/log.dart';
 import 'utils/time_helper.dart';
+import 'services/native_presence_service.dart';
 
 
 	@pragma('vm:entry-point')
@@ -63,6 +66,12 @@ import 'utils/time_helper.dart';
 	
 	@pragma('vm:entry-point')
 	Future<void> locatorPresenceServiceMain() async {
+	Log.d(
+  "SERVICE MAIN => "
+  "iso=${Isolate.current.hashCode} "
+  "pid=$pid",
+);
+	
 		WidgetsFlutterBinding.ensureInitialized();
 
 		await Firebase.initializeApp();
@@ -79,16 +88,39 @@ import 'utils/time_helper.dart';
 		Log.d(
 			"LYNRA_DART => locatorPresenceServiceMain",
 		);
+		
 		await PresenceService.loadDistanceCache();
-		SmartPresenceScheduler.start();
+
+		await PresenceService.startConnectionWatcher();
+
 		LocatorSettingsService.startListeners();
+
 		final prefs = await SharedPreferences.getInstance();
+
 		ActiveWatcherService.setLangCode(
 			prefs.getString('languageCode') ?? 'en',
 		);
+		
+		const MethodChannel _serviceChannel =
+				MethodChannel('lynra/presence_service_dart');
+
+		_serviceChannel.setMethodCallHandler((call) async {
+			switch (call.method) {
+				case 'setAppForeground':
+					final value =
+							call.arguments['value'] as bool? ?? false;
+
+					NativePresenceService.setAppForeground(value);
+					break;
+			}
+		});
+
 		await ActiveWatcherService.start();
-		await PresenceService.startConnectionWatcher();
+
+		SmartPresenceScheduler.start();
+
 		MotionService.start();
+		
 	}
 
 
