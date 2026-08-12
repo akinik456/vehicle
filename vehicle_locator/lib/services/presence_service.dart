@@ -36,8 +36,8 @@ class PresenceService {
 	static DateTime? _lastAcceptedLocationTime;
 	static String _currentAddress = '';
 
-	static int _totalDistanceMeters = 0;
-	static int _tripDistanceMeters = 0;
+	static int? _totalDistanceMeters;
+	static int? _tripDistanceMeters;
 	static const double _distanceCorrection = 1.28;
 	static bool _distanceInitialized = false;
 	
@@ -50,6 +50,16 @@ class PresenceService {
   "iso=${Isolate.current.hashCode} "
   "pid=$pid",
 );
+
+if (_totalDistanceMeters == null ||
+    _tripDistanceMeters == null) {
+  await loadDistanceCache();
+}
+
+if (_totalDistanceMeters == null ||
+    _tripDistanceMeters == null) {
+  return;
+}
 	
 	Log.d("updateOnline_called");
   final groupId = _serviceGroupId ?? await IdentityService.getGroupId();
@@ -204,7 +214,7 @@ class PresenceService {
 		SmartPresenceScheduler.setSpeedKmh(speedKmh,);
 		}
 
-  final shouldSkipSmallMove = false;//?*?(reason == 'timer' || reason == 'motion') && movedMeters != null && movedMeters < 25;
+  final shouldSkipSmallMove = (reason == 'timer' || reason == 'motion') && movedMeters != null && movedMeters < 25;
 
 	// Hareket yok, pil/GPS de değişmedi:
   // ne alert kontrolüne ne de RTDB write'a gerek var.
@@ -294,15 +304,15 @@ class PresenceService {
   "trip=$_tripDistanceMeters",
 );
 		} else if (
-				movedMeters != null /*?*?&&
+				movedMeters != null &&
 				movedMeters >= 25 &&
-				movedMeters <= 1000*/
+				movedMeters <= 1000
 		){
 			final delta =
 					(movedMeters * _distanceCorrection).round();
 
-			_totalDistanceMeters += delta;
-			_tripDistanceMeters += delta;
+_totalDistanceMeters = _totalDistanceMeters! + delta;
+_tripDistanceMeters = _tripDistanceMeters! + delta;
 
 			Log.d(
 				"ODO => total=$_totalDistanceMeters "
@@ -592,9 +602,9 @@ static Future<void> loadDistanceCache() async {
   final cache = await PresenceCacheService.load();
 
   _totalDistanceMeters =
-      (cache['totalDistanceMeters'] as num?)?.toInt() ?? 0;
+      (cache['totalDistanceMeters'] as num?)?.toInt();
 
   _tripDistanceMeters =
-      (cache['tripDistanceMeters'] as num?)?.toInt() ?? 0;
+      (cache['tripDistanceMeters'] as num?)?.toInt();
 }
 }

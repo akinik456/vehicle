@@ -258,22 +258,22 @@ Future<void> _updateAllMemberMarkers(
 					Positioned(
 						left: 16,
 						bottom: 130,
-						child: FloatingActionButton.small(
-						heroTag: "map_type",
-						backgroundColor: AppColors.primary,
-						onPressed: () {
-							setState(() {
-								_mapType = _mapType == MapType.normal
-										? MapType.satellite
-										: MapType.normal;
-							});
-						},
-						child: Icon(
-							_mapType == MapType.normal
-									? Icons.satellite_alt
-									: Icons.map,
+							child: FloatingActionButton.small(
+							heroTag: "map_type",
+							backgroundColor: AppColors.primary,
+							onPressed: () {
+								setState(() {
+									_mapType = _mapType == MapType.normal
+											? MapType.satellite
+											: MapType.normal;
+								});
+							},
+							child: Icon(
+								_mapType == MapType.normal
+										? Icons.satellite_alt
+										: Icons.map,
+							),
 						),
-					),
 					),
 					Positioned(
 						left: 16,

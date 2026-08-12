@@ -131,9 +131,6 @@ class GroupService {
 
 			return groupId;
 		});
-	Log.d("CREATE GROUP => transaction completed");
-	//  await RequesterRegistryService.registerRequester();
-	Log.d("CREATE GROUP => requester registered");
 		final prefs = await SharedPreferences.getInstance();
 		await prefs.setString(
 			_groupIdKey,

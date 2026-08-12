@@ -20,9 +20,6 @@ class MainActivity : FlutterActivity() {
 
             if (call.method == "startPresenceService") {
 
-						val groupId =
-								call.argument<String>("groupId")
-
 						val locatorId =
 								call.argument<String>("locatorId")
 
@@ -30,7 +27,6 @@ class MainActivity : FlutterActivity() {
 								this,
 								LocatorPresenceForegroundService::class.java,
 						).apply {
-								putExtra("groupId", groupId)
 								putExtra("locatorId", locatorId)
 						}
 

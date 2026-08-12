@@ -1,4 +1,5 @@
 //?*?Free trial $_trialDaysLeft days left
+//android:value="AIzaSyCkairHqEl6kGkOdR_03sDYct-gmhc_NZM" />	
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';

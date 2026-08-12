@@ -39,12 +39,11 @@ class LocatorPresenceForegroundService : Service() {
         startId: Int,
     ): Int {
 				
-				val groupId = intent?.getStringExtra("groupId")
 				val locatorId = intent?.getStringExtra("locatorId")
 
 				Log.e(
 						"LYNRA_SERVICE",
-						"groupId=$groupId locatorId=$locatorId",
+						"locatorId=$locatorId",
 				)
 		
         Log.e(
@@ -72,7 +71,6 @@ class LocatorPresenceForegroundService : Service() {
 									"getPresenceIds" -> {
 											result.success(
 													mapOf(
-															"groupId" to groupId,
 															"locatorId" to locatorId,
 													)
 											)
