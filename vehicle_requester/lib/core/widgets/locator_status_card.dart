@@ -263,6 +263,18 @@ class _LocatorStatusCardState
 											fontSize:18,
 										),
 									),	
+									
+									/* ?*? bunu ekle final speed = 
+		(double.tryParse(widget.speed) ?? 0).round();
+
+		final speedColor =
+				speed < 90
+						? AppColors.accent
+						: speed < 120
+								? AppColors.warning
+								: AppColors.danger;*/
+								
+								
 							const SizedBox(width: 32),
 									Icon(
 										widget.gpsEnabled
