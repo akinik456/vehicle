@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'identity_service.dart';
 import 'geofence_service.dart';
@@ -38,8 +39,12 @@ class PresenceService {
 
 	static int? _totalDistanceMeters;
 	static int? _tripDistanceMeters;
-	static const double _distanceCorrection = 1.28;
+	static const double _distanceCorrection = 1.0;
 	static bool _distanceInitialized = false;
+	
+	static StreamSubscription<Position>? _odometerSub;
+
+	static Position? _lastOdometerPosition;
 	
 	static Future<void> updateOnline({
 		String reason = 'unknown',
@@ -104,7 +109,11 @@ if (_totalDistanceMeters == null ||
 				speedKmh = 0;
 			}//?*?
 		}
-
+		if (speedKmh >= 6) {
+			await setOdometerTracking(true);
+		} else if (speedKmh <= 3) {
+			await setOdometerTracking(false);
+		}
 		if (position != null && _lastLat != null && _lastLng != null) 
 		{
 		movedMeters = Geolocator.distanceBetween(_lastLat!,_lastLng!,position.latitude,position.longitude,);		
@@ -308,11 +317,10 @@ if (_totalDistanceMeters == null ||
 				movedMeters >= 25 &&
 				movedMeters <= 1000
 		){
-			final delta =
+			/*final delta =
 					(movedMeters * _distanceCorrection).round();
-
-_totalDistanceMeters = _totalDistanceMeters! + delta;
-_tripDistanceMeters = _tripDistanceMeters! + delta;
+			_totalDistanceMeters = _totalDistanceMeters! + delta;
+			_tripDistanceMeters = _tripDistanceMeters! + delta;*/
 
 			Log.d(
 				"ODO => total=$_totalDistanceMeters "
@@ -395,12 +403,60 @@ _tripDistanceMeters = _tripDistanceMeters! + delta;
 			updateData['stationarySince'] =
 					ServerValue.timestamp;
 		}
-		try {
-		await _db.child(path).update(updateData,);
-		await PresenceCacheService.save(cacheData);
-		} catch (e) {
-			rethrow;
-		}
+		
+final now = DateTime.now();
+
+final currentDay =
+    '${now.year}-${now.month}-${now.day}';
+
+final prefs = await SharedPreferences.getInstance();
+
+final historyDayKey =
+    'history_day_$locatorId';
+
+final savedDay =
+    prefs.getString(historyDayKey);
+
+if (savedDay != currentDay) {
+  await _db
+      .child(
+        'history/groups/$groupId/$locatorId/lastday',
+      )
+      .remove();
+
+  await prefs.setString(
+    historyDayKey,
+    currentDay,
+  );
+
+  Log.d(
+    'HISTORY NEW DAY => '
+    'old=$savedDay new=$currentDay '
+    'lastday cleared',
+  );
+}
+final historyTimestamp =
+DateTime.now().millisecondsSinceEpoch;
+final historyPath =
+    'history/groups/$groupId/$locatorId/lastday/$historyTimestamp';
+
+final Map<String, dynamic> rootUpdateData = {
+  // Mevcut presence update
+  for (final entry in updateData.entries)
+    '$path/${entry.key}': entry.value,
+
+  // History
+  '$historyPath/lat': position.latitude,
+  '$historyPath/lng': position.longitude,
+};
+
+try {
+  await _db.update(rootUpdateData);
+
+  await PresenceCacheService.save(cacheData);
+} catch (e) {
+  rethrow;
+}
 		
   _lastBatteryLevel = batteryLevel;
   _lastGpsEnabled = gpsEnabled;
@@ -585,12 +641,6 @@ static Future<void> startConnectionWatcher() async {
       'lastSeen': ServerValue.timestamp,
       'offlineSince': ServerValue.timestamp,
     });
-
-    await locatorRef.update({
-      'status': 'online',
-      'lastSeen': ServerValue.timestamp,
-      'offlineSince': null,
-    });
   });
 }
 
@@ -607,4 +657,103 @@ static Future<void> loadDistanceCache() async {
   _tripDistanceMeters =
       (cache['tripDistanceMeters'] as num?)?.toInt();
 }
+
+static Future<void> startOdometerTracking() async {
+  if (_odometerSub != null) return;
+
+  const settings = LocationSettings(
+    accuracy: LocationAccuracy.high,
+    distanceFilter: 10,
+  );
+
+  _odometerSub = Geolocator.getPositionStream(
+    locationSettings: settings,
+  ).listen((position) {
+    // Kötü GPS'i alma
+    if (position.accuracy > 100) return;
+
+    final previous = _lastOdometerPosition;
+
+    _lastOdometerPosition = position;
+
+    // İlk nokta sadece referans
+    if (previous == null) return;
+
+    final movedMeters = Geolocator.distanceBetween(
+      previous.latitude,
+      previous.longitude,
+      position.latitude,
+      position.longitude,
+    );
+
+    // Ufak GPS jitter
+    if (movedMeters < 5) return;
+
+    final delta = movedMeters.round();
+
+    if (_totalDistanceMeters == null ||
+        _tripDistanceMeters == null) {
+      return;
+    }
+
+    _totalDistanceMeters =
+        _totalDistanceMeters! + delta;
+
+    _tripDistanceMeters =
+        _tripDistanceMeters! + delta;
+  });
+}
+
+static Future<void> setOdometerTracking(bool active) async {
+  if (active) {
+    if (_odometerSub != null) return;
+
+    _lastOdometerPosition = null;
+
+    final settings = AndroidSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+      intervalDuration: Duration(seconds: 5),
+    );
+
+    _odometerSub = Geolocator.getPositionStream(
+      locationSettings: settings,
+    ).listen((position) {
+      if (position.accuracy > 100) return;
+
+      final previous = _lastOdometerPosition;
+      _lastOdometerPosition = position;
+
+      if (previous == null) return;
+
+      final movedMeters = Geolocator.distanceBetween(
+        previous.latitude,
+        previous.longitude,
+        position.latitude,
+        position.longitude,
+      );
+
+      if (movedMeters < 5) return;
+
+      final delta = movedMeters.round();
+
+      if (_totalDistanceMeters == null ||
+          _tripDistanceMeters == null) {
+        return;
+      }
+
+      _totalDistanceMeters =
+          _totalDistanceMeters! + delta;
+
+      _tripDistanceMeters =
+          _tripDistanceMeters! + delta;
+    });
+
+  } else {
+    await _odometerSub?.cancel();
+    _odometerSub = null;
+    _lastOdometerPosition = null;
+  }
+}
+
 }
