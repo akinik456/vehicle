@@ -1,7 +1,7 @@
 adb logcat | findstr LYNRA_SERVICE
 Foreground service destroyed
 **************
-
+- araç gruptan silinirken rtdb den de sil
 -	bildirim ayarları check
 
 - app cihazdan kaldırılırsa FS den nasıl sileceğiz ?

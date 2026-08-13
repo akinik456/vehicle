@@ -24,7 +24,6 @@ class PresenceService {
   PresenceService._();
 
   static final _db = FirebaseDatabase.instance.ref();
-	static StreamSubscription<DatabaseEvent>? _connectedSub;
 	static StreamSubscription<DatabaseEvent>? _presenceSub;
 	static String? _serviceGroupId;
 	static String? _serviceLocatorId;
@@ -625,23 +624,6 @@ static Future<void> startConnectionWatcher() async {
     });
   });
 
-  final connectedRef =
-      FirebaseDatabase.instance.ref(".info/connected");
-
-  await _connectedSub?.cancel();
-
-  _connectedSub = connectedRef.onValue.listen((event) async {
-    final connected =
-        event.snapshot.value as bool? ?? false;
-
-    if (!connected) return;
-
-    await locatorRef.onDisconnect().update({
-      'status': 'offline',
-      'lastSeen': ServerValue.timestamp,
-      'offlineSince': ServerValue.timestamp,
-    });
-  });
 }
 
 static void resetTripDistance() {
@@ -658,102 +640,88 @@ static Future<void> loadDistanceCache() async {
       (cache['tripDistanceMeters'] as num?)?.toInt();
 }
 
-static Future<void> startOdometerTracking() async {
-  if (_odometerSub != null) return;
+static double _distanceCorrectionForSpeed(
+  double speedKmh,
+) {
+  if (speedKmh >= 70) return 1.00;
+  if (speedKmh >= 40) return 1.05;
+  if (speedKmh >= 20) return 1.10;
 
-  const settings = LocationSettings(
-    accuracy: LocationAccuracy.high,
-    distanceFilter: 10,
-  );
-
-  _odometerSub = Geolocator.getPositionStream(
-    locationSettings: settings,
-  ).listen((position) {
-    // Kötü GPS'i alma
-    if (position.accuracy > 100) return;
-
-    final previous = _lastOdometerPosition;
-
-    _lastOdometerPosition = position;
-
-    // İlk nokta sadece referans
-    if (previous == null) return;
-
-    final movedMeters = Geolocator.distanceBetween(
-      previous.latitude,
-      previous.longitude,
-      position.latitude,
-      position.longitude,
-    );
-
-    // Ufak GPS jitter
-    if (movedMeters < 5) return;
-
-    final delta = movedMeters.round();
-
-    if (_totalDistanceMeters == null ||
-        _tripDistanceMeters == null) {
-      return;
-    }
-
-    _totalDistanceMeters =
-        _totalDistanceMeters! + delta;
-
-    _tripDistanceMeters =
-        _tripDistanceMeters! + delta;
-  });
+  return 1.10;
 }
 
-static Future<void> setOdometerTracking(bool active) async {
-  if (active) {
-    if (_odometerSub != null) return;
+	static Future<void> setOdometerTracking(
+		bool active,
+	) async {
+		if (active) {
+			if (_odometerSub != null) return;
 
-    _lastOdometerPosition = null;
+			_lastOdometerPosition = null;
 
-    final settings = AndroidSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 10,
-      intervalDuration: Duration(seconds: 5),
-    );
+			final settings = AndroidSettings(
+				accuracy: LocationAccuracy.high,
+				distanceFilter: 10,
+				intervalDuration: const Duration(
+					seconds: 5,
+				),
+			);
 
-    _odometerSub = Geolocator.getPositionStream(
-      locationSettings: settings,
-    ).listen((position) {
-      if (position.accuracy > 100) return;
+			_odometerSub = Geolocator.getPositionStream(
+				locationSettings: settings,
+			).listen((position) {
+				// Kötü GPS noktasını kullanma
+				if (position.accuracy > 100) return;
 
-      final previous = _lastOdometerPosition;
-      _lastOdometerPosition = position;
+				final previous =
+						_lastOdometerPosition;
 
-      if (previous == null) return;
+				_lastOdometerPosition = position;
 
-      final movedMeters = Geolocator.distanceBetween(
-        previous.latitude,
-        previous.longitude,
-        position.latitude,
-        position.longitude,
-      );
+				// İlk nokta sadece referans
+				if (previous == null) return;
 
-      if (movedMeters < 5) return;
+				final movedMeters =
+						Geolocator.distanceBetween(
+					previous.latitude,
+					previous.longitude,
+					position.latitude,
+					position.longitude,
+				);
 
-      final delta = movedMeters.round();
+				// Ufak GPS jitter
+				if (movedMeters < 5) return;
 
-      if (_totalDistanceMeters == null ||
-          _tripDistanceMeters == null) {
-        return;
-      }
+				final speedKmh =
+						position.speed >= 0
+								? position.speed * 3.6
+								: 0.0;
 
-      _totalDistanceMeters =
-          _totalDistanceMeters! + delta;
+				final correction =
+						_distanceCorrectionForSpeed(
+					speedKmh,
+				);
 
-      _tripDistanceMeters =
-          _tripDistanceMeters! + delta;
-    });
+				final delta =
+						(movedMeters * correction).round();
 
-  } else {
-    await _odometerSub?.cancel();
-    _odometerSub = null;
-    _lastOdometerPosition = null;
-  }
-}
+				if (_totalDistanceMeters == null ||
+						_tripDistanceMeters == null) {
+					return;
+				}
+
+				_totalDistanceMeters =
+						_totalDistanceMeters! + delta;
+
+				_tripDistanceMeters =
+						_tripDistanceMeters! + delta;
+			});
+
+		} else {
+			await _odometerSub?.cancel();
+
+			_odometerSub = null;
+			_lastOdometerPosition = null;
+		}
+	}
 
 }

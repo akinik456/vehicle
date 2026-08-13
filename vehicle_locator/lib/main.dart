@@ -91,8 +91,6 @@ import 'services/native_presence_service.dart';
 		
 		await PresenceService.loadDistanceCache();
 		
-		await PresenceService.startOdometerTracking();
-
 		await PresenceService.startConnectionWatcher();
 
 		LocatorSettingsService.startListeners();

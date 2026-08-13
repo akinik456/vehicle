@@ -1814,7 +1814,19 @@ Widget _buildGroupHome({
 																							final locatorName = locator['locatorName'] ?? 'Member';
 																							final locatorCode = locator['locatorCode'] ?? '------';
 																							final locatorPlate = locator['locatorPlate'] ?? '------';
-																							final status = locator['status'] ?? 'offline';
+																							
+																							final lastSeen =
+																									(locator['lastSeen'] as num?)?.toInt();
+
+																							final now =
+																									DateTime.now().millisecondsSinceEpoch;
+
+																							final status =
+																									lastSeen != null &&
+																									now - lastSeen <= 5 * 60 * 1000
+																											? 'online'
+																											: 'offline';
+																							
 																							final battery = locator['battery'] ?? 0;
 																							final speed = (locator['speed'] as num?)?.toDouble() ?? 0.0;
 																							final gpsEnabled = locator['gpsEnabled'] == true;																	
