@@ -403,39 +403,64 @@ exports.createFleetManager = onCall(
       }
 
       // ==========================================
-      // CREATE FIREBASE AUTH USER
-      // ==========================================
+			// GET OR CREATE FIREBASE AUTH USER
+			// ==========================================
 
-      let userRecord;
+			let userRecord;
+			let isNewUser = false;
 
-      try {
-        userRecord =
-            await admin.auth().createUser({
-          email,
-          password,
-          emailVerified: false,
-          disabled: false,
-        });
-      } catch (error) {
-        console.error(
-            "CREATE FLEET MANAGER AUTH ERROR",
-            error,
-        );
+			try {
+				userRecord =
+						await admin.auth().getUserByEmail(email);
 
-        if (error.code === "auth/email-already-exists") {
-          throw new HttpsError(
-              "already-exists",
-              "This email address is already registered.",
-          );
-        }
+				console.log(
+						"FLEET MANAGER EXISTING USER",
+						"uid=", userRecord.uid,
+						"email=", email,
+				);
+			} catch (error) {
+				if (error.code !== "auth/user-not-found") {
+					console.error(
+							"FLEET MANAGER LOOKUP ERROR",
+							error,
+					);
 
-        throw new HttpsError(
-            "internal",
-            "Could not create web account.",
-        );
-      }
+					throw new HttpsError(
+							"internal",
+							"Could not check web account.",
+					);
+				}
 
-      const managerUid = userRecord.uid;
+				try {
+					userRecord =
+							await admin.auth().createUser({
+						email,
+						password,
+						emailVerified: false,
+						disabled: false,
+					});
+
+					isNewUser = true;
+
+					console.log(
+							"FLEET MANAGER NEW USER",
+							"uid=", userRecord.uid,
+							"email=", email,
+					);
+				} catch (createError) {
+					console.error(
+							"CREATE FLEET MANAGER AUTH ERROR",
+							createError,
+					);
+
+					throw new HttpsError(
+							"internal",
+							"Could not create web account.",
+					);
+				}
+			}
+
+			const managerUid = userRecord.uid;
 
       // ==========================================
       // GROUP ACCESS
@@ -458,7 +483,9 @@ exports.createFleetManager = onCall(
       } catch (error) {
         // Auth user oluşturuldu ama Firestore yazılamadı.
         // Yarım hesap bırakmayalım.
-        await admin.auth().deleteUser(managerUid);
+        if (isNewUser) {
+					await admin.auth().deleteUser(managerUid);
+				}
 
         console.error(
             "CREATE FLEET MANAGER FIRESTORE ERROR",

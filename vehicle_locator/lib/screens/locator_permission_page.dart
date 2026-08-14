@@ -5,6 +5,8 @@ import '../core/theme/app_fonts.dart';
 import '../core/widgets/app_card.dart';
 import '../services/locator_permission_service.dart';
 import '../l10n/app_localizations.dart';
+import '../services/app_log_service.dart';
+
 
 
 class LocatorPermissionPage extends StatefulWidget {
@@ -339,7 +341,29 @@ Widget build(BuildContext context) {
                 ),
               ),
             ),
-
+						const SizedBox(height: 10),
+						TextButton.icon(
+								onPressed: () async {
+									await AppLogService.shareLog();
+								},
+								icon: Icon(
+									Icons.share_rounded,
+									size: 18,
+									color: AppColors.accent,
+								),
+								label: Row(
+									mainAxisSize: MainAxisSize.min,
+									children: [
+										Text(
+											l10n.shareLogs,
+											style: AppFonts.caption.copyWith(
+												color: AppColors.textPrimary,
+												fontWeight: FontWeight.w600,
+											),
+										),
+									],
+								),
+							),
             const SizedBox(height: 16),
           ],
         ),

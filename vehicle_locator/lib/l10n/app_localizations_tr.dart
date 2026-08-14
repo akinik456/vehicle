@@ -15,7 +15,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get memberSetupStepOne => '\"LynraFleet Driver\" uygulamasını sürücünün telefonuna yükleyin.';
 
   @override
-  String get memberSetupStepTwo => 'LynraFleet Driver uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.';
+  String get memberSetupStepTwo => '\"LynraFleet Driver\" uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.';
 
   @override
   String get memberSetupStepThree => 'Araç Ekle seçeneğine dokunup eşleştirme isteği gönderin.';
@@ -34,6 +34,21 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get plate => 'Plaka';
+
+  @override
+  String get webPanelAccess => 'Web Panel Erişimi';
+
+  @override
+  String get webPanelAccessDescription => 'LynraFleet web paneline erişim için bir yönetici hesabı oluşturun.';
+
+  @override
+  String get email => 'E-posta';
+
+  @override
+  String get password => 'Şifre';
+
+  @override
+  String get createWebAccess => 'Web Erişimi Oluştur';
 
   @override
   String get actionRequired => 'İşlem Gerekli';
@@ -627,6 +642,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsSaved => 'Ayarlar kaydedildi';
+
+  @override
+  String get shareLogs => 'Log Paylaş';
 
   @override
   String get sixdigitcode => '6 haneli kod giriniz';

@@ -15,7 +15,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get memberSetupStepOne => 'Instala \"LynraFleet Driver\" en el teléfono del conductor.';
 
   @override
-  String get memberSetupStepTwo => 'Abre LynraFleet Driver y obtén el Código del Conductor o el código QR.';
+  String get memberSetupStepTwo => 'Abre \"LynraFleet Driver\" y obtén el Código del Conductor o el código QR.';
 
   @override
   String get memberSetupStepThree => 'Pulsa Añadir vehículo y envía una solicitud de vinculación.';
@@ -34,6 +34,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get plate => 'Matrícula';
+
+  @override
+  String get webPanelAccess => 'Acceso al panel web';
+
+  @override
+  String get webPanelAccessDescription => 'Cree una cuenta de administrador para acceder al panel web de LynraFleet.';
+
+  @override
+  String get email => 'Correo electrónico';
+
+  @override
+  String get password => 'Contraseña';
+
+  @override
+  String get createWebAccess => 'Crear acceso web';
 
   @override
   String get actionRequired => 'Acción requerida';
@@ -627,6 +642,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsSaved => 'Configuración guardada';
+
+  @override
+  String get shareLogs => 'Compartir registro';
 
   @override
   String get sixdigitcode => 'Introduzca un código de 6 dígitos';

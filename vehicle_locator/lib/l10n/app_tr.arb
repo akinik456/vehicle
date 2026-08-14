@@ -12,7 +12,11 @@
 "enterVehicleInfo": 									"Araç Bilgilerini Gir",
 "vehicleName": 												"Araç İsmi",
 "plate": 															"Plaka",
-
+"webPanelAccess": 										"Web Panel Erişimi",
+"webPanelAccessDescription": 					"LynraFleet web paneline erişim için bir yönetici hesabı oluşturun.",
+"email": 															"E-posta",
+"password": 													"Şifre",
+"createWebAccess": 										"Web Erişimi Oluştur",
 
 "actionRequired":											"İşlem Gerekli",
 "activeWatchers":											"Aktif İzleyenler",
@@ -211,6 +215,7 @@
 "sendPairingRequest":									"Bağlantı isteği gönder",
 "settings":														"Ayarlar",
 "settingsSaved":											"Ayarlar kaydedildi",
+"shareLogs":													"Log Paylaş",
 "sixdigitcode":												"6 haneli kod giriniz",
 "somePermissions":										"Bazı izinler eksik. Lütfen izinler sayfasını açın ve gerekli izinleri verin.",
 "speed":															"Hız",

@@ -114,7 +114,7 @@ abstract class AppLocalizations {
   /// No description provided for @memberSetupStepTwo.
   ///
   /// In en, this message translates to:
-  /// **'Open LynraFleet Driver and get the Driver Code or QR code.'**
+  /// **'Open \"LynraFleet Driver\" and get the Driver Code or QR code.'**
   String get memberSetupStepTwo;
 
   /// No description provided for @memberSetupStepThree.
@@ -152,6 +152,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plate'**
   String get plate;
+
+  /// No description provided for @webPanelAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Web Panel Access'**
+  String get webPanelAccess;
+
+  /// No description provided for @webPanelAccessDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a manager account for access to the LynraFleet web panel.'**
+  String get webPanelAccessDescription;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @createWebAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Web Access'**
+  String get createWebAccess;
 
   /// No description provided for @actionRequired.
   ///
@@ -1286,6 +1316,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings saved'**
   String get settingsSaved;
+
+  /// No description provided for @shareLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Logs'**
+  String get shareLogs;
 
   /// No description provided for @sixdigitcode.
   ///
