@@ -11,6 +11,11 @@
 "enterVehicleInfo": 									"Enter Vehicle Info",
 "vehicleName": 												"Vehicle Name",
 "plate": 															"Plate",
+"webPanelAccess": 										"Web Panel Access",
+"webPanelAccessDescription": 					"Create a manager account for access to the LynraFleet web panel.",
+"email": 															"Email",
+"password": 													"Password",
+"createWebAccess": 										"Create Web Access",
 
 "actionRequired":											"Action Required",
 "activeWatchers":											"Active Watchers",

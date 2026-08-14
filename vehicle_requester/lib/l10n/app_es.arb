@@ -11,7 +11,11 @@
 "enterVehicleInfo": 									"Introduzca la Información del Vehículo",
 "vehicleName": 												"Nombre del vehículo",
 "plate": 															"Matrícula",
-
+"webPanelAccess": 										"Acceso al panel web",
+"webPanelAccessDescription": 					"Cree una cuenta de administrador para acceder al panel web de LynraFleet.",
+"email": 															"Correo electrónico",
+"password": 													"Contraseña",
+"createWebAccess": 										"Crear acceso web",
 
 "actionRequired": 										"Acción requerida",
 "activeWatchers": 										"Observadores activos",

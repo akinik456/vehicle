@@ -9,6 +9,8 @@
 
 const {setGlobalOptions} = require("firebase-functions");
 const {onRequest} = require("firebase-functions/https");
+const {onCall, HttpsError} =
+    require("firebase-functions/v2/https");
 const {onDocumentCreated} =
     require("firebase-functions/v2/firestore");
 const {onValueWritten} = require("firebase-functions/v2/database");
@@ -302,4 +304,182 @@ exports.onActiveWatchersChanged = onValueWritten(
       console.error("ACTIVE WATCHERS FCM ERROR", error);
     }
   }
+);
+exports.createFleetManager = onCall(
+    async (request) => {
+      // ==========================================
+      // AUTH CHECK
+      // ==========================================
+
+      if (!request.auth) {
+        throw new HttpsError(
+            "unauthenticated",
+            "Authentication required.",
+        );
+      }
+
+      const callerUid = request.auth.uid;
+
+      const email =
+          request.data.email?.trim().toLowerCase();
+
+      const password =
+          request.data.password;
+
+      const groupId =
+          request.data.groupId?.trim();
+
+      if (!email || !password || !groupId) {
+        throw new HttpsError(
+            "invalid-argument",
+            "Email, password and groupId are required.",
+        );
+      }
+
+      if (password.length < 6) {
+        throw new HttpsError(
+            "invalid-argument",
+            "Password must contain at least 6 characters.",
+        );
+      }
+
+      // ==========================================
+      // GROUP CHECK
+      // ==========================================
+
+      const groupRef = admin
+          .firestore()
+          .collection("groups")
+          .doc(groupId);
+
+      const groupSnap = await groupRef.get();
+
+      if (!groupSnap.exists) {
+        throw new HttpsError(
+            "not-found",
+            "Fleet not found.",
+        );
+      }
+
+      const groupData = groupSnap.data();
+
+      // Buradaki field senin mevcut yapına göre.
+      // groups/{groupId}.masterRequesterId
+      const masterRequesterId =
+          groupData.masterRequesterId;
+
+      if (!masterRequesterId) {
+        throw new HttpsError(
+            "failed-precondition",
+            "Fleet master not found.",
+        );
+      }
+
+      // ==========================================
+      // VERIFY REQUESTER OWNER
+      // ==========================================
+
+      const requesterSnap = await admin
+          .firestore()
+          .collection("requesters")
+          .doc(masterRequesterId)
+          .get();
+
+      if (!requesterSnap.exists) {
+        throw new HttpsError(
+            "permission-denied",
+            "Fleet owner not found.",
+        );
+      }
+
+      const requesterAuthUid =
+          requesterSnap.data().authUid;
+
+      if (requesterAuthUid !== callerUid) {
+        throw new HttpsError(
+            "permission-denied",
+            "Only the fleet owner can create web access.",
+        );
+      }
+
+      // ==========================================
+      // CREATE FIREBASE AUTH USER
+      // ==========================================
+
+      let userRecord;
+
+      try {
+        userRecord =
+            await admin.auth().createUser({
+          email,
+          password,
+          emailVerified: false,
+          disabled: false,
+        });
+      } catch (error) {
+        console.error(
+            "CREATE FLEET MANAGER AUTH ERROR",
+            error,
+        );
+
+        if (error.code === "auth/email-already-exists") {
+          throw new HttpsError(
+              "already-exists",
+              "This email address is already registered.",
+          );
+        }
+
+        throw new HttpsError(
+            "internal",
+            "Could not create web account.",
+        );
+      }
+
+      const managerUid = userRecord.uid;
+
+      // ==========================================
+      // GROUP ACCESS
+      // ==========================================
+
+      try {
+        await admin
+            .firestore()
+            .collection("fleet_managers")
+            .doc(managerUid)
+            .collection("groups")
+            .doc(groupId)
+            .set({
+              groupId,
+              email,
+              createdAt:
+                  admin.firestore.FieldValue.serverTimestamp(),
+              createdBy: callerUid,
+            });
+      } catch (error) {
+        // Auth user oluşturuldu ama Firestore yazılamadı.
+        // Yarım hesap bırakmayalım.
+        await admin.auth().deleteUser(managerUid);
+
+        console.error(
+            "CREATE FLEET MANAGER FIRESTORE ERROR",
+            error,
+        );
+
+        throw new HttpsError(
+            "internal",
+            "Could not create web access.",
+        );
+      }
+
+      console.log(
+          "FLEET MANAGER CREATED",
+          "uid=", managerUid,
+          "groupId=", groupId,
+      );
+
+      return {
+        success: true,
+        uid: managerUid,
+      };
+    },
 );

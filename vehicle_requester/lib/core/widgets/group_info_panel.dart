@@ -11,6 +11,8 @@ import '../../services/requester_name_editor.dart';
 import 'app_banner.dart';
 import 'dialogs/app_input_dialog.dart';
 import 'locator_list_card.dart';
+import '../../screens/web_panel_access_page.dart';
+
 
 class GroupInfoPanel  extends StatelessWidget {
   const GroupInfoPanel ({
@@ -168,6 +170,7 @@ class GroupInfoPanel  extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+	final l10n = AppLocalizations.of(context)!;
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance
           .collection('groups')
@@ -269,9 +272,59 @@ class GroupInfoPanel  extends StatelessWidget {
 								],
 							),					
 							const SizedBox(height: 8),
+
 							_buildCodeRow(context),
-							
+
+							if (isMaster) ...[
+								const SizedBox(height: 8),
+
+								InkWell(
+									borderRadius: BorderRadius.circular(10),
+									onTap: () {
+										Navigator.push(
+											context,
+											MaterialPageRoute(
+												builder: (_) => WebPanelAccessPage(
+													groupId: groupId,
+												),
+											),
+										);
+									},
+									child: Padding(
+										padding: const EdgeInsets.symmetric(
+											horizontal: 6,
+											vertical: 8,
+										),
+										child: Row(
+											children: [
+												Icon(
+													Icons.language_rounded,
+													size: 18,
+													color: AppColors.primary,
+												),
+												const SizedBox(width: 8),
+												Text(
+													l10n.webPanelAccess,
+													style: AppFonts.body.copyWith(
+														fontSize: 14,
+														fontWeight: FontWeight.w600,
+														color: AppColors.textSecondary,
+													),
+												),
+												const Spacer(),
+												Icon(
+													Icons.chevron_right_rounded,
+													size: 20,
+													color: AppColors.textSecondary,
+												),
+											],
+										),
+									),
+								),
+							],
+
 							const SizedBox(height: 12),
+
 							RequesterListCard(
 								groupId: groupId,
 								isMaster: isMaster,

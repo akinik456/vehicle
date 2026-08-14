@@ -36,6 +36,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get plate => 'Plaka';
 
   @override
+  String get webPanelAccess => 'Web Panel Erişimi';
+
+  @override
+  String get webPanelAccessDescription => 'LynraFleet web paneline erişim için bir yönetici hesabı oluşturun.';
+
+  @override
+  String get email => 'E-posta';
+
+  @override
+  String get password => 'Şifre';
+
+  @override
+  String get createWebAccess => 'Web Erişimi Oluştur';
+
+  @override
   String get actionRequired => 'İşlem Gerekli';
 
   @override

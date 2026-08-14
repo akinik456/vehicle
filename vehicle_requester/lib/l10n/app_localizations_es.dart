@@ -36,6 +36,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get plate => 'Matrícula';
 
   @override
+  String get webPanelAccess => 'Acceso al panel web';
+
+  @override
+  String get webPanelAccessDescription => 'Cree una cuenta de administrador para acceder al panel web de LynraFleet.';
+
+  @override
+  String get email => 'Correo electrónico';
+
+  @override
+  String get password => 'Contraseña';
+
+  @override
+  String get createWebAccess => 'Crear acceso web';
+
+  @override
   String get actionRequired => 'Acción requerida';
 
   @override

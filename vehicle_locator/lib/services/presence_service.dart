@@ -24,6 +24,7 @@ class PresenceService {
   PresenceService._();
 
   static final _db = FirebaseDatabase.instance.ref();
+	static StreamSubscription<DatabaseEvent>? _connectedSub;
 	static StreamSubscription<DatabaseEvent>? _presenceSub;
 	static String? _serviceGroupId;
 	static String? _serviceLocatorId;
@@ -242,6 +243,7 @@ if (_totalDistanceMeters == null ||
 			'battery': batteryLevel,
 			'gpsEnabled': gpsEnabled,
 			'updateCount': ServerValue.increment(1),
+			'deviceChangedCounter': ServerValue.increment(1),
 		});
 		
 		await PresenceCacheService.save({
@@ -271,6 +273,7 @@ if (_totalDistanceMeters == null ||
       'gpsEnabled': gpsEnabled,
 			'speed': speedKmh,
       'updateCount': ServerValue.increment(1),
+			'deviceChangedwithNoPos': ServerValue.increment(1),
     });
 		
 		await PresenceCacheService.save({
@@ -340,6 +343,7 @@ if (_totalDistanceMeters == null ||
 				'totalDistanceMeters': _totalDistanceMeters,
 				'tripDistanceMeters': _tripDistanceMeters,
 				'updateCount': ServerValue.increment(1),
+				'deviceChangedwithmotion': ServerValue.increment(1),
 			});
 		Log.d("km_update1 totalDistanceMeters:$_totalDistanceMeters");
 			
@@ -376,6 +380,7 @@ if (_totalDistanceMeters == null ||
 		'tripDistanceMeters': _tripDistanceMeters,
 		'updateCount': ServerValue.increment(1),
 		...placeData,
+		'posupdateCounter': ServerValue.increment(1),
 	};		
 		Log.d("km_update4 totalDistanceMeters:$_totalDistanceMeters");
 	
@@ -533,6 +538,28 @@ static Future<void> startConnectionWatcher() async {
   final locatorRef = _db.child(
     "presence/groups/$groupId/locators/$locatorId",
   );
+	
+	final connectedRef =
+      FirebaseDatabase.instance.ref(".info/connected");
+
+  await _connectedSub?.cancel();
+
+  _connectedSub = connectedRef.onValue.listen((event) async {
+    final connected =
+        event.snapshot.value as bool? ?? false;
+	//Log.d("BEACON_PRESENCE => connected=$connected");
+
+    if (!connected) return;
+
+    await locatorRef.onDisconnect().update({
+			'status': 'offline',
+			'lastSeen': ServerValue.timestamp,
+			'offlineSince': ServerValue.timestamp,
+			'offlineCounter': ServerValue.increment(1),
+			'updateCount': ServerValue.increment(1),
+		});
+		//Log.d("BEACON_PRESENCE => onDisconnect armed");
+  });
 
   // İlk açılışta serverdaki km değerlerini kesin al
   try {
