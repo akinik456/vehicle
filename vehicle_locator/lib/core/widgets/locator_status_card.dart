@@ -21,6 +21,7 @@ class LocatorCurrentLocationCard extends StatefulWidget {
     required this.offlineSince,
     required this.addressText,
 		required this.onRefreshLocation,
+		required this.onOpenHistory,
     required this.onOpenMaps,
 		required this.odometerKm,
 		required this.tripKm,
@@ -38,6 +39,7 @@ class LocatorCurrentLocationCard extends StatefulWidget {
   final int? offlineSince;
 	
 	final VoidCallback onRefreshLocation;
+	final VoidCallback onOpenHistory;
   final VoidCallback onOpenMaps;
 	
 	final double odometerKm;
@@ -400,6 +402,15 @@ class _LocatorCurrentLocationCardState
 								label: l10n.refreshMyLocation,
 								color: AppColors.primary,
 								onTap: widget.onRefreshLocation,
+							),
+							
+							const Spacer(),
+
+							_MiniAction(
+								icon: Icons.history_rounded,
+								label: l10n.history,
+								color: AppColors.primary,
+								onTap: widget.onOpenHistory,
 							),
 
 							const Spacer(),

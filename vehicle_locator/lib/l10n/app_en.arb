@@ -16,6 +16,7 @@
 "email": 															"Email",
 "password": 													"Password",
 "createWebAccess": 										"Create Web Access",
+"history": 														"History",
 
 "actionRequired":											"Action Required",
 "activeWatchers":											"Active Watchers",

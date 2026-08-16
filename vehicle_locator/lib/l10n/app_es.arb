@@ -16,6 +16,7 @@
 "email": 															"Correo electrónico",
 "password": 													"Contraseña",
 "createWebAccess": 										"Crear acceso web",
+"history": 														"Historial",
 
 "actionRequired": 										"Acción requerida",
 "activeWatchers": 										"Observadores activos",

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'vehicle_history_page.dart';
 
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -1195,6 +1196,22 @@ Widget _currentLocationCard() {
 					PresenceService.resetTripDistance();
 				},				
 				onRefreshLocation: _refreshMyLocation,
+				onOpenHistory: () async {
+				final groupId = await IdentityService.getGroupId();
+				final locatorId = await IdentityService.getLocatorId();
+
+				if (groupId == null || locatorId == null) return;
+
+					Navigator.push(
+						context,
+						MaterialPageRoute(
+							builder: (_) => VehicleHistoryPage(
+								groupId: groupId,
+								locatorId: locatorId,
+							),
+						),
+					);
+				},				
         onOpenMaps: () async {
           await MapHelper.openInMaps(
             lat: lat!,

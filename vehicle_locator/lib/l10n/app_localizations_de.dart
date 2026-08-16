@@ -51,6 +51,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get createWebAccess => 'Create Web Access';
 
   @override
+  String get history => 'History';
+
+  @override
   String get actionRequired => 'Aktion erforderlich';
 
   @override

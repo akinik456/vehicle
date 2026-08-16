@@ -51,6 +51,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get createWebAccess => 'Web Erişimi Oluştur';
 
   @override
+  String get history => 'Geçmiş';
+
+  @override
   String get actionRequired => 'İşlem Gerekli';
 
   @override

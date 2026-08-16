@@ -55,6 +55,9 @@ class GpsAnalysisService {
 	final moved = input.movedMeters;
 	final elapsed = input.elapsedSeconds;
 	final lastSpeed = input.lastSpeedKmh;
+	
+	final reportedSpeedReliable =
+    input.reportedSpeedKmh >= 1.0;
 
 	if (moved != null &&
 			elapsed != null &&
@@ -80,26 +83,26 @@ class GpsAnalysisService {
 		}
 		
 		// Accuracy riski
-			if (input.accuracy > 35) {
+			if (input.accuracy > 50) {
 				gpsRiskScore += 3;
 				gpsRiskReasons.add('accuracy_high');
-			} else if (input.accuracy > 20) {
+			} else if (input.accuracy > 30) {
 				gpsRiskScore += 2;
 				gpsRiskReasons.add('accuracy_medium');
-			} else if (input.accuracy > 10) {
+			} else if (input.accuracy > 20) {
 				gpsRiskScore += 1;
 				gpsRiskReasons.add('accuracy_low');
 			}
 
 		// Mesafe riski
 		if (moved != null) {
-			if (moved >= 100) {
+			if (moved >= 150) {
 				gpsRiskScore += 3;
 				gpsRiskReasons.add('distance_100');
-			} else if (moved >= 50) {
+			} else if (moved >= 100) {
 				gpsRiskScore += 2;
 				gpsRiskReasons.add('distance_50');
-			} else if (moved >= 25) {
+			} else if (moved >= 50) {
 				gpsRiskScore += 1;
 				gpsRiskReasons.add('distance_25');
 			}
@@ -118,46 +121,54 @@ class GpsAnalysisService {
 				gpsRiskReasons.add('calculated_speed_10');
 			}
 		}
-		
-		if (speedJumpKmh != null) {
-			if (speedJumpKmh >= 40) {
-				gpsRiskScore += 4;
-				gpsRiskReasons.add('speed_jump_40');
-			} else if (speedJumpKmh >= 20) {
-				gpsRiskScore += 2;
-				gpsRiskReasons.add('speed_jump_20');
-			} else if (speedJumpKmh >= 10) {
-				gpsRiskScore += 1;
-				gpsRiskReasons.add('speed_jump_10');
+		if (reportedSpeedReliable) 
+		{
+			if (speedJumpKmh != null) {
+				if (speedJumpKmh >= 40) {
+					gpsRiskScore += 4;
+					gpsRiskReasons.add('speed_jump_40');
+				} else if (speedJumpKmh >= 20) {
+					gpsRiskScore += 2;
+					gpsRiskReasons.add('speed_jump_20');
+				} else if (speedJumpKmh >= 10) {
+					gpsRiskScore += 1;
+					gpsRiskReasons.add('speed_jump_10');
+				}
 			}
 		}
+		final gpsShowsMovement =
+    (calculatedSpeedKmh ?? 0) >= 4.0 ||
+    input.reportedSpeedKmh >= 4.0;
+
+if (!input.motionRecent &&
+    moved != null &&
+    moved >= 50 &&
+    !gpsShowsMovement) {
+  gpsRiskScore += 3;
+  gpsRiskReasons.add('no_motion');
+}
 		
-		if (!input.motionRecent &&
-				moved != null &&
-				moved >= 50) {
-			gpsRiskScore += 3;
-			gpsRiskReasons.add('no_motion');
-		}
-		
-		if (speedDifferenceKmh != null) {
-			if (speedDifferenceKmh >= 50) {
-				gpsRiskScore += 3;
-				gpsRiskReasons.add('speed_difference_50');
-			} else if (speedDifferenceKmh >= 25) {
-				gpsRiskScore += 2;
-				gpsRiskReasons.add('speed_difference_25');
-			} else if (speedDifferenceKmh >= 10) {
-				gpsRiskScore += 1;
-				gpsRiskReasons.add('speed_difference_10');
+		if (reportedSpeedReliable) {
+			if (speedDifferenceKmh != null) {
+				if (speedDifferenceKmh >= 50) {
+					gpsRiskScore += 3;
+					gpsRiskReasons.add('speed_difference_50');
+				} else if (speedDifferenceKmh >= 25) {
+					gpsRiskScore += 2;
+					gpsRiskReasons.add('speed_difference_25');
+				} else if (speedDifferenceKmh >= 10) {
+					gpsRiskScore += 1;
+					gpsRiskReasons.add('speed_difference_10');
+				}
 			}
 		}
 	
 	
 	GpsDecision decision;
 
-		if (gpsRiskScore >= 6) {
+		if (gpsRiskScore >= 12) {
 			decision = GpsDecision.suspicious;
-		} else if (gpsRiskScore >= 3) {
+		} else if (gpsRiskScore >= 9) {
 			decision = GpsDecision.verify;
 		} else {
 			decision = GpsDecision.safe;

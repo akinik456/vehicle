@@ -183,6 +183,12 @@ abstract class AppLocalizations {
   /// **'Create Web Access'**
   String get createWebAccess;
 
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
   /// No description provided for @actionRequired.
   ///
   /// In en, this message translates to:

@@ -1,7 +1,7 @@
 name: vehicle_locator
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+39
+version: 1.0.0+40
 
 environment:
   sdk: ^3.12.0
@@ -36,6 +36,8 @@ dependencies:
   url_launcher: ^6.3.0
   firebase_auth: ^6.1.2
   share_plus: ^11.0.0
+  google_maps_flutter: ^2.13.1
+  
   
 dev_dependencies:
   flutter_test:
@@ -55,6 +57,13 @@ flutter:
   uses-material-design: true
   generate: true
   
+  assets:
+    - assets/images/
+    - assets/images/history_start.png
+    - assets/images/history_end.png
+    - assets/images/playback_vehicle.png 
+    - assets/images/history_point.png
+
 flutter_native_splash:
   color: "#091220"
   image: assets/images/splash_logo.png

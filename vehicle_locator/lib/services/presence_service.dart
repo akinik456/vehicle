@@ -412,7 +412,7 @@ await AppLogService.log(
 
 		}
 
-  final shouldSkipSmallMove = (reason == 'timer' || reason == 'motion') && movedMeters != null && movedMeters < 25;
+  final shouldSkipSmallMove = false;// ?*? (reason == 'timer' || reason == 'motion') && movedMeters != null && movedMeters < 25;
 
 	// Hareket yok, pil/GPS de değişmedi:
   // ne alert kontrolüne ne de RTDB write'a gerek var.
