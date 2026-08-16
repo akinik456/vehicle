@@ -777,39 +777,7 @@ static Future<void> startConnectionWatcher() async {
     "presence/groups/$groupId/locators/$locatorId",
   );
 	
-	final connectedRef =
-      FirebaseDatabase.instance.ref(".info/connected");
-
-  await _connectedSub?.cancel();
-
-  _connectedSub = connectedRef.onValue.listen((event) async {
-    final connected =
-        event.snapshot.value as bool? ?? false;
-	Log.d(
-    "RTDB CONNECTION => "
-    "connected=$connected "
-    "time=${DateTime.now()}",
-  );
-await AppLogService.log(
-	type: AppLogType.rtdb,
-	text:
-			"RTDB CONNECTION => "
-			"connected=$connected "
-			"time=${DateTime.now()}",
-);	
-
-    if (!connected) return;
-
-    await locatorRef.onDisconnect().update({
-			'status': 'offline',
-			'lastSeen': ServerValue.timestamp,
-			'offlineSince': ServerValue.timestamp,
-			'offlineCounter': ServerValue.increment(1),
-			'updateCount': ServerValue.increment(1),
-		});
-		//Log.d("BEACON_PRESENCE => onDisconnect armed");
-  });
-
+	
   // İlk açılışta serverdaki km değerlerini kesin al
   try {
     final snapshot = await locatorRef.get();
@@ -919,9 +887,9 @@ static Future<void> loadDistanceCache() async {
 static double _distanceCorrectionForSpeed(
   double speedKmh,
 ) {
-  if (speedKmh >= 70) return 1.00;
-  if (speedKmh >= 40) return 1.05;
-  if (speedKmh >= 20) return 1.10;
+  if (speedKmh >= 70) return 1.10;
+  if (speedKmh >= 40) return 1.15;
+  if (speedKmh >= 20) return 1.20;
 
   return 1.10;
 }

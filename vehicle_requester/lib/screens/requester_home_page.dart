@@ -1821,7 +1821,11 @@ Widget _buildGroupHome({
 																							final now =
 																									DateTime.now().millisecondsSinceEpoch;
 
-																							final status = locator['status'] ?? 'offline';
+																							final status =
+																									lastSeen != null &&
+																									now - lastSeen <= 5 * 60 * 1000
+																											? 'online'
+																											: 'offline';
 																							
 																							final battery = locator['battery'] ?? 0;
 																							final speed = (locator['speed'] as num?)?.toDouble() ?? 0.0;
