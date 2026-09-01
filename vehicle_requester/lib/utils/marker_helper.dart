@@ -12,7 +12,7 @@ class MarkerHelper {
     required bool selected,
   }) async {
     final data = await rootBundle.load(
-      'assets/images/app_icon.png',
+      'assets/images/vehicle_marker.png',
     );
 
     final codec = await ui.instantiateImageCodec(

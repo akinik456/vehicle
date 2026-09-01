@@ -108,13 +108,13 @@ abstract class AppLocalizations {
   /// No description provided for @memberSetupStepOne.
   ///
   /// In en, this message translates to:
-  /// **'Install \"LynraFleet Driver\" on the driver\'s phone.'**
+  /// **'Install \"LynraFleet Vehicle\" on the driver\'s phone.'**
   String get memberSetupStepOne;
 
   /// No description provided for @memberSetupStepTwo.
   ///
   /// In en, this message translates to:
-  /// **'Open \"LynraFleet Driver\" and get the Driver Code or QR code.'**
+  /// **'Open \"LynraFleet Vehicle\" and get the Driver Code or QR code.'**
   String get memberSetupStepTwo;
 
   /// No description provided for @memberSetupStepThree.
@@ -126,14 +126,20 @@ abstract class AppLocalizations {
   /// No description provided for @memberAppFreeHint.
   ///
   /// In en, this message translates to:
-  /// **'\"LynraFleet Driver\" is free for your drivers.'**
+  /// **'\"LynraFleet Vehicle\" is free for your drivers.'**
   String get memberAppFreeHint;
 
   /// No description provided for @memberAppInfo.
   ///
   /// In en, this message translates to:
-  /// **'Drivers use the free \"LynraFleet Driver\" app on their own phones.'**
+  /// **'Drivers use the free \"LynraFleet Vehicle\" app on their own phones.'**
   String get memberAppInfo;
+
+  /// No description provided for @shareMemberApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Member App'**
+  String get shareMemberApp;
 
   /// No description provided for @enterVehicleInfo.
   ///
@@ -182,6 +188,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Web Access'**
   String get createWebAccess;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
 
   /// No description provided for @actionRequired.
   ///
@@ -1316,6 +1328,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings saved'**
   String get settingsSaved;
+
+  /// No description provided for @shareLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Logs'**
+  String get shareLogs;
 
   /// No description provided for @sixdigitcode.
   ///

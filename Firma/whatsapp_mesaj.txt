@@ -1,0 +1,29 @@
+Merhaba, İpekyolu Turizm'in personel taşımacılığı hizmetlerini ve araç filonuzu inceledim. 
+Filo takibi için geliştirdiğimiz farklı bir çözüm hakkında kısaca bilgi paylaşmak istiyorum. 
+Uygunsa detayları iletebilir miyim?
+
+***********
+
+LynraFleet, araçta kullanılan Android telefonu ek bir GPS takip cihazına ihtiyaç duymadan araç takip sistemine dönüştürüyor.
+
+Araçların canlı konumu, hız ve hareket durumu, rota geçmişi, park süresi ve kilometre bilgileri web panelinden veya 
+mobil uygulamadan takip edilebiliyor.
+
+Sistem aylık araç başı abonelik gerektirmiyor; tek seferlik ödeme modeliyle sunuluyor.
+
+Detayları ve sistemin ekran görüntülerini buradan inceleyebilirsiniz:
+lynra.app/lynrafleet
+
+******************
+
+Merhaba, Yurduseven Turizm'in personel taşımacılığı hizmetlerini inceledik. 
+Araç filoları için geliştirdiğimiz LynraFleet, sürücünün Android telefonunu araç takip cihazına dönüştürüyor. 
+Ek GPS cihazı gerektirmeden araçlar web ve mobil üzerinden canlı takip edilebiliyor.
+
+İncelemek isterseniz: https://lynra.app/lynrafleet-wa
+
+*************
+
+"Aşırı e-posta trafiği oluşturmamak adına bu bilgilendirme tek seferlik 
+gönderilmiştir. Yine de bu konuda bir daha e-posta almak istemiyorsanız 
+bu iletiye 'İstemiyorum' yazarak yanıt vermeniz yeterlidir."

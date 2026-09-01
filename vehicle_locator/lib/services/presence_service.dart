@@ -1,3 +1,6 @@
+// sinan loc Id 0b86  updateCounter 1240
+// group Id 9b3e
+
 import 'dart:isolate';
 import 'dart:io';
 import 'dart:async';
@@ -356,7 +359,9 @@ await AppLogService.log(
 
 			return;
 			}
-		SmartPresenceScheduler.setSpeedKmh(speedKmh,);
+		SmartPresenceScheduler.setSpeedKmh(
+  finalAnalysis.calculatedSpeedKmh ?? 0,
+);
 		
 /*Log.d(
   "BEACON_GPS => "
@@ -412,246 +417,396 @@ await AppLogService.log(
 
 		}
 
-  final shouldSkipSmallMove = false;// ?*? (reason == 'timer' || reason == 'motion') && movedMeters != null && movedMeters < 25;
+// ============================================================
+// MOVEMENT ACCEPTANCE
+// ============================================================
 
-	// Hareket yok, pil/GPS de değişmedi:
-  // ne alert kontrolüne ne de RTDB write'a gerek var.
+// GPS doğruluğuna göre dinamik hareket eşiği.
+// Örn:
+// accuracy  5m  => 25m
+// accuracy 15m  => 30m
+// accuracy 25m  => 50m
+// accuracy 40m  => 80m
+final double movementThresholdMeters =
+    position == null
+        ? 25.0
+        : math.max(
+            25.0,
+            position.accuracy * 2.0,
+          );
 
-		if (shouldSkipSmallMove && !deviceStatusChanged) 
-		{
-			return;
-		}//?*?
+// İlk geçerli konum her zaman kabul edilir.
+// Sonraki konumlar ancak dinamik eşiği aşarsa
+// "gerçek konum hareketi" kabul edilir.
+final bool acceptedLocation =
+    position != null &&
+    (
+      movedMeters == null ||
+      movedMeters >= movementThresholdMeters
+    );
 
-		// Hareket yok ama pil veya GPS durumu değişti:
-		// yalnızca status alanlarını güncelle.
-		if (shouldSkipSmallMove && deviceStatusChanged) 
-		{
-await AppLogService.log(
-	type: AppLogType.rtdb,
-	text:
-			"RTDB status-only write started "
-			"reason=$reason path=$path "
-			"battery=$batteryLevel gpsEnabled=$gpsEnabled",
-);
-		await _db.child(path).update({
-			'status': 'online',
-			'lastSeen': ServerValue.timestamp,
-			'battery': batteryLevel,
-			'gpsEnabled': gpsEnabled,
-			'updateCount': ServerValue.increment(1),
-			'deviceChangedCounter': ServerValue.increment(1),
-		});
-		
-		await PresenceCacheService.save({
-			'status': 'online',
-			'battery': batteryLevel,
-			'gpsEnabled': gpsEnabled,
-			'speed': speedKmh,
-		});				
-		_lastBatteryLevel = batteryLevel;
-		_lastGpsEnabled = gpsEnabled;
-		
-await AppLogService.log(
-	type: AppLogType.rtdb,
-	text:
-			"RTDB status-only write success "
-			"reason=$reason path=$path",
-);
-		
-		return;
-		}
+final shouldSkipSmallMove =
+    (reason == 'timer' || reason == 'motion') &&
+    position != null &&
+    movedMeters != null &&
+    !acceptedLocation;
 
-		// Geçerli konum yoksa yalnızca değişen cihaz durumu yazılabilir.
-		if (position == null) 
-		{
-			if (!deviceStatusChanged) 
-			{
-await AppLogService.log(
-	type: AppLogType.presence,
-	text:
-			"Presence stopped: no valid position "
-			"and no device status change reason=$reason",
+Log.d(
+  "LOCATION ACCEPT => "
+  "moved=${movedMeters?.toStringAsFixed(1)}m "
+  "accuracy=${position?.accuracy.toStringAsFixed(1)}m "
+  "threshold=${movementThresholdMeters.toStringAsFixed(1)}m "
+  "accepted=$acceptedLocation "
+  "reason=$reason",
 );
-			return;
-			}
-await AppLogService.log(
-	type: AppLogType.rtdb,
-	text:
-			"RTDB status-only write started: no valid position "
-			"reason=$reason path=$path "
-			"battery=$batteryLevel gpsEnabled=$gpsEnabled",
+
+
+// ============================================================
+// SMALL MOVEMENT - NO DEVICE STATUS CHANGE
+// ============================================================
+
+// Küçük GPS hareketi.
+// Presence/history yazma.
+// En önemlisi: _lastLat/_lastLng DEĞİŞMEYECEK.
+if (shouldSkipSmallMove && !deviceStatusChanged) {
+
+  if (SmartPresenceScheduler.hasActiveWatcher) {
+    await _db.child(path).update({
+      'lastSeen': ServerValue.timestamp,
+    });
+  }
+
+  return;
+}
+
+
+// ============================================================
+// SMALL MOVEMENT - DEVICE STATUS CHANGED
+// ============================================================
+
+// Konum anlamlı şekilde değişmedi ama pil/GPS durumu değişti.
+// Sadece cihaz durumunu güncelle.
+// Konum ve history değişmez.
+if (shouldSkipSmallMove && deviceStatusChanged) {
+
+  await AppLogService.log(
+    type: AppLogType.rtdb,
+    text:
+        "RTDB status-only write started "
+        "reason=$reason path=$path "
+        "battery=$batteryLevel gpsEnabled=$gpsEnabled",
+  );
+
+  await _db.child(path).update({
+    'status': 'online',
+    'lastSeen': ServerValue.timestamp,
+    'battery': batteryLevel,
+    'gpsEnabled': gpsEnabled,
+    'updateCount': ServerValue.increment(1),
+    'deviceChangedCounter': ServerValue.increment(1),
+  });
+
+  await PresenceCacheService.save({
+    'status': 'online',
+    'battery': batteryLevel,
+    'gpsEnabled': gpsEnabled,
+    'speed': speedKmh,
+  });
+
+  _lastBatteryLevel = batteryLevel;
+  _lastGpsEnabled = gpsEnabled;
+
+  await AppLogService.log(
+    type: AppLogType.rtdb,
+    text:
+        "RTDB status-only write success "
+        "reason=$reason path=$path",
+  );
+
+  return;
+}
+
+
+// ============================================================
+// NO POSITION
+// ============================================================
+
+if (position == null) {
+
+  if (!deviceStatusChanged) {
+
+    await AppLogService.log(
+      type: AppLogType.presence,
+      text:
+          "Presence stopped: no valid position "
+          "and no device status change reason=$reason",
+    );
+
+    return;
+  }
+
+  await AppLogService.log(
+    type: AppLogType.rtdb,
+    text:
+        "RTDB status-only write started: no valid position "
+        "reason=$reason path=$path "
+        "battery=$batteryLevel gpsEnabled=$gpsEnabled",
+  );
+
+  await _db.child(path).update({
+    'status': 'online',
+    'lastSeen': ServerValue.timestamp,
+    'battery': batteryLevel,
+    'gpsEnabled': gpsEnabled,
+    'speed': speedKmh,
+    'updateCount': ServerValue.increment(1),
+    'deviceChangedwithNoPos': ServerValue.increment(1),
+  });
+
+  await PresenceCacheService.save({
+    'status': 'online',
+    'battery': batteryLevel,
+    'gpsEnabled': gpsEnabled,
+    'speed': speedKmh,
+  });
+
+  _lastBatteryLevel = batteryLevel;
+  _lastGpsEnabled = gpsEnabled;
+
+  await AppLogService.log(
+    type: AppLogType.rtdb,
+    text:
+        "RTDB status-only write success: no valid position "
+        "reason=$reason path=$path",
+  );
+
+  return;
+}
+
+
+// ============================================================
+// PLACE / MOVEMENT ALERT
+// ============================================================
+
+final placeData =
+    await GeofenceService.checkPlaces(
+  groupId: groupId,
+  locatorId: locatorId,
+  lat: position.latitude,
+  lng: position.longitude,
 );
+
+await MovementAlertService.checkNow(
+  position: position,
+  reason: reason,
+);
+
+Log.d("movedMeters:$movedMeters");
+
+
+// ============================================================
+// ODOMETER
+// ============================================================
+
+if (!_distanceInitialized) {
+
+  Log.d(
+    "ODO NOT INIT => "
+    "iso=${Isolate.current.hashCode} "
+    "pid=$pid "
+    "total=$_totalDistanceMeters "
+    "trip=$_tripDistanceMeters",
+  );
+
+} else if (
+    acceptedLocation &&
+    movedMeters != null &&
+    movedMeters <= 1000
+) {
+
+  /*
+  final delta =
+      (movedMeters * _distanceCorrection).round();
+
+  _totalDistanceMeters =
+      _totalDistanceMeters! + delta;
+
+  _tripDistanceMeters =
+      _tripDistanceMeters! + delta;
+  */
+
+  Log.d(
+    "ODO => total=$_totalDistanceMeters "
+    "trip=$_tripDistanceMeters",
+  );
+}
+
+
+// ============================================================
+// MOTION WITHOUT ACTIVE WATCHER
+// ============================================================
+
+if (
+    reason == 'motion' &&
+    !SmartPresenceScheduler.hasActiveWatcher
+) {
+
+  if (deviceStatusChanged) {
+
     await _db.child(path).update({
       'status': 'online',
       'lastSeen': ServerValue.timestamp,
       'battery': batteryLevel,
       'gpsEnabled': gpsEnabled,
-			'speed': speedKmh,
+      'speed': speedKmh,
+      'totalDistanceMeters': _totalDistanceMeters,
+      'tripDistanceMeters': _tripDistanceMeters,
       'updateCount': ServerValue.increment(1),
-			'deviceChangedwithNoPos': ServerValue.increment(1),
+      'deviceChangedwithmotion':
+          ServerValue.increment(1),
     });
-		
-		await PresenceCacheService.save({
-			'status': 'online',
-			'battery': batteryLevel,
-			'gpsEnabled': gpsEnabled,
-			'speed': speedKmh,
-		});
-		
+
+    Log.d(
+      "km_update1 totalDistanceMeters:"
+      "$_totalDistanceMeters",
+    );
+
+    await PresenceCacheService.save({
+      'status': 'online',
+      'battery': batteryLevel,
+      'gpsEnabled': gpsEnabled,
+      'speed': speedKmh,
+      'totalDistanceMeters':
+          _totalDistanceMeters,
+      'tripDistanceMeters':
+          _tripDistanceMeters,
+    });
+
+    Log.d(
+      "km_update5 totalDistanceMeters:"
+      "$_totalDistanceMeters",
+    );
+
     _lastBatteryLevel = batteryLevel;
     _lastGpsEnabled = gpsEnabled;
+  }
 
-await AppLogService.log(
-	type: AppLogType.rtdb,
-	text:
-			"RTDB status-only write success: no valid position "
-			"reason=$reason path=$path",
-);
-    return;
-		}
-
-  // Buraya geldiysek geçerli ve anlamlı bir konum hareketi var.
-  final placeData =
-      await GeofenceService.checkPlaces(
-    groupId: groupId,
-    locatorId: locatorId,
-    lat: position.latitude,
-    lng: position.longitude,
+  await AppLogService.log(
+    type: AppLogType.presence,
+    text:
+        "Presence location write skipped: "
+        "motion without active watcher "
+        "deviceStatusChanged=$deviceStatusChanged",
   );
 
-  await MovementAlertService.checkNow(position: position,reason: reason,);
+  return;
+}
 
-		// Motion alert ve geofence kontrolleri çalıştı.
-		// Aktif izleyen yoksa sırf motion nedeniyle presence konumu yazma.
-		
-		Log.d("movedMeters:$movedMeters");
-		
-		
-		if (!_distanceInitialized) {
-			Log.d(
-  "ODO NOT INIT => "
-  "iso=${Isolate.current.hashCode} "
-  "pid=$pid "
-  "total=$_totalDistanceMeters "
-  "trip=$_tripDistanceMeters",
+
+// ============================================================
+// PRESENCE DATA
+// ============================================================
+
+_currentAddress =
+    await AddressHelper.getAddressFromLatLng(
+  lat: position.latitude,
+  lng: position.longitude,
 );
-		} else if (
-				movedMeters != null &&
-				movedMeters >= 25 &&
-				movedMeters <= 1000
-		){
-			/*final delta =
-					(movedMeters * _distanceCorrection).round();
-			_totalDistanceMeters = _totalDistanceMeters! + delta;
-			_tripDistanceMeters = _tripDistanceMeters! + delta;*/
 
-			Log.d(
-				"ODO => total=$_totalDistanceMeters "
-				"trip=$_tripDistanceMeters",
-			);
-		}		
-		
-		if (reason == 'motion' && !SmartPresenceScheduler.hasActiveWatcher) 
-		{
-			if (deviceStatusChanged) 
-			{
-			await _db.child(path).update({
-				'status': 'online',
-				'lastSeen': ServerValue.timestamp,
-				'battery': batteryLevel,
-				'gpsEnabled': gpsEnabled,
-				'speed': speedKmh,
-				'totalDistanceMeters': _totalDistanceMeters,
-				'tripDistanceMeters': _tripDistanceMeters,
-				'updateCount': ServerValue.increment(1),
-				'deviceChangedwithmotion': ServerValue.increment(1),
-			});
-		Log.d("km_update1 totalDistanceMeters:$_totalDistanceMeters");
-			
-			await PresenceCacheService.save({
-				'status': 'online',
-				'battery': batteryLevel,
-				'gpsEnabled': gpsEnabled,
-				'speed': speedKmh,
-				'totalDistanceMeters': _totalDistanceMeters,
-				'tripDistanceMeters': _tripDistanceMeters,
-			});
-				Log.d("km_update5 totalDistanceMeters:$_totalDistanceMeters");
+final Map<String, dynamic> updateData = {
+  'status': 'online',
+  'lastSeen': ServerValue.timestamp,
+  'battery': batteryLevel,
+  'gpsEnabled': gpsEnabled,
+  'speed': speedKmh,
+  'lat': position.latitude,
+  'lng': position.longitude,
+  'address': _currentAddress,
+  'accuracy': position.accuracy,
+  'movedSinceLastUpdateMeters':
+      movedMeters?.round(),
+  'totalDistanceMeters':
+      _totalDistanceMeters,
+  'tripDistanceMeters':
+      _tripDistanceMeters,
+  'updateCount':
+      ServerValue.increment(1),
+  ...placeData,
+  'posupdateCounter':
+      ServerValue.increment(1),
+};
 
-			_lastBatteryLevel = batteryLevel;
-			_lastGpsEnabled = gpsEnabled;
-			}
+Log.d(
+  "km_update4 totalDistanceMeters:"
+  "$_totalDistanceMeters",
+);
+
+
+// ============================================================
+// STATIONARY SINCE
+// ============================================================
+
+// Sadece gerçekten kabul edilmiş konum hareketinde
+// stationarySince sıfırlanır.
+if (acceptedLocation) {
+  updateData['stationarySince'] =
+      ServerValue.timestamp;
+}
+
+
+// ============================================================
+// CACHE DATA
+// ============================================================
+
+final Map<String, dynamic> cacheData = {
+  'status': 'online',
+  'battery': batteryLevel,
+  'gpsEnabled': gpsEnabled,
+  'speed': speedKmh,
+  'lat': position.latitude,
+  'lng': position.longitude,
+  'address': _currentAddress,
+  ...placeData,
+  'stationarySince':
+      updateData['stationarySince'],
+  'offlineSince': null,
+  'totalDistanceMeters':
+      _totalDistanceMeters,
+  'tripDistanceMeters':
+      _tripDistanceMeters,
+};
+
+Log.d(
+  "km_update3 totalDistanceMeters:"
+  "$_totalDistanceMeters",
+);
+
+
 await AppLogService.log(
-	type: AppLogType.presence,
-	text:
-			"Presence location write skipped: "
-			"motion without active watcher "
-			"deviceStatusChanged=$deviceStatusChanged",
+  type: AppLogType.rtdb,
+  text:
+      "RTDB presence write started "
+      "reason=$reason path=$path "
+      "lat=${position.latitude} "
+      "lng=${position.longitude} "
+      "accuracy=${position.accuracy.toStringAsFixed(1)}m "
+      "moved=${movedMeters?.toStringAsFixed(1)}m "
+      "threshold=${movementThresholdMeters.toStringAsFixed(1)}m "
+      "accepted=$acceptedLocation",
 );
-		return;
-		}	
-	_currentAddress = await AddressHelper.getAddressFromLatLng(lat: position.latitude,lng: position.longitude,);
-	final Map<String, dynamic> updateData = 
-	{
-		'status': 'online',
-		'lastSeen': ServerValue.timestamp,
-		'battery': batteryLevel,
-		'gpsEnabled': gpsEnabled,
-		'speed': speedKmh,
-		'lat': position.latitude,
-		'lng': position.longitude,
-		'address': _currentAddress,
-		'accuracy': position.accuracy,
-		'movedSinceLastUpdateMeters':
-				movedMeters?.round(),
-		'totalDistanceMeters': _totalDistanceMeters,
-		'tripDistanceMeters': _tripDistanceMeters,
-		'updateCount': ServerValue.increment(1),
-		...placeData,
-		'posupdateCounter': ServerValue.increment(1),
-	};		
-		Log.d("km_update4 totalDistanceMeters:$_totalDistanceMeters");
-	
-	final Map<String, dynamic> cacheData = 
-	{
-		'status': 'online',
-		'battery': batteryLevel,
-		'gpsEnabled': gpsEnabled,
-		'speed': speedKmh,
-		'lat': position.latitude,
-		'lng': position.longitude,
-		'address': _currentAddress,
-		...placeData,
-		'stationarySince': updateData['stationarySince'],
-		'offlineSince': null,
-		'totalDistanceMeters': _totalDistanceMeters,
-		'tripDistanceMeters': _tripDistanceMeters,
-	};
-		Log.d("km_update3 totalDistanceMeters:$_totalDistanceMeters");
 
 
-		if (movedMeters == null ||
-				movedMeters >= 25) {
-			updateData['stationarySince'] =
-					ServerValue.timestamp;
-		}
-await AppLogService.log(
-	type: AppLogType.rtdb,
-	text:
-			"RTDB presence write started "
-			"reason=$reason path=$path "
-			"lat=${position.latitude} "
-			"lng=${position.longitude} "
-			"accuracy=${position.accuracy.toStringAsFixed(1)}m "
-			"moved=${movedMeters?.toStringAsFixed(1)}m",
-);
-		
+// ============================================================
+// HISTORY DAY
+// ============================================================
+
 final now = DateTime.now();
 
 final currentDay =
     '${now.year}-${now.month}-${now.day}';
 
-final prefs = await SharedPreferences.getInstance();
+final prefs =
+    await SharedPreferences.getInstance();
 
 final historyDayKey =
     'history_day_$locatorId';
@@ -660,11 +815,35 @@ final savedDay =
     prefs.getString(historyDayKey);
 
 if (savedDay != currentDay) {
+
+  await AppLogService.log(
+    type: AppLogType.rtdb,
+    text:
+        "HISTORY CLEAR START => "
+        "savedDay=$savedDay "
+        "currentDay=$currentDay "
+        "locatorId=$locatorId "
+        "iso=${Isolate.current.hashCode} "
+        "pid=$pid",
+  );
+
   await _db
       .child(
-        'history/groups/$groupId/$locatorId/lastday',
+        'history/groups/'
+        '$groupId/$locatorId/lastday',
       )
       .remove();
+
+  await AppLogService.log(
+    type: AppLogType.rtdb,
+    text:
+        "HISTORY CLEAR SUCCESS => "
+        "savedDay=$savedDay "
+        "currentDay=$currentDay "
+        "locatorId=$locatorId "
+        "iso=${Isolate.current.hashCode} "
+        "pid=$pid",
+  );
 
   await prefs.setString(
     historyDayKey,
@@ -677,35 +856,168 @@ if (savedDay != currentDay) {
     'lastday cleared',
   );
 }
-final historyTimestamp =
-DateTime.now().millisecondsSinceEpoch;
-final historyPath =
-    'history/groups/$groupId/$locatorId/lastday/$historyTimestamp';
+
+
+// ============================================================
+// ROOT UPDATE
+// ============================================================
 
 final Map<String, dynamic> rootUpdateData = {
-  // Mevcut presence update
+
+  // Presence her durumda yazılabilir.
   for (final entry in updateData.entries)
     '$path/${entry.key}': entry.value,
-
-  // History
-  '$historyPath/lat': position.latitude,
-  '$historyPath/lng': position.longitude,
 };
 
+
+// ============================================================
+// HISTORY
+// ============================================================
+
+// KRİTİK:
+// History sadece kabul edilmiş konum noktasında yazılır.
+// GPS jitter history'ye girmez.
+int? historyTimestamp;
+
+if (acceptedLocation) {
+
+  historyTimestamp =
+      DateTime.now().millisecondsSinceEpoch;
+
+  final historyPath =
+      'history/groups/'
+      '$groupId/$locatorId/'
+      'lastday/$historyTimestamp';
+
+  rootUpdateData[
+      '$historyPath/lat'] =
+      position.latitude;
+
+  rootUpdateData[
+      '$historyPath/lng'] =
+      position.longitude;
+
+  await AppLogService.log(
+    type: AppLogType.rtdb,
+    text:
+        "HISTORY WRITE START => "
+        "reason=$reason "
+        "timestamp=$historyTimestamp "
+        "lat=${position.latitude} "
+        "lng=${position.longitude} "
+        "moved=${movedMeters?.toStringAsFixed(1)}m "
+        "accuracy=${position.accuracy.toStringAsFixed(1)}m "
+        "threshold=${movementThresholdMeters.toStringAsFixed(1)}m "
+        "iso=${Isolate.current.hashCode} "
+        "pid=$pid",
+  );
+
+} else {
+
+  await AppLogService.log(
+    type: AppLogType.gps,
+    text:
+        "HISTORY SKIPPED => "
+        "moved=${movedMeters?.toStringAsFixed(1)}m "
+        "accuracy=${position.accuracy.toStringAsFixed(1)}m "
+        "threshold=${movementThresholdMeters.toStringAsFixed(1)}m",
+  );
+}
+
+
+// ============================================================
+// WRITE
+// ============================================================
+
 try {
+
   await _db.update(rootUpdateData);
 
-  await PresenceCacheService.save(cacheData);
+  if (acceptedLocation &&
+      historyTimestamp != null) {
+
+    await AppLogService.log(
+      type: AppLogType.rtdb,
+      text:
+          "HISTORY WRITE SUCCESS => "
+          "reason=$reason "
+          "timestamp=$historyTimestamp "
+          "iso=${Isolate.current.hashCode} "
+          "pid=$pid",
+    );
+  }
+
+  await PresenceCacheService.save(
+    cacheData,
+  );
+
 } catch (e) {
+
+  await AppLogService.log(
+    type: AppLogType.error,
+    text:
+        "RTDB WRITE ERROR => "
+        "reason=$reason "
+        "error=$e "
+        "iso=${Isolate.current.hashCode} "
+        "pid=$pid",
+  );
+
   rethrow;
 }
-		
-  _lastBatteryLevel = batteryLevel;
-  _lastGpsEnabled = gpsEnabled;
-  _lastLat = position.latitude;
-  _lastLng = position.longitude;
-	lastSpeedKmh = speedKmh;
-	_lastAcceptedLocationTime = position.timestamp;
+
+
+// ============================================================
+// STATUS REFERENCES
+// ============================================================
+
+_lastBatteryLevel = batteryLevel;
+_lastGpsEnabled = gpsEnabled;
+
+
+// ============================================================
+// LOCATION REFERENCE
+// ============================================================
+
+// EN KRİTİK DEĞİŞİKLİK:
+//
+// GPS jitter kabul edilmediyse referans noktasını
+// ASLA değiştirmiyoruz.
+//
+// Böylece:
+// gerçek nokta -> kötü GPS -> başka kötü GPS
+//
+// şeklinde üçgen üretilmesini engelliyoruz.
+if (acceptedLocation) {
+
+  _lastLat =
+      position.latitude;
+
+  _lastLng =
+      position.longitude;
+
+  lastSpeedKmh =
+      speedKmh;
+
+  _lastAcceptedLocationTime =
+      position.timestamp;
+
+  Log.d(
+    "LOCATION REFERENCE UPDATED => "
+    "lat=$_lastLat "
+    "lng=$_lastLng "
+    "moved=${movedMeters?.toStringAsFixed(1)} "
+    "threshold=${movementThresholdMeters.toStringAsFixed(1)}",
+  );
+
+} else {
+
+  Log.d(
+    "LOCATION REFERENCE KEPT => "
+    "moved=${movedMeters?.toStringAsFixed(1)} "
+    "threshold=${movementThresholdMeters.toStringAsFixed(1)}",
+  );
+}
 }
 
 static Future<Position?> _getConfirmationPosition({
@@ -888,10 +1200,10 @@ static double _distanceCorrectionForSpeed(
   double speedKmh,
 ) {
   if (speedKmh >= 70) return 1.10;
-  if (speedKmh >= 40) return 1.15;
-  if (speedKmh >= 20) return 1.20;
+  if (speedKmh >= 40) return 1.13;
+  if (speedKmh >= 20) return 1.18;
 
-  return 1.10;
+  return 1.08;
 }
 
 	static Future<void> setOdometerTracking(

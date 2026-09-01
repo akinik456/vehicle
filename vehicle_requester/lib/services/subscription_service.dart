@@ -278,6 +278,18 @@ static Future<void> processPurchase({
 
   final requesterId =
       await IdentityService.getRequesterId();
+			
+	final int vehicleCount = switch (productId) {
+		'lynrafleet_extra_vehicle' => 1,
+		'lynrafleet_extra_vehicle_3' => 3,
+		'lynrafleet_extra_vehicle_5' => 5,
+		'lynrafleet_extra_vehicle_10' => 10,
+		'lynrafleet_extra_vehicle_20' => 20,
+		'lynrafleet_extra_vehicle_30' => 30,
+		'lynrafleet_extra_vehicle_40' => 40,
+		'lynrafleet_extra_vehicle_50' => 50,
+		_ => 0,
+	};
 
   final groupRef =
       _firestore.collection('groups').doc(groupId);
@@ -332,7 +344,7 @@ static Future<void> processPurchase({
     // Temel paket: 1 requester (master) + 1 locator
     // =====================================================
 
-    if (productId == 'lynrafamily_lifetime') {
+    if (productId == 'lynrafleet_lifetime') {
       DocumentReference<Map<String, dynamic>>?
           firstLocatorRef;
 
@@ -389,7 +401,7 @@ static Future<void> processPurchase({
     // Pasif requester yoksa slot sonraki katılım için kalır.
     // =====================================================
 
-    if (productId == 'extra_requester_1') {
+    if (productId == 'lynrafleet_extra_requester') {
       DocumentReference<Map<String, dynamic>>?
           requesterToEnableRef;
 
@@ -442,56 +454,62 @@ static Future<void> processPurchase({
     }
 
     // =====================================================
-    // EXTRA MEMBER
-    // İlk pasif locator açılır.
-    // Pasif locator yoksa slot sonraki katılım için kalır.
-    // =====================================================
+		// EXTRA VEHICLE
+		// Paket kadar locator slotu eklenir.
+		// Mevcut pasif locatorlar varsa sırayla aktif edilir.
+		// Kalan slotlar gelecekte eklenecek araçlar için kalır.
+		// =====================================================
 
-    if (productId == 'extra_member_1') {
-      DocumentReference<Map<String, dynamic>>?
-          locatorToEnableRef;
+		if (vehicleCount > 0) {
+			final locatorRefsToEnable =
+					<DocumentReference<Map<String, dynamic>>>[];
 
-      for (final deviceDoc in deviceDocs) {
-        final data = deviceDoc.data();
+			for (final deviceDoc in deviceDocs) {
+				final data = deviceDoc.data();
 
-        if (data == null) {
-          continue;
-        }
+				if (data == null) {
+					continue;
+				}
 
-        final isLocator =
-            data['role'] == 'locator';
+				final isLocator =
+						data['role'] == 'locator';
 
-        final isEntitled =
-            data['isEntitled'] == true;
+				final isEntitled =
+						data['isEntitled'] == true;
 
-        if (isLocator && !isEntitled) {
-          locatorToEnableRef =
-              deviceDoc.reference;
-          break;
-        }
-      }
+				if (isLocator && !isEntitled) {
+					locatorRefsToEnable.add(
+						deviceDoc.reference,
+					);
 
-      if (locatorToEnableRef != null) {
-        tx.update(locatorToEnableRef, {
-          'isEntitled': true,
-        });
-      }
+					if (locatorRefsToEnable.length >= vehicleCount) {
+						break;
+					}
+				}
+			}
 
-      tx.update(groupRef, {
-        'maxLocators':
-            FieldValue.increment(1),
-        'entitlementUpdatedAt':
-            FieldValue.serverTimestamp(),
-      });
+			for (final locatorRef in locatorRefsToEnable) {
+				tx.update(locatorRef, {
+					'isEntitled': true,
+				});
+			}
 
-      Log.d(
-        "BEACON IAP => extra member processed "
-        "deviceEnabled="
-        "${locatorToEnableRef != null}",
-      );
+			tx.update(groupRef, {
+				'maxLocators':
+						FieldValue.increment(vehicleCount),
+				'entitlementUpdatedAt':
+						FieldValue.serverTimestamp(),
+			});
 
-      return;
-    }
+			Log.d(
+				"BEACON IAP => extra vehicle processed "
+				"product=$productId "
+				"vehicleCount=$vehicleCount "
+				"devicesEnabled=${locatorRefsToEnable.length}",
+			);
+
+			return;
+		}
 
     throw StateError(
       'Unknown productId: $productId',

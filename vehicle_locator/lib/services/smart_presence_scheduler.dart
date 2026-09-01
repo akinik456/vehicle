@@ -6,6 +6,8 @@ import 'dart:async';
 import 'presence_service.dart';
 import 'alert_monitor_service.dart';
 import '../utils/log.dart';
+import 'app_log_service.dart';
+
 
 class SmartPresenceScheduler {
   SmartPresenceScheduler._();
@@ -17,6 +19,7 @@ class SmartPresenceScheduler {
   static bool _hasActiveWatcher = false;
 	static bool _appInForeground = false;
   static bool _isUpdating = false;
+	static bool _nativeDriven = false;
 	
 	static const _vehiclePeriod =
     Duration(seconds: 15);
@@ -51,10 +54,10 @@ class SmartPresenceScheduler {
     );
 		
 		Log.d(
-  "SMART START => "
-  "iso=${Isolate.current.hashCode} "
-  "pid=$pid",
-);
+			"SMART START => "
+			"iso=${Isolate.current.hashCode} "
+			"pid=$pid",
+		);
   }
 
   static void stop() {
@@ -87,14 +90,10 @@ class SmartPresenceScheduler {
 	static void boostOnly({
 		required String reason,
 	}) {
-		final wasFast =
-				_fastUntil != null &&
-				DateTime.now().isBefore(_fastUntil!);
-
 		_fastUntil =
 				DateTime.now().add(_fastWindow);
 
-		if (!wasFast) {
+		if (_timer == null) {
 			_scheduleNext(
 				immediate: false,
 				reason: reason,
@@ -125,52 +124,70 @@ class SmartPresenceScheduler {
     }
   }
 
-  static void _scheduleNext({
-		required bool immediate,
-		required String reason,
-	}) {
-		_timer?.cancel();
-
-		final now = DateTime.now();
-
-		final isFast =
-			_appInForeground ||
-			_hasActiveWatcher ||
-			(_fastUntil != null && now.isBefore(_fastUntil!));
-			Duration period;
-
-		if (isFast) {
-			if ((_appInForeground  || _hasActiveWatcher ) && _speedKmh >= 6) {
-				period = _vehiclePeriod;
-			} else {
-				period = _fastPeriod;
-Log.d("BEACON_SCHEDULE => period = _fastPeriod");			
-			}
-		} else {
-			period = _slowPeriod;
-Log.d("BEACON_SCHEDULE => period = _slowPeriod");			
+  static void _scheduleNext({ 
+		required bool immediate, 
+		required String reason, 
+	}) { 
+	
+		if (_nativeDriven) {
+			Log.d(
+				"SMART PRESENCE => Dart timer skipped "
+				"native driven reason=$reason",
+			);
+			return;
 		}
+		
+		_timer?.cancel(); 
 
-		Log.d(
-			"SMART PRESENCE => schedule "
-			"period=${period.inSeconds}s "
-			"reason=$reason",
-		);
+		final now = DateTime.now(); 
 
-		_timer = Timer(
-			immediate ? Duration.zero : period,
-			() async {
-				await _runUpdate(
-					reason: 'timer',
+		final isFast = 
+			_appInForeground || 
+			_hasActiveWatcher || 
+			_speedKmh >= 6 ||
+			(_fastUntil != null && now.isBefore(_fastUntil!)); 
+
+		Duration period; 
+
+		if (isFast) { 
+			if ((_appInForeground || _hasActiveWatcher) && _speedKmh >= 6) { 
+				period = _vehiclePeriod; 
+			} else { 
+				period = _fastPeriod; 
+				AppLogService.log(
+				type: AppLogType.gps,
+				text: "BEACON_SCHEDULE => period = _fastPeriod",
 				);
+			} 
+		} else { 
+			period = _fastPeriod;//_slowPeriod; 
+			AppLogService.log(
+			type: AppLogType.gps,
+			text: "BEACON_SCHEDULE => period = _fastPeriod//_slowPeriod",
+			);
+		} 
 
-				_scheduleNext(
-					immediate: false,
-					reason: 'timer',
-				);
-			},
-		);
+		Log.d( 
+			"SMART PRESENCE => schedule " 
+			"period=${period.inSeconds}s " 
+			"reason=$reason", 
+		); 
+
+		_timer = Timer( 
+			immediate ? Duration.zero : period, 
+			() async { 
+				await _runUpdate( 
+					reason: 'timer', 
+				); 
+
+				_scheduleNext( 
+					immediate: false, 
+					reason: 'timer', 
+				); 
+			}, 
+		); 
 	}
+
   static void setActiveWatcher(bool value) {
 		final wasActive = _hasActiveWatcher;
 
@@ -191,4 +208,21 @@ Log.d("BEACON_SCHEDULE => period = _slowPeriod");
 			);
 		}
 	}
+	
+	static void startNativeDriven() {
+		Log.d("SMART PRESENCE => native driven");
+
+		_nativeDriven = true;
+
+		_timer?.cancel();
+		_timer = null;
+	}
+
+	static Future<void> nativeTick() async {
+		await _runUpdate(
+			reason: 'timer',
+		);
+	}
+
+
 }

@@ -2,11 +2,12 @@
 "@@locale": 													"es",
 
 "howToAddMember": "¿Cómo añadir un vehículo?",
-"memberSetupStepOne": "Instala \"LynraFleet Driver\" en el teléfono del conductor.",
-"memberSetupStepTwo": "Abre \"LynraFleet Driver\" y obtén el Código del Conductor o el código QR.",
+"memberSetupStepOne": "Instala \"LynraFleet Vehicle\" en el teléfono del conductor.",
+"memberSetupStepTwo": "Abre \"LynraFleet Vehicle\" y obtén el Código del Conductor o el código QR.",
 "memberSetupStepThree": "Pulsa Añadir vehículo y envía una solicitud de vinculación.",
-"memberAppFreeHint": "\"LynraFleet Driver\" es gratuita para tus conductores.",
-"memberAppInfo": "Los conductores utilizan la aplicación gratuita \"LynraFleet Driver\" en sus propios teléfonos.",
+"memberAppFreeHint": "\"LynraFleet Vehicle\" es gratuita para tus conductores.",
+"memberAppInfo": "Los conductores utilizan la aplicación gratuita \"LynraFleet Vehicle\" en sus propios teléfonos.",
+"shareMemberApp": "Compartir aplicación para miembros",
 
 "enterVehicleInfo": 									"Introduzca la Información del Vehículo",
 "vehicleName": 												"Nombre del vehículo",
@@ -16,6 +17,7 @@
 "email": 															"Correo electrónico",
 "password": 													"Contraseña",
 "createWebAccess": 										"Crear acceso web",
+"history": 														"Historial",
 
 "actionRequired": 										"Acción requerida",
 "activeWatchers": 										"Observadores activos",

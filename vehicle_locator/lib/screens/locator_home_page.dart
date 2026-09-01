@@ -1,11 +1,22 @@
-// https://www.youtube.com/shorts/uz_d2RcNNc0
+// E2:27:9D:BA:30:43:60:D0:5F:34:F2:53:8F:22:6D:52:75:7A:1F:13 debug
+
+// Yükleme anahtarı sertifikası
+// A5:5A:77:26:F4:63:69:95:C5:15:A9:86:2A:C2:4C:8D:AB:77:14:C7
+// 9F:E8:9A:4F:96:0E:18:EE:02:8E:F1:BE:2A:85:B7:15:B6:AF:FC:25:FC:55:67:0C:7D:E8:35:55:48:E8:23:24
+
+// Uygulama imzalama
+// 57:4E:00:7A:70:45:24:39:C7:BD:D7:B0:AE:40:B8:F5:37:28:42:B9
+// 15:EC:D5:AF:DF:22:E0:70:22:32:42:52:CB:5F:BE:12:54:42:D5:63:02:D4:D3:03:37:46:EA:3B:E5:AA:F4:A7
+
+// Uygulama imzalama Kuantum
+// 38:EC:90:D9:2C:F3:0F:E2:08:0F:34:BF:31:2F:54:74:DC:DE:4E:A8
+// EC:FB:42:CB:F5:F3:9A:16:1B:0B:DD:63:1D:1A:30:4A:BD:31:A2:A0:45:56:1B:F1:D0:89:4F:90:EE:35:3A:A4
 
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'vehicle_history_page.dart';
 
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -55,6 +66,7 @@ import '../core/widgets/locator_status_card.dart';
 import '../services/presence_service.dart';
 import '../services/smart_presence_scheduler.dart';
 import '../services/native_presence_service.dart';
+import 'vehicle_history_page.dart';
 
 
 class LocatorHomePage extends StatefulWidget {

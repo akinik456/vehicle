@@ -1,5 +1,20 @@
 //?*?Free trial $_trialDaysLeft days left
 //android:value="AIzaSyCkairHqEl6kGkOdR_03sDYct-gmhc_NZM" />	
+// com.lynra.vehicle.requester
+// E2:27:9D:BA:30:43:60:D0:5F:34:F2:53:8F:22:6D:52:75:7A:1F:13 debug
+
+// Yükleme anahtarı sertifikası
+// SHA-1 A5:5A:77:26:F4:63:69:95:C5:15:A9:86:2A:C2:4C:8D:AB:77:14:C7
+// SHA-256 9F:E8:9A:4F:96:0E:18:EE:02:8E:F1:BE:2A:85:B7:15:B6:AF:FC:25:FC:55:67:0C:7D:E8:35:55:48:E8:23:24
+
+//Uygulama imzalama anahtarı
+//F9:CE:02:5A:AF:DB:EB:87:1D:F8:5C:45:88:C3:6D:EC:DC:39:13:D7
+//09:84:34:D8:27:98:FC:15:0D:DF:83:78:FE:A4:46:50:95:A7:FA:3C:E2:07:80:91:F0:8B:40:EA:8F:69:D0:47
+
+//Uygulama imzalama anahtarı Kuantum
+// 6D:E8:7A:70:A6:C3:0C:62:19:23:BF:32:DB:C3:7C:B1:37:6F:BC:11
+// DD:A9:F4:34:5D:77:46:70:1B:AB:75:5C:85:5D:9C:1F:A6:91:90:A3:E9:4B:C3:10:5F:31:83:C9:C7:4F:8E:33
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -14,6 +29,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_fonts.dart';
@@ -58,6 +74,7 @@ import 'live_tracking_map_page.dart';
 import '../services/pending_pairing_manager.dart';
 import '../services/pending_pairing_service.dart';
 import '../services/pairing_response_service.dart';
+import 'vehicle_history_page.dart';
 
 
 class RequesterHomePage extends StatefulWidget {
@@ -162,13 +179,13 @@ class _RequesterHomePageState
             purchaseProcessed = true;
 
             if (purchase.productID ==
-                    'lynrafamily_lifetime' &&
-                mounted) {
-              setState(() {
-                _isPremium = true;
-                _trialActive = false;
-              });
-            }
+										'lynrafleet_lifetime' &&
+								mounted) {
+							setState(() {
+								_isPremium = true;
+								_trialActive = false;
+							});
+						}
 
             Log.d(
               "BEACON IAP => purchase processed "
@@ -871,21 +888,28 @@ Future<void> _buy(String productId) async {
     productDetails: product,
   );
 
-  if (productId == 'lynrafamily_lifetime') {
+  if (productId == 'lynrafleet_lifetime') {
     await InAppPurchase.instance.buyNonConsumable(
       purchaseParam: purchaseParam,
     );
     return;
   }
 
-  if (productId == 'extra_requester_1' ||
-      productId == 'extra_member_1') {
-    await InAppPurchase.instance.buyConsumable(
-      purchaseParam: purchaseParam,
-      autoConsume: true,
-    );
-    return;
-  }
+  if (productId == 'lynrafleet_extra_requester' ||
+			productId == 'lynrafleet_extra_vehicle' ||
+			productId == 'lynrafleet_extra_vehicle_3' ||
+			productId == 'lynrafleet_extra_vehicle_5' ||
+			productId == 'lynrafleet_extra_vehicle_10' ||
+			productId == 'lynrafleet_extra_vehicle_20' ||
+			productId == 'lynrafleet_extra_vehicle_30' ||
+			productId == 'lynrafleet_extra_vehicle_40' ||
+			productId == 'lynrafleet_extra_vehicle_50') {
+		await InAppPurchase.instance.buyConsumable(
+			purchaseParam: purchaseParam,
+			autoConsume: true,
+		);
+		return;
+	}
 
   Log.d("BEACON IAP => unknown productId=$productId");
 }
@@ -901,6 +925,46 @@ Future<void> _initTrial() async {
     _trialActive = info.trialActive;Log.d("_initTrial _trialActive $_trialActive");
     _trialDaysLeft = info.trialDaysLeft;Log.d("_initTrial _trialDaysLeft $_trialDaysLeft");
   });
+}
+
+Future<void> copyDemoHistory() async {
+  const sourcePath =
+      "history/groups/9b3e1f65-06fb-4a06-9dc4-a7d63eb42c5c/"
+      "0b8639d6-cb2e-426c-910d-44248675c878/lastday";
+
+  const targetPath =
+      "history/groups/demogroup/demovehicle/lastday";
+
+  final db = FirebaseDatabase.instance;
+
+  final snapshot = await db
+      .ref(sourcePath)
+      .limitToFirst(150)
+      .get();
+
+  if (!snapshot.exists || snapshot.value == null) {
+    debugPrint('DEMO HISTORY => source empty');
+    return;
+  }
+
+  final raw = snapshot.value;
+
+  if (raw is! Map) {
+    debugPrint('DEMO HISTORY => invalid data');
+    return;
+  }
+
+  final Map<String, dynamic> demoData = {};
+
+  for (final entry in raw.entries) {
+    demoData[entry.key.toString()] = entry.value;
+  }
+
+  await db.ref(targetPath).set(demoData);
+
+  debugPrint(
+    'DEMO HISTORY => copied ${demoData.length} points',
+  );
 }
 
 Future<void> _showPurchaseMenu() async {
@@ -992,8 +1056,8 @@ final l10n = AppLocalizations.of(context)!;
                 purchaseItem(
                   icon: Icons.lock_open_rounded,
                   title: l10n.lifeTimeAccess,
-                  subtitle: 'Unlock LynraFamily for this group.',
-                  productId: 'lynrafamily_lifetime',
+                  subtitle: 'Unlock LynraFleet for this group.',
+                  productId: 'lynrafleet_lifetime',
                 ),
 
               if (_isPremium) ...[
@@ -1001,19 +1065,154 @@ final l10n = AppLocalizations.of(context)!;
                   icon: Icons.person_add_alt_1_rounded,
                   title: l10n.addAdmin,
                   subtitle: l10n.allowOneMoreAdmin,
-                  productId: 'extra_requester_1',
+                  productId: 'lynrafleet_extra_requester',
                 ),
 
                 const SizedBox(height: 12),
 
-                purchaseItem(
-                  icon: Icons.group_add_rounded,
-                  title: 'Add member',
-                  subtitle: l10n.allowOneMoreMember,
-                  productId: 'extra_member_1',
-                ),
+                AppCard(
+									padding: const EdgeInsets.all(14),
+									onTap: () {
+										Navigator.pop(dialogContext);
+										_showVehiclePackageMenu();
+									},
+									child: Row(
+										children: [
+											Container(
+												width: 44,
+												height: 44,
+												decoration: BoxDecoration(
+													color: AppColors.primary.withValues(alpha: 0.14),
+													borderRadius: BorderRadius.circular(14),
+												),
+												child: Icon(
+													Icons.directions_car_filled_rounded,
+													color: AppColors.primary,
+													size: 24,
+												),
+											),
+
+											const SizedBox(width: 12),
+
+											Expanded(
+												child: Column(
+													crossAxisAlignment: CrossAxisAlignment.start,
+													children: [
+														Text(
+															'Add vehicles',
+															style: AppFonts.subtitle.copyWith(
+																color: AppColors.textPrimary,
+															),
+														),
+
+														const SizedBox(height: 4),
+
+														Text(
+															'Choose a vehicle package',
+															style: AppFonts.caption.copyWith(
+																color: AppColors.textSecondary,
+															),
+														),
+													],
+												),
+											),
+
+											Icon(
+												Icons.chevron_right_rounded,
+												color: AppColors.textSecondary,
+											),
+										],
+									),
+								),
               ],
             ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> _showVehiclePackageMenu() async {
+  await showDialog(
+    context: context,
+    builder: (dialogContext) {
+      Widget packageItem({
+        required int vehicleCount,
+        required String productId,
+      }) {
+        return ListTile(
+          leading: Icon(
+            Icons.directions_car_rounded,
+            color: AppColors.primary,
+          ),
+          title: Text(
+            '+$vehicleCount vehicle${vehicleCount > 1 ? 's' : ''}',
+            style: AppFonts.subtitle.copyWith(
+              color: AppColors.textPrimary,
+            ),
+          ),
+          trailing: const Icon(
+            Icons.chevron_right_rounded,
+          ),
+          onTap: () {
+            Navigator.pop(dialogContext);
+            _buy(productId);
+          },
+        );
+      }
+
+      return AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
+        ),
+        title: Text(
+          'Add vehicles',
+          style: AppFonts.title.copyWith(
+            color: AppColors.primary,
+          ),
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                packageItem(
+                  vehicleCount: 1,
+                  productId: 'lynrafleet_extra_vehicle',
+                ),
+                packageItem(
+                  vehicleCount: 3,
+                  productId: 'lynrafleet_extra_vehicle_3',
+                ),
+                packageItem(
+                  vehicleCount: 5,
+                  productId: 'lynrafleet_extra_vehicle_5',
+                ),
+                packageItem(
+                  vehicleCount: 10,
+                  productId: 'lynrafleet_extra_vehicle_10',
+                ),
+                packageItem(
+                  vehicleCount: 20,
+                  productId: 'lynrafleet_extra_vehicle_20',
+                ),
+                packageItem(
+                  vehicleCount: 30,
+                  productId: 'lynrafleet_extra_vehicle_30',
+                ),
+                packageItem(
+                  vehicleCount: 40,
+                  productId: 'lynrafleet_extra_vehicle_40',
+                ),
+                packageItem(
+                  vehicleCount: 50,
+                  productId: 'lynrafleet_extra_vehicle_50',
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -1750,9 +1949,13 @@ Widget _buildGroupHome({
 																						child: CircularProgressIndicator(),
 																					)
 																				: _locators.isEmpty
-																						? Center(
-																								child: Padding(
-																									padding: const EdgeInsets.symmetric(horizontal: 24),
+																				? SingleChildScrollView(
+																						child: Column(
+																							children: [
+																								Padding(
+																									padding: const EdgeInsets.symmetric(
+																										horizontal: 24,
+																									),
 																									child: AppCard(
 																										child: Column(
 																											mainAxisSize: MainAxisSize.min,
@@ -1799,11 +2002,137 @@ Widget _buildGroupHome({
 																														height: 1.4,
 																													),
 																												),
+																												const SizedBox(height: 12),
+																												SizedBox(
+																													width: double.infinity,
+																													child: OutlinedButton.icon(
+																														onPressed: () async {
+																															const memberAppUrl =
+																																	'https://play.google.com/store/apps/details?id=com.lynra.vehicle.locator';
+																															await SharePlus.instance.share(
+																																ShareParams(
+																																	text: memberAppUrl,
+																																),
+																															);
+																														},
+																														icon: const Icon(
+																															Icons.share_rounded,
+																															size: 20,
+																														),
+																														label: Text(
+																															l10n.shareMemberApp,
+																														),
+																													),
+																												),	
+																																														
 																											],
 																										),
 																									),
 																								),
-																							)
+																												const SizedBox(height: 12),
+																												LocatorStatusCard(
+																													locatorId: 'demo',
+																													locatorName: 'Demo',
+																													locatorCode: '',
+																													locatorPlate: '34 DEMO',
+
+																													status: 'online',
+
+																													battery: 82,
+																													gpsEnabled: true,
+
+																													addressText:
+																															_myLat != null && _myLng != null
+																																	? 'Cumhuriyet Blv., Ankara'
+																																	: l10n.addressNotAvailable,
+
+																													geoInside: false,
+																													placeName: '',
+
+																													lastSeenText: l10n.justNow,
+
+																													distanceText:
+																															_myLat != null && _myLng != null
+																																	? '0 m'
+																																	: '-',
+
+																													speed: 0,
+																													totalDistanceKm: 0,
+																													tripDistanceKm: 0,
+
+																													stationarySince: null,
+																													offlineSince: null,
+
+																													onEditTotalDistance: (newKm) async {
+																														// Demo - RTDB write yok
+																													},
+
+																													onResetTripDistance: () async {
+																														// Demo - RTDB write yok
+																													},
+
+																													onOpenMaps: () async {
+																														if (_myLat == null || _myLng == null) {
+																															return;
+																														}
+
+																														await MapHelper.openInMaps(
+																															lat: _myLat!,
+																															lng: _myLng!,
+																														);
+																													},
+
+																													onLiveTrack: () {
+																														if (_myLat == null || _myLng == null) {
+																															return;
+																														}
+
+																														Navigator.push(
+																															context,
+																															MaterialPageRoute(
+																																builder: (_) => LiveTrackingMapPage(
+																																	groupId: 'demo',
+																																	locatorId: 'demo',
+																																	locatorName: 'Demo Member',
+																																	latitude: _myLat!,
+																																	longitude: _myLng!,
+																																	address: 'Cumhuriyet Blv., Ankara',
+																																	locatorNames: const {
+																																		'demo': 'Demo',
+																																	},
+																																),
+																															),
+																														);
+																													},
+
+																													onOpenHistory: () async {
+																													//copyDemoHistory();
+																															Navigator.push(
+																																context,
+																																MaterialPageRoute(
+																																	builder: (_) => VehicleHistoryPage(
+																																		groupId: 'demogroup',
+																																		locatorId: 'demovehicle',
+																																	),
+																																),
+																															);
+																														},		
+
+																													onNotificationSettings: () {
+																														// Demo
+																													},
+
+																													onSettings: () {
+																														// Demo
+																													},
+
+																													onRemove: () {
+																														// Demo
+																													},
+																												),																																			
+																									],
+																							),
+																						)
 																						: ListView.separated(
 																								itemCount: _locators.length,
 																						separatorBuilder: (_, __) =>
@@ -1942,6 +2271,20 @@ Widget _buildGroupHome({
 																										),
 																									);
 																								},
+																								onOpenHistory: () async {
+																								final groupId = await GroupService.getLocalGroupId();
+																								if (groupId == null ) return;
+
+																									Navigator.push(
+																										context,
+																										MaterialPageRoute(
+																											builder: (_) => VehicleHistoryPage(
+																												groupId: groupId,
+																												locatorId: locatorId,
+																											),
+																										),
+																									);
+																								},		
 																								onNotificationSettings: () {
 																									 Navigator.push(
 																										context,

@@ -3,11 +3,12 @@
 
 
 "howToAddMember": "Araç nasıl eklenir?",
-"memberSetupStepOne": "\"LynraFleet Driver\" uygulamasını sürücünün telefonuna yükleyin.",
-"memberSetupStepTwo": "\"LynraFleet Driver\" uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.",
+"memberSetupStepOne": "\"LynraFleet Vehicle\" uygulamasını sürücünün telefonuna yükleyin.",
+"memberSetupStepTwo": "\"LynraFleet Vehicle\" uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.",
 "memberSetupStepThree": "Araç Ekle seçeneğine dokunup eşleştirme isteği gönderin.",
-"memberAppFreeHint": "\"LynraFleet Driver\" sürücüleriniz için ücretsizdir.",
-"memberAppInfo": "Sürücüler kendi telefonlarında ücretsiz \"LynraFleet Driver\" uygulamasını kullanır.",
+"memberAppFreeHint": "\"LynraFleet Vehicle\" sürücüleriniz için ücretsizdir.",
+"memberAppInfo": "Sürücüler kendi telefonlarında ücretsiz \"LynraFleet Vehicle\" uygulamasını kullanır.",
+"shareMemberApp": "Üye Uygulamasını Paylaş",
 
 "enterVehicleInfo": 									"Araç Bilgilerini Gir",
 "vehicleName": 												"Araç İsmi",
@@ -17,6 +18,7 @@
 "email": 															"E-posta",
 "password": 													"Şifre",
 "createWebAccess": 										"Web Erişimi Oluştur",
+"history": 														"Geçmiş",
 
 "actionRequired":											"İşlem Gerekli",
 "activeWatchers":											"Aktif İzleyenler",

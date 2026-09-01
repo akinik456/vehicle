@@ -1,0 +1,29 @@
+Uygulama Adı
+LynraFleet
+
+Kısa Açıklama
+Track company vehicles in real time using the driver's Android phone.
+
+Tam Açıklama
+LynraFleet turns the driver's Android phone into a vehicle tracking device. Track your company vehicles in real time from the LynraFleet mobile app or web panel.
+
+Monitor vehicle locations, speed, GPS status, battery level, route history, and vehicle status without installing dedicated GPS tracking hardware.
+
+Create a private fleet, add your vehicles, and monitor your fleet from anywhere.
+
+Features
+
+• Live vehicle tracking
+• Route history
+• Speed information
+• Odometer and trip distance
+• Vehicle status
+• GPS and battery monitoring
+• Smart alerts
+• Fleet management
+• Web dashboard access
+• Fast and easy setup
+
+LynraFleet works together with the LynraFleet Vehicle app installed on the Android phone used in the vehicle. Vehicle location is shared only with authorized members of the same fleet.
+
+Your fleet data is private and shared only within your organization.

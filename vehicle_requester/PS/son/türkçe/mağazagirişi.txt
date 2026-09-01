@@ -1,0 +1,29 @@
+Uygulama Adı
+LynraFleet
+
+Kısa Açıklama
+Sürücünün Android telefonunu kullanarak şirket araçlarınızı canlı takip edin.
+
+Tam Açıklama
+LynraFleet, sürücünün Android telefonunu bir araç takip cihazına dönüştürür. Şirket araçlarınızı LynraFleet mobil uygulaması veya web paneli üzerinden gerçek zamanlı takip edin.
+
+Ayrı bir GPS takip cihazı kurmadan araçlarınızın konumunu, hızını, rota geçmişini, GPS ve pil durumunu görüntüleyin.
+
+Özel filonuzu oluşturun, araçlarınızı ekleyin ve filonuzu dilediğiniz yerden takip edin.
+
+Özellikler
+
+• Canlı araç takibi
+• Rota geçmişi
+• Hız bilgisi
+• Kilometre ve seyahat mesafesi takibi
+• Araç durumu
+• GPS ve pil durumu takibi
+• Akıllı uyarılar
+• Filo yönetimi
+• Web paneli erişimi
+• Hızlı ve kolay kurulum
+
+LynraFleet, araçta kullanılan Android telefona yüklenen LynraFleet Vehicle uygulamasıyla birlikte çalışır. Araç konumu yalnızca aynı filodaki yetkili kullanıcılarla paylaşılır.
+
+Filo verileriniz gizlidir ve yalnızca kuruluşunuz içinde paylaşılır.

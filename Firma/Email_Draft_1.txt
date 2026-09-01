@@ -1,0 +1,30 @@
+Merhaba,
+
+Firmanızın sahada birden fazla araçla hizmet verdiğini gördük ve geliştirdiğimiz **LynraFleet** çözümünün operasyonlarınız için faydalı olabileceğini düşündük.
+
+LynraFleet, sürücünün Android telefonunu bir araç takip cihazına dönüştürür.. Ek bir GPS takip cihazı veya donanım kurulumu gerektirmeden araçlarınızı 
+web panelinden ve mobil uygulamadan gerçek zamanlı olarak takip edebilirsiniz.
+
+LynraFleet hakkında detaylı bilgi :
+
+Android uygulaması:
+Google Play: [Play Store linki]
+
+https://lynra.app/lynrafleet
+
+Dilerseniz birkaç aracınızla deneyerek sistemin işletmeniz için uygun olup olmadığını görebilirsiniz.
+
+Sorularınız olursa doğrudan bu e-postayı yanıtlayabilirsiniz.
+
+İyi çalışmalar,
+
+LynraFleet
+Lynra
+
+Konu
+Araçlarınızı ek GPS cihazı olmadan takip edin
+
+Personel Taşımacılığı 
+
+Test Firma  taşımacılık hizmetlerini inceledik. Araç filonuz için geliştirdiğimiz 
+LynraFleet ' in ilginizi çekebileceğini düşündük.

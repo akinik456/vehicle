@@ -12,19 +12,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get howToAddMember => '¿Cómo añadir un vehículo?';
 
   @override
-  String get memberSetupStepOne => 'Instala \"LynraFleet Driver\" en el teléfono del conductor.';
+  String get memberSetupStepOne => 'Instala \"LynraFleet Vehicle\" en el teléfono del conductor.';
 
   @override
-  String get memberSetupStepTwo => 'Abre \"LynraFleet Driver\" y obtén el Código del Conductor o el código QR.';
+  String get memberSetupStepTwo => 'Abre \"LynraFleet Vehicle\" y obtén el Código del Conductor o el código QR.';
 
   @override
   String get memberSetupStepThree => 'Pulsa Añadir vehículo y envía una solicitud de vinculación.';
 
   @override
-  String get memberAppFreeHint => '\"LynraFleet Driver\" es gratuita para tus conductores.';
+  String get memberAppFreeHint => '\"LynraFleet Vehicle\" es gratuita para tus conductores.';
 
   @override
-  String get memberAppInfo => 'Los conductores utilizan la aplicación gratuita \"LynraFleet Driver\" en sus propios teléfonos.';
+  String get memberAppInfo => 'Los conductores utilizan la aplicación gratuita \"LynraFleet Vehicle\" en sus propios teléfonos.';
+
+  @override
+  String get shareMemberApp => 'Compartir aplicación para miembros';
 
   @override
   String get enterVehicleInfo => 'Introduzca la Información del Vehículo';
@@ -49,6 +52,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get createWebAccess => 'Crear acceso web';
+
+  @override
+  String get history => 'Historial';
 
   @override
   String get actionRequired => 'Acción requerida';
@@ -642,6 +648,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsSaved => 'Configuración guardada';
+
+  @override
+  String get shareLogs => 'Compartir registro';
 
   @override
   String get sixdigitcode => 'Introduzca un código de 6 dígitos';

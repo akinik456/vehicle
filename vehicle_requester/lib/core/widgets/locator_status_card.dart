@@ -27,6 +27,7 @@ class LocatorStatusCard extends StatefulWidget {
     required this.offlineSince,
     required this.distanceText,
 		required this.onLiveTrack,
+		required this.onOpenHistory,
     required this.onOpenMaps,
     required this.addressText,
 		required this.speed,
@@ -61,6 +62,7 @@ class LocatorStatusCard extends StatefulWidget {
 
   final String distanceText;
 	final VoidCallback onLiveTrack;
+	final VoidCallback onOpenHistory;
   final VoidCallback onOpenMaps;
   final String addressText;
   final VoidCallback? onNotificationSettings;
@@ -525,6 +527,12 @@ class _LocatorStatusCardState
 								color: AppColors.primary,
 								onTap: widget.onLiveTrack,
 							),
+							_MiniAction(
+								icon: Icons.history_rounded,
+								label: l10n.history,
+								color: AppColors.primary,
+								onTap: widget.onOpenHistory,
+							),							
 							_MiniAction(
 								icon: Icons.map_rounded,
 								label: l10n.mapbutton,

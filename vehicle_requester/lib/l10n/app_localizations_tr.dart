@@ -12,19 +12,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get howToAddMember => 'Araç nasıl eklenir?';
 
   @override
-  String get memberSetupStepOne => '\"LynraFleet Driver\" uygulamasını sürücünün telefonuna yükleyin.';
+  String get memberSetupStepOne => '\"LynraFleet Vehicle\" uygulamasını sürücünün telefonuna yükleyin.';
 
   @override
-  String get memberSetupStepTwo => '\"LynraFleet Driver\" uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.';
+  String get memberSetupStepTwo => '\"LynraFleet Vehicle\" uygulamasını açın ve Sürücü Kodunu veya QR kodunu alın.';
 
   @override
   String get memberSetupStepThree => 'Araç Ekle seçeneğine dokunup eşleştirme isteği gönderin.';
 
   @override
-  String get memberAppFreeHint => '\"LynraFleet Driver\" sürücüleriniz için ücretsizdir.';
+  String get memberAppFreeHint => '\"LynraFleet Vehicle\" sürücüleriniz için ücretsizdir.';
 
   @override
-  String get memberAppInfo => 'Sürücüler kendi telefonlarında ücretsiz \"LynraFleet Driver\" uygulamasını kullanır.';
+  String get memberAppInfo => 'Sürücüler kendi telefonlarında ücretsiz \"LynraFleet Vehicle\" uygulamasını kullanır.';
+
+  @override
+  String get shareMemberApp => 'Üye Uygulamasını Paylaş';
 
   @override
   String get enterVehicleInfo => 'Araç Bilgilerini Gir';
@@ -49,6 +52,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get createWebAccess => 'Web Erişimi Oluştur';
+
+  @override
+  String get history => 'Geçmiş';
 
   @override
   String get actionRequired => 'İşlem Gerekli';
@@ -642,6 +648,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsSaved => 'Ayarlar kaydedildi';
+
+  @override
+  String get shareLogs => 'Log Paylaş';
 
   @override
   String get sixdigitcode => '6 haneli kod giriniz';

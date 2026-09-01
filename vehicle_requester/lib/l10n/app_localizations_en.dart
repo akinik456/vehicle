@@ -12,19 +12,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get howToAddMember => 'How to add a vehicle';
 
   @override
-  String get memberSetupStepOne => 'Install \"LynraFleet Driver\" on the driver\'s phone.';
+  String get memberSetupStepOne => 'Install \"LynraFleet Vehicle\" on the driver\'s phone.';
 
   @override
-  String get memberSetupStepTwo => 'Open \"LynraFleet Driver\" and get the Driver Code or QR code.';
+  String get memberSetupStepTwo => 'Open \"LynraFleet Vehicle\" and get the Driver Code or QR code.';
 
   @override
   String get memberSetupStepThree => 'Tap Add Vehicle and send a pairing request.';
 
   @override
-  String get memberAppFreeHint => '\"LynraFleet Driver\" is free for your drivers.';
+  String get memberAppFreeHint => '\"LynraFleet Vehicle\" is free for your drivers.';
 
   @override
-  String get memberAppInfo => 'Drivers use the free \"LynraFleet Driver\" app on their own phones.';
+  String get memberAppInfo => 'Drivers use the free \"LynraFleet Vehicle\" app on their own phones.';
+
+  @override
+  String get shareMemberApp => 'Share Member App';
 
   @override
   String get enterVehicleInfo => 'Enter Vehicle Info';
@@ -49,6 +52,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createWebAccess => 'Create Web Access';
+
+  @override
+  String get history => 'History';
 
   @override
   String get actionRequired => 'Action Required';
@@ -642,6 +648,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsSaved => 'Settings saved';
+
+  @override
+  String get shareLogs => 'Share Logs';
 
   @override
   String get sixdigitcode => 'Enter 6-digit code';

@@ -16,6 +16,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vehicle_locator/l10n/app_localizations.dart';
 
+
 import 'firebase_options.dart';
 import 'services/identity_service.dart';
 import 'services/firestore_service.dart';
@@ -65,63 +66,108 @@ import 'services/native_presence_service.dart';
 	}
 	
 	@pragma('vm:entry-point')
-	Future<void> locatorPresenceServiceMain() async {
-	Log.d(
-  "SERVICE MAIN => "
-  "iso=${Isolate.current.hashCode} "
-  "pid=$pid",
-);
-	
-		WidgetsFlutterBinding.ensureInitialized();
+Future<void> locatorPresenceServiceMain() async {
 
-		await Firebase.initializeApp();
-		
-		final ids = await NativePresenceService.getPresenceIds();
+  Log.d(
+    "SERVICE MAIN => "
+    "iso=${Isolate.current.hashCode} "
+    "pid=$pid",
+  );
 
-		if (ids != null) {
-			PresenceService.setServiceIds(
-				groupId: ids['groupId']!,
-				locatorId: ids['locatorId']!,
-			);
-		}
+  WidgetsFlutterBinding.ensureInitialized();
 
-		Log.d(
-			"LYNRA_DART => locatorPresenceServiceMain",
-		);
-		
-		await PresenceService.loadDistanceCache();
-		
-		await PresenceService.startConnectionWatcher();
+  await Firebase.initializeApp();
 
-		LocatorSettingsService.startListeners();
+  final ids =
+      await NativePresenceService.getPresenceIds();
 
-		final prefs = await SharedPreferences.getInstance();
+  if (ids != null) {
+    PresenceService.setServiceIds(
+      groupId: ids['groupId']!,
+      locatorId: ids['locatorId']!,
+    );
+  }
 
-		ActiveWatcherService.setLangCode(
-			prefs.getString('languageCode') ?? 'en',
-		);
-		
-		const MethodChannel _serviceChannel =
-				MethodChannel('lynra/presence_service_dart');
+  Log.d(
+    "LYNRA_DART => locatorPresenceServiceMain",
+  );
 
-		_serviceChannel.setMethodCallHandler((call) async {
-			switch (call.method) {
-				case 'setAppForeground':
-					final value =
-							call.arguments['value'] as bool? ?? false;
+  await PresenceService.loadDistanceCache();
 
-					NativePresenceService.setAppForeground(value);
-					break;
-			}
-		});
+  await PresenceService.startConnectionWatcher();
 
-		await ActiveWatcherService.start();
+  LocatorSettingsService.startListeners();
 
-		SmartPresenceScheduler.start();
+  final prefs =
+      await SharedPreferences.getInstance();
 
-		MotionService.start();
-		
-	}
+  ActiveWatcherService.setLangCode(
+    prefs.getString('languageCode') ?? 'en',
+  );
+
+  // =========================================================
+  // SMART PRESENCE - NATIVE TIMER MODE
+  // =========================================================
+
+  SmartPresenceScheduler.startNativeDriven();
+
+  // =========================================================
+  // NATIVE SERVICE CHANNEL
+  // =========================================================
+
+  const MethodChannel serviceChannel =
+      MethodChannel(
+        'lynra/presence_service_dart',
+      );
+
+  serviceChannel.setMethodCallHandler(
+    (call) async {
+
+      switch (call.method) {
+
+        // ================================================
+        // APP FOREGROUND
+        // ================================================
+
+        case 'setAppForeground':
+
+          final value =
+              call.arguments['value']
+                  as bool? ??
+              false;
+
+          NativePresenceService
+              .setAppForeground(value);
+
+          break;
+
+
+        // ================================================
+        // NATIVE 30 SECOND TIMER
+        // ================================================
+
+        case 'nativeTimerTick':
+
+          Log.d(
+            "NATIVE TIMER => Dart tick received",
+          );
+
+          await SmartPresenceScheduler
+              .nativeTick();
+
+          break;
+      }
+    },
+  );
+
+  await ActiveWatcherService.start();
+
+  // ESKİ DART TIMER ARTIK YOK:
+  //
+  // SmartPresenceScheduler.start();
+
+  MotionService.start();
+}
 
 
 Future<void> main() async {

@@ -1,7 +1,7 @@
 name: vehicle_requester
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+34
+version: 1.0.0+48
 
 environment:
   sdk: ^3.12.0
@@ -21,7 +21,7 @@ dependencies:
   firebase_messaging: ^15.2.10
   shared_preferences: ^2.5.5
   uuid: ^4.5.3
-  mobile_scanner: ^5.2.3
+  mobile_scanner: ^6.0.11
   qr_flutter: ^4.1.0
   in_app_update: ^4.2.3
   in_app_purchase: ^3.1.13
@@ -32,8 +32,9 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   geocoding: ^4.0.0
   firebase_auth: ^5.7.0
-  google_maps_flutter: ^2.13.1
+  google_maps_flutter: 2.17.1
   cloud_functions: ^5.6.2
+  share_plus: ^12.0.2
   
 dev_dependencies:
   flutter_test:
@@ -54,6 +55,11 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/history_start.png
+    - assets/images/history_end.png
+    - assets/images/playback_vehicle.png 
+    - assets/images/history_point.png
+    - assets/images/vehicle_marker.png
     
 flutter_native_splash:
   color: "#091220"
