@@ -12,6 +12,7 @@ import '../widgets/left_panel.dart';
 import '../widgets/map_panel.dart';
 import '../services/fleet_manager_service.dart';
 import '../extensions/context_extensions.dart';
+import 'create_join_fleet_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -433,13 +434,9 @@ class _DashboardPageState extends State<DashboardPage> {
 										child: CircularProgressIndicator(),
 									)
 								: _hasWebAccess == false
-										? Center(
-												child: Text(
-													'${context.l10n.webaccessisnotactive}\n\n'
-													'${context.l10n.pleaseactivatewebaccess}',
-													textAlign: TextAlign.center,
-												),
-											)
+										? CreateJoinFleetPage(
+											onFleetCreated: _start,
+										)
 										: Row(
 												children: [
 												if (!_mapFullscreen)

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'dashboard_page.dart';
 import '../extensions/context_extensions.dart';
-
+import 'welcome_page.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -33,7 +33,7 @@ class AuthGate extends StatelessWidget {
         final user = snapshot.data;
 
         if (user == null) {
-          return const LoginPage();
+          return const WelcomePage();
         }
 
         return const DashboardPage();

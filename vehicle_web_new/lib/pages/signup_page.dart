@@ -1,30 +1,50 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
-import '../extensions/context_extensions.dart';
-import 'signup_page.dart';
+import 'login_page.dart';
+import '../services/code_service.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   bool _isLoading = false;
   String? _errorText;
 
-  Future<void> _login() async {
+  Future<void> _signUp() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
 
-    if (email.isEmpty || password.isEmpty) {
+    if (email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       setState(() {
-        _errorText = 'Email and password are required.';
+        _errorText = 'Please complete all fields.';
+      });
+      return;
+    }
+
+    if (password != confirmPassword) {
+      setState(() {
+        _errorText = 'Passwords do not match.';
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      setState(() {
+        _errorText = 'Password must be at least 6 characters.';
       });
       return;
     }
@@ -35,30 +55,38 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+			await _createRequesterIdentity();
 			if (!mounted) return;
 
 			Navigator.of(context).pop();
+
+
+      // AuthGate authStateChanges() üzerinden kullanıcıyı
+      // otomatik olarak yakalayacak.
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
 
       setState(() {
         _errorText = switch (e.code) {
-          'invalid-credential' => 'Invalid email or password.',
-          'user-disabled' => 'This account has been disabled.',
-          'too-many-requests' =>
-            'Too many attempts. Please try again later.',
-          _ => e.message ?? 'Login failed.',
+          'email-already-in-use' =>
+            'An account already exists with this email.',
+          'invalid-email' =>
+            'Please enter a valid email address.',
+          'weak-password' =>
+            'Please choose a stronger password.',
+          _ =>
+            e.message ?? 'Account creation failed.',
         };
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
-        _errorText = 'Login failed.';
+        _errorText = 'Account creation failed.';
       });
     } finally {
       if (!mounted) return;
@@ -69,57 +97,49 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _resetPassword() async {
-    final email = _emailController.text.trim();
-
-    if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Please enter your email address first.',
-          ),
-        ),
-      );
-      return;
-    }
-
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-        email: email,
-      );
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password reset email sent.'),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (!mounted) return;
-
-      debugPrint(
-        'PASSWORD RESET ERROR => '
-        'code=${e.code} message=${e.message}',
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Password reset failed: ${e.code}',
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
+	
+	Future<void> _createRequesterIdentity() async {
+		final user = FirebaseAuth.instance.currentUser;
 
+		if (user == null) {
+			throw Exception('Authenticated user not found.');
+		}
+
+		final requesterId = const Uuid().v4();
+
+		final requesterCode =
+				CodeService.shortCodeFromId(requesterId);
+
+		final now = FieldValue.serverTimestamp();
+
+		await FirebaseFirestore.instance
+				.collection('requesters')
+				.doc(requesterId)
+				.set({
+			'active': true,
+			'authUid': user.uid,
+			'requesterId': requesterId,
+			'requesterCode': requesterCode,
+			'platform': 'web',
+			'createdAt': now,
+			'updatedAt': now,
+		});
+
+		debugPrint(
+			'WEB REQUESTER CREATED => '
+			'requesterId=$requesterId '
+			'requesterCode=$requesterCode '
+			'authUid=${user.uid}',
+		);
+	}
+	
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,8 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
                             'assets/images/fleet_icon.png',
@@ -162,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 28),
 
                       const Text(
-                        'Sign in to your account',
+                        'Create your free account',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
@@ -171,14 +190,15 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
 
                       const Text(
-                        'Manage and track your fleet from anywhere.',
+                        'Your first vehicle is free forever.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white60,
+                          color: Colors.greenAccent,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
 
@@ -186,17 +206,14 @@ class _LoginPageState extends State<LoginPage> {
 
                       TextField(
                         controller: _emailController,
-                        keyboardType:
-                            TextInputType.emailAddress,
+                        keyboardType: TextInputType.emailAddress,
                         autofillHints: const [
                           AutofillHints.email,
                         ],
-                        decoration: InputDecoration(
-                          labelText: context.l10n.email,
-                          prefixIcon:
-                              const Icon(Icons.email_outlined),
-                          border:
-                              const OutlineInputBorder(),
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email_outlined),
+                          border: OutlineInputBorder(),
                         ),
                       ),
 
@@ -206,36 +223,34 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         obscureText: true,
                         autofillHints: const [
-                          AutofillHints.password,
+                          AutofillHints.newPassword,
                         ],
-                        onSubmitted: (_) {
-                          if (!_isLoading) {
-                            _login();
-                          }
-                        },
                         decoration: const InputDecoration(
                           labelText: 'Password',
-                          prefixIcon:
-                              Icon(Icons.lock_outline),
+                          prefixIcon: Icon(Icons.lock_outline),
                           border: OutlineInputBorder(),
                         ),
                       ),
 
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: _resetPassword,
-                          child: const Text(
-                            'Forgot password?',
-                            style: TextStyle(
-                              color: Color(0xFF43BFF3),
-                            ),
-                          ),
+                      const SizedBox(height: 16),
+
+                      TextField(
+                        controller: _confirmPasswordController,
+                        obscureText: true,
+                        onSubmitted: (_) {
+                          if (!_isLoading) {
+                            _signUp();
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          labelText: 'Confirm Password',
+                          prefixIcon: Icon(Icons.lock_outline),
+                          border: OutlineInputBorder(),
                         ),
                       ),
 
                       if (_errorText != null) ...[
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 18),
                         Text(
                           _errorText!,
                           textAlign: TextAlign.center,
@@ -247,14 +262,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ],
 
-                      const SizedBox(height: 22),
+                      const SizedBox(height: 26),
 
                       SizedBox(
                         width: double.infinity,
                         height: 50,
                         child: FilledButton(
                           onPressed:
-                              _isLoading ? null : _login,
+                              _isLoading ? null : _signUp,
                           style: FilledButton.styleFrom(
                             backgroundColor:
                                 const Color(0xFF43BFF3),
@@ -271,7 +286,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 )
                               : const Text(
-                                  'Sign In',
+                                  'Create Account',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight:
@@ -288,7 +303,7 @@ class _LoginPageState extends State<LoginPage> {
                             MainAxisAlignment.center,
                         children: [
                           const Text(
-                            "Don't have an account?",
+                            'Already have an account?',
                             style: TextStyle(
                               color: Colors.white60,
                             ),
@@ -299,17 +314,14 @@ class _LoginPageState extends State<LoginPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) =>
-                                      const SignUpPage(),
+                                      const LoginPage(),
                                 ),
                               );
                             },
                             child: const Text(
-                              'Create Account',
+                              'Sign In',
                               style: TextStyle(
-                                color:
-                                    Color(0xFF43BFF3),
-                                fontWeight:
-                                    FontWeight.w600,
+                                color: Color(0xFF43BFF3),
                               ),
                             ),
                           ),
