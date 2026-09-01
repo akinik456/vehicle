@@ -1,0 +1,32 @@
+{
+"@@locale": "tr",		
+		
+"admin": 															"Yönetici",		
+"address": 														"Adres",
+"appTitle": 													"LynraFleet",
+"atThisLocationNow": 									"Bu konumda: Az önce",
+"atThisLocationMinutes": 							"Bu konumda: {minutes} dk",
+"atThisLocationHours": 								"Bu konumda: {hours} sa",
+"atThisLocationHoursMinutes": 				"Bu konumda: {hours} sa {minutes} dk",
+"authenticationerror": 								"Kimlik doğrulama hatası",
+"battery": 														"Pil",
+"dashboard": 													"Kontrol Paneli",
+"driverName": 												"Sürücü Adı",
+"email": 															"E-posta",
+"lastUpdate": 												"Son Güncelleme",
+"login": 															"Giriş",
+"logout": 														"Çıkış Yap",
+"parked": 														"Parkta",
+"password": 													"Şifre",
+"plate": 															"Plaka",
+"pleaseactivatewebaccess": 						"Lütfen web erişimini LynraFleet mobil uygulamasından etkinleştirin.",
+"signIn": 														"Giriş Yap",			
+"signintoyourfleetdashboard": 				"Filo kontrol panelinizde oturum açın",
+"unknownPlate": 											"Plaka girilmemiş",
+"updated": 														"Güncellendi",
+"vehicleFleet":												"Araç Filosu",
+"vehicles": 													"Araçlar",
+"vehicleWeb": 												"Araç Web",
+"webaccessisnotactive": 							"Web erişimi aktif değil."		
+
+}
