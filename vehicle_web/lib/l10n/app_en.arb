@@ -1,0 +1,32 @@
+{
+"@@locale": "en",
+
+"admin": 															"Admin",		
+"address": 														"Address",
+"appTitle": 													"LynraFleet",
+"atThisLocationNow": 									"At this location: just now",
+"atThisLocationMinutes": 							"At this location: {minutes} min",
+"atThisLocationHours": 								"At this location: {hours} h",
+"atThisLocationHoursMinutes": 				"At this location: {hours} h {minutes} min",
+"authenticationerror": 								"Authentication error",
+"battery": 														"Battery",
+"dashboard": 													"Dashboard",
+"driverName": 												"Driver Name",
+"email": 															"Email",
+"lastUpdate": 												"Last Update",
+"login": 															"Login",
+"logout": 														"Logout",
+"parked": 														"Parked",
+"password": 													"Password",
+"plate": 															"Plate",
+"pleaseactivatewebaccess": 						"Please activate web access from the LynraFleet mobile application.",
+"signIn": 														"Sign In",			
+"signintoyourfleetdashboard": 				"Sign in to your fleet dashboard",
+"unknownPlate": 											"Unknown Plate",
+"updated": 														"Updated",
+"vehicleFleet":												"Vehicle Fleet",
+"vehicleWeb": 												"Vehicle Web",
+"vehicles": 													"Vehicles",
+"webaccessisnotactive": 							"Web access is not active."
+
+}

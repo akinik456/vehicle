@@ -1,0 +1,16 @@
+Araç geçmişi / rota geçmişi. Bence en kritik eksik bu. Firma “şu an araç nerede?” kadar “bugün nerelere gitti?” diyecek. 
+İlk sürüm çok basit olabilir: araç → tarih → haritada rota. Hatta başlangıçta sadece Bugün yeter.
+
+Araç yönetimi. Plaka ve sürücü adını webden değiştirebilmek. Firma yöneticisinin bunun için telefona dönmesi kötü görünür. 
+Sonrasında araç ekleme/çıkarma da webden yapılabilir ama demo öncesi şart değil.
+
+Trip reset ve odometer edit için başarı/hata feedback'i. Şu an işlem çalışıyor ama profesyonel panelde Odometer updated / Trip reset gibi kısa Snackbar olmalı. 
+Hata olursa da kullanıcı sessizce ortada kalmamalı.
+
+
+Bunların içinde ben bir sonraki büyük işe rota geçmişini seçerdim.
+
+Ama rota geçmişine dalmadan önce 15-20 dakikalık üç küçük işi bitirelim: GPS göstergesi + Snackbar'lar + demo verisinin düzenlenmesi. Sonra history/route işine gireriz.
+
+Ve brom, şunu özellikle yapmazdım: raporlar, grafikler, yakıt, sürücü puanı, onlarca dashboard kutusu falan. 
+İlk firma görüşmesinden önce bunları tahmin ederek haftalar harcamayalım. Paneli gösteririz; adam “ben şunu da görmek isterim” dediğinde gerçek B2B ihtiyacını bedavaya öğrenmiş oluruz. 😄
