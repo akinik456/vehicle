@@ -13,6 +13,8 @@ import '../widgets/map_panel.dart';
 import '../services/fleet_manager_service.dart';
 import '../extensions/context_extensions.dart';
 import 'create_join_fleet_page.dart';
+import '../services/locator_pairing_service.dart';
+import '../services/pairing_response_service.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -273,7 +275,159 @@ class _DashboardPageState extends State<DashboardPage> {
       _selectedVehicleId = vehicleId;
     });
   }
+	Future<void> _showAddVehicleDialog() async {
+		final controller = TextEditingController();
 
+		await showDialog<void>(
+			context: context,
+			builder: (dialogContext) {
+				return AlertDialog(
+					title: const Text('Add Vehicle'),
+					content: SizedBox(
+						width: 380,
+						child: TextField(
+							controller: controller,
+							autofocus: true,
+							maxLength: 6,
+							textCapitalization: TextCapitalization.characters,
+							decoration: const InputDecoration(
+								labelText: 'Vehicle Code',
+								hintText: 'ABC123',
+								border: OutlineInputBorder(),
+							),
+						),
+					),
+					actions: [
+						TextButton(
+							onPressed: () {
+								Navigator.pop(dialogContext);
+							},
+							child: const Text('Cancel'),
+						),
+						FilledButton(
+							onPressed: () async {
+								final code = controller.text.trim();
+
+								if (code.isEmpty) return;
+
+								final result =
+										await LocatorPairingService.sendPairingRequest(
+									locatorInput: code,
+								);
+
+								if (!dialogContext.mounted) return;
+
+								if (result == null) {
+									ScaffoldMessenger.of(context).showSnackBar(
+										const SnackBar(
+											content: Text('Vehicle not found.'),
+										),
+									);
+									return;
+								}
+
+								final error = result['error'];
+
+								if (error != null) {
+									String message;
+
+									switch (error) {
+										case 'pairing_request_pending':
+											message = 'A pairing request is already pending.';
+											break;
+
+										case 'member_already_paired':
+											message = 'This vehicle is already paired.';
+											break;
+
+										case 'member_limit_reached':
+											message = 'Vehicle limit reached.';
+											break;
+
+										case 'member_not_found':
+											message = 'Vehicle not found.';
+											break;
+
+										default:
+											message = 'Could not send pairing request.';
+									}
+
+									ScaffoldMessenger.of(context).showSnackBar(
+										SnackBar(
+											content: Text(message),
+										),
+									);
+
+									return;
+								}
+
+								Navigator.pop(dialogContext);
+
+								ScaffoldMessenger.of(context).showSnackBar(
+									const SnackBar(
+										content: Text('Pairing request sent.'),
+									),
+								);
+
+								debugPrint(
+									'PAIRING REQUEST => '
+									'locatorId=${result['locatorId']} '
+									'requestId=${result['requestId']}',
+								);
+								final locatorId = result['locatorId']!;
+								final requestId = result['requestId']!;
+
+								PairingResponseService.watchPairingResponse(
+									locatorId: locatorId,
+									requestId: requestId,
+									onApproved: () async {
+										debugPrint('PAIRING APPROVED => $locatorId');
+
+										if (!mounted) return;
+
+										ScaffoldMessenger.of(context).showSnackBar(
+											const SnackBar(
+												content: Text('Vehicle paired successfully.'),
+											),
+										);
+
+										if (_groupId != null) {
+											await _loadVehicleInfo(_groupId!);
+										}
+									},
+									onRejected: () {
+										debugPrint('PAIRING REJECTED => $locatorId');
+
+										if (!mounted) return;
+
+										ScaffoldMessenger.of(context).showSnackBar(
+											const SnackBar(
+												content: Text('Pairing request rejected.'),
+											),
+										);
+									},
+									onError: (error) {
+										debugPrint('PAIRING RESPONSE ERROR => $error');
+
+										if (!mounted) return;
+
+										ScaffoldMessenger.of(context).showSnackBar(
+											const SnackBar(
+												content: Text('Pairing could not be completed.'),
+											),
+										);
+									},
+								);								
+							},
+							child: const Text('Send Request'),
+						),
+					],
+				);
+			},
+		);
+
+		controller.dispose();
+	}
   @override
   void dispose() {
     _presenceSubscription?.cancel();
@@ -455,6 +609,7 @@ class _DashboardPageState extends State<DashboardPage> {
 																	vehicle.vehicleType = type;
 																});
 															},
+															onAddVehicle: _showAddVehicleDialog,
 														),
 													),
 													Expanded(

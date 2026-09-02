@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/group_service.dart';
+import '../services/join_response_service.dart';
 
 class CreateJoinFleetPage extends StatelessWidget {
   const CreateJoinFleetPage({
@@ -99,6 +100,167 @@ class CreateJoinFleetPage extends StatelessWidget {
       );
     }
   }
+	
+	Future<void> _joinFleet(BuildContext context) async {
+		final controller = TextEditingController();
+
+		final fleetCode = await showDialog<String>(
+			context: context,
+			builder: (dialogContext) {
+				return AlertDialog(
+					backgroundColor: const Color(0xFF172033),
+					title: const Text(
+						'Join Fleet',
+						style: TextStyle(
+							color: Colors.white,
+							fontWeight: FontWeight.w700,
+						),
+					),
+					content: SizedBox(
+						width: 380,
+						child: TextField(
+							controller: controller,
+							autofocus: true,
+							maxLength: 6,
+							textCapitalization: TextCapitalization.characters,
+							style: const TextStyle(
+								color: Colors.white,
+							),
+							decoration: const InputDecoration(
+								labelText: 'Fleet Code',
+								hintText: 'ABC123',
+								border: OutlineInputBorder(),
+							),
+							onSubmitted: (value) {
+								final code = value.trim();
+
+								if (code.isNotEmpty) {
+									Navigator.of(dialogContext).pop(code);
+								}
+							},
+						),
+					),
+					actions: [
+						TextButton(
+							onPressed: () {
+								Navigator.of(dialogContext).pop();
+							},
+							child: const Text('Cancel'),
+						),
+						FilledButton(
+							style: FilledButton.styleFrom(
+								backgroundColor: lynraBlue,
+								foregroundColor: const Color(0xFF0F172A),
+							),
+							onPressed: () {
+								final code = controller.text.trim();
+
+								if (code.isEmpty) return;
+
+								Navigator.of(dialogContext).pop(code);
+							},
+							child: const Text('Send Request'),
+						),
+					],
+				);
+			},
+		);
+
+		controller.dispose();
+
+		if (fleetCode == null || fleetCode.isEmpty) {
+			return;
+		}
+
+		try {
+			final groupId = await GroupService.joinGroup(
+				groupCode: fleetCode,
+			);
+
+			if (!context.mounted) return;
+
+			if (groupId == null) {
+				ScaffoldMessenger.of(context).showSnackBar(
+					const SnackBar(
+						content: Text('Fleet not found.'),
+					),
+				);
+				return;
+			}
+
+			ScaffoldMessenger.of(context).showSnackBar(
+				const SnackBar(
+					content: Text(
+						'Join request sent. Waiting for approval.',
+					),
+				),
+			);
+
+			debugPrint(
+				'JOIN FLEET REQUEST => groupId=$groupId',
+			);
+			JoinResponseService.watchJoinResponse(
+				groupId: groupId,
+				onApproved: () async {
+					debugPrint(
+						'JOIN FLEET APPROVED => groupId=$groupId',
+					);
+
+					if (!context.mounted) return;
+
+					ScaffoldMessenger.of(context).showSnackBar(
+						const SnackBar(
+							content: Text(
+								'Fleet joined successfully.',
+							),
+						),
+					);
+
+					await onFleetCreated();
+				},
+				onRejected: () {
+					debugPrint(
+						'JOIN FLEET REJECTED => groupId=$groupId',
+					);
+
+					if (!context.mounted) return;
+
+					ScaffoldMessenger.of(context).showSnackBar(
+						const SnackBar(
+							content: Text(
+								'Join request rejected.',
+							),
+						),
+					);
+				},
+				onError: (error) {
+					debugPrint(
+						'JOIN FLEET RESPONSE ERROR => $error',
+					);
+
+					if (!context.mounted) return;
+
+					ScaffoldMessenger.of(context).showSnackBar(
+						const SnackBar(
+							content: Text(
+								'Fleet join could not be completed.',
+							),
+						),
+					);
+				},
+			);
+		} catch (e) {
+			if (!context.mounted) return;
+
+			ScaffoldMessenger.of(context).showSnackBar(
+				SnackBar(
+					content: Text(
+						'Could not send join request: $e',
+					),
+				),
+			);
+		}
+	}
 
   @override
   Widget build(BuildContext context) {
@@ -169,9 +331,7 @@ class CreateJoinFleetPage extends StatelessWidget {
                     width: double.infinity,
                     height: 54,
                     child: OutlinedButton.icon(
-                      onPressed: () {
-                        // Join Fleet sonraki adım.
-                      },
+                      onPressed: () => _joinFleet(context),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: lynraBlue,
                         side: const BorderSide(

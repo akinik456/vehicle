@@ -12,6 +12,7 @@ class LeftPanel extends StatefulWidget {
 	final ValueChanged<String> onVehicleSelected;
 	final void Function(String locatorId, String vehicleType)
     onVehicleTypeChanged;
+	final VoidCallback onAddVehicle;
 		
 	const LeftPanel({
 		super.key,
@@ -19,6 +20,7 @@ class LeftPanel extends StatefulWidget {
 		required this.selectedVehicleId,
 		required this.onVehicleSelected,
 		required this.onVehicleTypeChanged,
+		required this.onAddVehicle,
 	});
 @override
   State<LeftPanel> createState() =>
@@ -106,6 +108,18 @@ class LeftPanel extends StatefulWidget {
 						),
 					),
 				),
+				Padding(
+					padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+					child: SizedBox(
+						width: double.infinity,
+						height: 46,
+						child: FilledButton.icon(
+							onPressed: widget.onAddVehicle,
+							icon: const Icon(Icons.add_rounded),
+							label: const Text('Add Vehicle'),
+						),
+					),
+				),				
         VehicleList(
 					vehicles: filteredVehicles,
 					selectedVehicleId: widget.selectedVehicleId,

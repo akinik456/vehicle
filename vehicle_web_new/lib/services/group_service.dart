@@ -140,4 +140,101 @@ class GroupService {
     });
     return groupId;
   }
+	static Future<String?> joinGroup({
+		required String groupCode,
+	}) async {
+		final user = FirebaseAuth.instance.currentUser;
+
+		if (user == null) {
+			throw Exception('Authenticated user not found.');
+		}
+
+		// Web requester kimliğini bul.
+		final requesterQuery = await _firestore
+				.collection('requesters')
+				.where('authUid', isEqualTo: user.uid)
+				.limit(1)
+				.get();
+
+		if (requesterQuery.docs.isEmpty) {
+			throw Exception('Requester identity not found.');
+		}
+
+		final requesterDoc = requesterQuery.docs.first;
+		final requesterId = requesterDoc.id;
+		final requesterData = requesterDoc.data();
+
+		final requesterCode =
+				requesterData['requesterCode']?.toString();
+
+		if (requesterCode == null ||
+				requesterCode.isEmpty) {
+			throw Exception('Requester code not found.');
+		}
+
+		// Zaten bir filoya bağlıysa join gönderme.
+		final existingGroupId =
+				requesterData['groupId']?.toString().trim();
+
+		if (existingGroupId != null &&
+				existingGroupId.isNotEmpty) {
+			throw Exception(
+				'Requester already belongs to a fleet.',
+			);
+		}
+
+		final normalizedCode =
+				CodeService.normalizeCode(groupCode);
+
+		// Fleet code ile grubu bul.
+		final groupQuery = await _firestore
+				.collection('groups')
+				.where(
+					'groupCode',
+					isEqualTo: normalizedCode,
+				)
+				.limit(1)
+				.get();
+
+		if (groupQuery.docs.isEmpty) {
+			return null;
+		}
+
+		final groupDoc = groupQuery.docs.first;
+		final groupId = groupDoc.id;
+
+		final joinRequestRef = _firestore
+				.collection('groups')
+				.doc(groupId)
+				.collection('join_requests')
+				.doc(requesterId);
+
+		// Daha önce pending request varsa yenisini yazma.
+		final existingRequest =
+				await joinRequestRef.get();
+
+		if (existingRequest.exists) {
+			final status =
+					existingRequest.data()?['status']?.toString();
+
+			if (status == 'pending') {
+				return groupId;
+			}
+		}
+
+		await joinRequestRef.set({
+			'requesterCode': requesterCode,
+
+			// Web profilinde henüz isim tutmuyoruz.
+			'requesterName': 'Requester',
+
+			'authUid': user.uid,
+			'status': 'pending',
+			'createdAt': FieldValue.serverTimestamp(),
+			'updatedAt': FieldValue.serverTimestamp(),
+		}, SetOptions(merge: true));
+
+		return groupId;
+	}
+	
 }
