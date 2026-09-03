@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'login_page.dart';
+import 'signup_page.dart';
 import 'dashboard_page.dart';
 import '../extensions/context_extensions.dart';
 import 'welcome_page.dart';
@@ -32,11 +33,21 @@ class AuthGate extends StatelessWidget {
 
         final user = snapshot.data;
 
-        if (user == null) {
-          return const WelcomePage();
-        }
+        final page = Uri.base.queryParameters['page'];
 
-        return const DashboardPage();
+				if (page == 'login') {
+					return const LoginPage();
+				}
+
+				if (page == 'signup') {
+					return const SignUpPage();
+				}
+
+				if (user == null) {
+					return const WelcomePage();
+				}
+
+				return const DashboardPage();
       },
     );
   }

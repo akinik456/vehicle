@@ -126,4 +126,15 @@ class FleetManagerService {
 					.doc(groupId)
 					.delete();
 		}
+		static Future<String?> getGroupCode(String groupId) async {
+			final doc = await FirebaseFirestore.instance
+					.collection('groups')
+					.doc(groupId)
+					.get();
+
+			if (!doc.exists) return null;
+
+			return doc.data()?['groupCode']?.toString();
+		}
+		
 }

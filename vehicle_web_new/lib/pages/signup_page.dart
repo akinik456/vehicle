@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import 'login_page.dart';
 import '../services/code_service.dart';
+import 'dashboard_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -21,6 +22,9 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isLoading = false;
   String? _errorText;
 
+  bool get _isTr =>
+      Uri.base.queryParameters['lang'] == 'tr';
+
   Future<void> _signUp() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
@@ -30,21 +34,21 @@ class _SignUpPageState extends State<SignUpPage> {
         password.isEmpty ||
         confirmPassword.isEmpty) {
       setState(() {
-        _errorText = 'Please complete all fields.';
+        _errorText = _isTr ? 'Lütfen tüm alanları doldurun.' : 'Please complete all fields.';
       });
       return;
     }
 
     if (password != confirmPassword) {
       setState(() {
-        _errorText = 'Passwords do not match.';
+        _errorText = _isTr ? 'Şifreler eşleşmiyor.' : 'Passwords do not match.';
       });
       return;
     }
 
     if (password.length < 6) {
       setState(() {
-        _errorText = 'Password must be at least 6 characters.';
+        _errorText = _isTr ? 'Şifre en az 6 karakter olmalıdır.' : 'Password must be at least 6 characters.';
       });
       return;
     }
@@ -62,7 +66,12 @@ class _SignUpPageState extends State<SignUpPage> {
 			await _createRequesterIdentity();
 			if (!mounted) return;
 
-			Navigator.of(context).pop();
+			Navigator.of(context).pushAndRemoveUntil(
+				MaterialPageRoute(
+					builder: (_) => DashboardPage(),
+				),
+				(route) => false,
+			);
 
 
       // AuthGate authStateChanges() üzerinden kullanıcıyı
@@ -73,20 +82,23 @@ class _SignUpPageState extends State<SignUpPage> {
       setState(() {
         _errorText = switch (e.code) {
           'email-already-in-use' =>
-            'An account already exists with this email.',
+            _isTr ? 'Bu e-posta adresiyle zaten bir hesap var.' : 'An account already exists with this email.',
           'invalid-email' =>
-            'Please enter a valid email address.',
+            _isTr ? 'Lütfen geçerli bir e-posta adresi girin.' : 'Please enter a valid email address.',
           'weak-password' =>
-            'Please choose a stronger password.',
+            _isTr ? 'Lütfen daha güçlü bir şifre seçin.' : 'Please choose a stronger password.',
           _ =>
-            e.message ?? 'Account creation failed.',
+							e.message ??
+							(_isTr
+									? 'Hesap oluşturulamadı.'
+									: 'Account creation failed.'),
         };
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
-        _errorText = 'Account creation failed.';
+        _errorText = _isTr ? 'Hesap oluşturulamadı.' : 'Account creation failed.';
       });
     } finally {
       if (!mounted) return;
@@ -142,6 +154,8 @@ class _SignUpPageState extends State<SignUpPage> {
 	
   @override
   Widget build(BuildContext context) {
+    final isTr = Uri.base.queryParameters['lang'] == 'tr';
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A),
       body: SafeArea(
@@ -180,8 +194,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       const SizedBox(height: 28),
 
-                      const Text(
-                        'Create your free account',
+                      Text(
+                        isTr ? 'Ücretsiz hesabınızı oluşturun' : 'Create your free account',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
@@ -192,8 +206,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       const SizedBox(height: 10),
 
-                      const Text(
-                        'Your first vehicle is free forever.',
+                      Text(
+                        isTr ? 'İlk aracınız ömür boyu ücretsiz.' : 'Your first vehicle is free forever.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
@@ -210,10 +224,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         autofillHints: const [
                           AutofillHints.email,
                         ],
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email_outlined),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: isTr ? 'E-posta' : 'Email',
+                          prefixIcon: const Icon(Icons.email_outlined),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
 
@@ -225,10 +239,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         autofillHints: const [
                           AutofillHints.newPassword,
                         ],
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock_outline),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: isTr ? 'Şifre' : 'Password',
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
 
@@ -242,10 +256,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             _signUp();
                           }
                         },
-                        decoration: const InputDecoration(
-                          labelText: 'Confirm Password',
-                          prefixIcon: Icon(Icons.lock_outline),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: isTr ? 'Şifreyi Onayla' : 'Confirm Password',
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
 
@@ -285,8 +299,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text(
-                                  'Create Account',
+                              : Text(
+                                  isTr ? 'Hesap Oluştur' : 'Create Account',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight:
@@ -302,8 +316,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         mainAxisAlignment:
                             MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Already have an account?',
+                          Text(
+                            isTr ? 'Zaten bir hesabınız var mı?' : 'Already have an account?',
                             style: TextStyle(
                               color: Colors.white60,
                             ),
@@ -318,8 +332,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                               );
                             },
-                            child: const Text(
-                              'Sign In',
+                            child: Text(
+                              isTr ? 'Giriş Yap' : 'Sign In',
                               style: TextStyle(
                                 color: Color(0xFF43BFF3),
                               ),

@@ -18,13 +18,16 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   String? _errorText;
 
+  bool get _isTr =>
+      Uri.base.queryParameters['lang'] == 'tr';
+			
   Future<void> _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
       setState(() {
-        _errorText = 'Email and password are required.';
+        _errorText = _isTr ? 'E-posta ve şifre gereklidir.' : 'Email and password are required.';
       });
       return;
     }
@@ -47,18 +50,18 @@ class _LoginPageState extends State<LoginPage> {
 
       setState(() {
         _errorText = switch (e.code) {
-          'invalid-credential' => 'Invalid email or password.',
-          'user-disabled' => 'This account has been disabled.',
+          'invalid-credential' => _isTr ? 'E-posta veya şifre hatalı.' : 'Invalid email or password.',
+          'user-disabled' => _isTr ? 'Bu hesap devre dışı bırakılmış.' : 'This account has been disabled.',
           'too-many-requests' =>
-            'Too many attempts. Please try again later.',
-          _ => e.message ?? 'Login failed.',
+            _isTr ? 'Çok fazla deneme yapıldı. Lütfen daha sonra tekrar deneyin.' : 'Too many attempts. Please try again later.',
+          _ => e.message ?? (_isTr ? 'Giriş başarısız.' : _isTr ? 'Giriş başarısız.' : 'Login failed.'),
         };
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
-        _errorText = 'Login failed.';
+        _errorText = _isTr ? 'Giriş başarısız.' : 'Login failed.';
       });
     } finally {
       if (!mounted) return;
@@ -74,9 +77,11 @@ class _LoginPageState extends State<LoginPage> {
 
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Please enter your email address first.',
+            _isTr
+                ? 'Lütfen önce e-posta adresinizi girin.'
+                : 'Please enter your email address first.',
           ),
         ),
       );
@@ -91,8 +96,12 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password reset email sent.'),
+        SnackBar(
+          content: Text(
+            _isTr
+                ? 'Şifre sıfırlama e-postası gönderildi.'
+                : 'Password reset email sent.',
+          ),
         ),
       );
     } on FirebaseAuthException catch (e) {
@@ -106,7 +115,9 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'Password reset failed: ${e.code}',
+            _isTr
+                ? 'Şifre sıfırlama başarısız: ${e.code}'
+                : 'Password reset failed: ${e.code}',
           ),
         ),
       );
@@ -122,6 +133,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isTr = Uri.base.queryParameters['lang'] == 'tr';
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F172A),
       body: SafeArea(
@@ -161,8 +174,8 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 28),
 
-                      const Text(
-                        'Sign in to your account',
+                      Text(
+                        isTr ? 'Hesabınıza giriş yapın' : 'Sign in to your account',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 24,
@@ -173,8 +186,10 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 8),
 
-                      const Text(
-                        'Manage and track your fleet from anywhere.',
+                      Text(
+                        isTr
+                            ? 'Filonuzu her yerden yönetin ve takip edin.'
+                            : 'Manage and track your fleet from anywhere.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
@@ -213,11 +228,11 @@ class _LoginPageState extends State<LoginPage> {
                             _login();
                           }
                         },
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
+                        decoration: InputDecoration(
+                          labelText: isTr ? 'Şifre' : 'Password',
                           prefixIcon:
-                              Icon(Icons.lock_outline),
-                          border: OutlineInputBorder(),
+                              const Icon(Icons.lock_outline),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
 
@@ -225,8 +240,8 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: _resetPassword,
-                          child: const Text(
-                            'Forgot password?',
+                          child: Text(
+                            isTr ? 'Şifremi unuttum' : 'Forgot password?',
                             style: TextStyle(
                               color: Color(0xFF43BFF3),
                             ),
@@ -270,8 +285,8 @@ class _LoginPageState extends State<LoginPage> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text(
-                                  'Sign In',
+                              : Text(
+                                  isTr ? 'Giriş Yap' : 'Sign In',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight:
@@ -287,8 +302,8 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment:
                             MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Don't have an account?",
+                          Text(
+                            isTr ? 'Hesabınız yok mu?' : "Don't have an account?",
                             style: TextStyle(
                               color: Colors.white60,
                             ),
@@ -303,8 +318,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               );
                             },
-                            child: const Text(
-                              'Create Account',
+                            child: Text(
+                              isTr ? 'Hesap Oluştur' : 'Create Account',
                               style: TextStyle(
                                 color:
                                     Color(0xFF43BFF3),

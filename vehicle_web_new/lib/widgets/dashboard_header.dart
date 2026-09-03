@@ -6,6 +6,7 @@ import '../extensions/context_extensions.dart';
 class DashboardHeader extends StatelessWidget {
   final String groupName;
 	final String managerName;
+	final String groupCode;
   final VoidCallback onEditGroupName;
 	final VoidCallback onFleetManagement;
 	
@@ -13,6 +14,7 @@ class DashboardHeader extends StatelessWidget {
     super.key,
     required this.groupName,
 		required this.managerName,
+		required this.groupCode,
     required this.onEditGroupName,
 		required this.onFleetManagement,
   });
@@ -62,20 +64,36 @@ class DashboardHeader extends StatelessWidget {
 							InkWell(
 								borderRadius: BorderRadius.circular(8),
 								onTap: onFleetManagement,
-								child: Row(
+								child: Column(
+									mainAxisSize: MainAxisSize.min,
+									crossAxisAlignment: CrossAxisAlignment.start,
 									children: [
-										Text(
-											groupName,
-											style: const TextStyle(
-												fontSize: 24,
-												fontWeight: FontWeight.bold,
+										Row(
+											children: [
+												Text(
+													groupName,
+													style: const TextStyle(
+														fontSize: 24,
+														fontWeight: FontWeight.bold,
+													),
+												),
+												const SizedBox(width: 4),
+												const Icon(
+													Icons.keyboard_arrow_down_rounded,
+													size: 20,
+												),
+											],
+										),
+
+										if (groupCode.isNotEmpty)
+											Text(
+												'Fleet Code: $groupCode',
+												style: const TextStyle(
+													fontSize: 12,
+													color: Colors.white60,
+													fontWeight: FontWeight.w500,
+												),
 											),
-										),
-										const SizedBox(width: 4),
-										const Icon(
-											Icons.keyboard_arrow_down_rounded,
-											size: 20,
-										),
 									],
 								),
 							),

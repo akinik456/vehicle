@@ -15,6 +15,7 @@ import '../extensions/context_extensions.dart';
 import 'create_join_fleet_page.dart';
 import '../services/locator_pairing_service.dart';
 import '../services/pairing_response_service.dart';
+import '../services/join_request_service.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -35,6 +36,7 @@ class _DashboardPageState extends State<DashboardPage> {
 	bool? _hasWebAccess ;
 	bool _mapFullscreen = false;
 	List<Map<String, String>> _groups = [];
+	String _groupCode = '';
 	
   @override
   void initState() {
@@ -96,6 +98,11 @@ class _DashboardPageState extends State<DashboardPage> {
 				await FleetManagerService.getMasterRequesterName(
 			groupId,
 		);
+		
+		final groupCode =
+				await FleetManagerService.getGroupCode(
+			groupId,
+		);
 
 		await _loadVehicleInfo(groupId);
 
@@ -105,6 +112,7 @@ class _DashboardPageState extends State<DashboardPage> {
 			_groupId = groupId;
 			_groupName = groupName ?? '';
 			_managerName = managerName ?? '';
+			_groupCode = groupCode ?? '';
 		});
 
 		_presenceSubscription =
@@ -269,6 +277,204 @@ class _DashboardPageState extends State<DashboardPage> {
 			);
 		}
 	}
+	Widget _buildJoinRequests() {
+		final groupId = _groupId;
+
+		if (groupId == null) {
+			return const SizedBox.shrink();
+		}
+
+		return StreamBuilder(
+			stream: JoinRequestService.watchPendingJoinRequests(
+				groupId: groupId,
+			),
+			builder: (context, snapshot) {
+				if (!snapshot.hasData ||
+						snapshot.data!.docs.isEmpty) {
+					return const SizedBox.shrink();
+				}
+
+				final count = snapshot.data!.docs.length;
+
+				return Padding(
+					padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+					child: FilledButton.icon(
+						onPressed: _showJoinRequestsDialog,
+						icon: const Icon(Icons.person_add_alt_1_rounded),
+						label: Text(
+							count == 1
+									? '1 Join Request'
+									: '$count Join Requests',
+						),
+					),
+				);
+			},
+		);
+	}
+	
+	Future<void> _showJoinRequestsDialog() async {
+		final groupId = _groupId;
+
+		if (groupId == null) return;
+
+		await showDialog<void>(
+			context: context,
+			builder: (dialogContext) {
+				return AlertDialog(
+					title: const Row(
+						children: [
+							Icon(Icons.person_add_alt_1_rounded),
+							SizedBox(width: 10),
+							Text('Join Requests'),
+						],
+					),
+					content: SizedBox(
+						width: 440,
+						child: StreamBuilder(
+							stream: JoinRequestService.watchPendingJoinRequests(
+								groupId: groupId,
+							),
+							builder: (context, snapshot) {
+								if (!snapshot.hasData) {
+									return const Padding(
+										padding: EdgeInsets.all(24),
+										child: Center(
+											child: CircularProgressIndicator(),
+										),
+									);
+								}
+
+								final requests = snapshot.data!.docs;
+
+								if (requests.isEmpty) {
+									return const Padding(
+										padding: EdgeInsets.all(24),
+										child: Center(
+											child: Text('No pending join requests.'),
+										),
+									);
+								}
+
+								return Column(
+									mainAxisSize: MainAxisSize.min,
+									children: requests.map((doc) {
+										final data = doc.data();
+
+										final requesterName =
+												data['requesterName']?.toString() ??
+														'Requester';
+
+										final requesterCode =
+												data['requesterCode']?.toString() ??
+														'-';
+
+										return ListTile(
+											contentPadding: EdgeInsets.zero,
+											leading: const CircleAvatar(
+												child: Icon(Icons.person_rounded),
+											),
+											title: Text(requesterName),
+											subtitle: Text(requesterCode),
+											trailing: Row(
+												mainAxisSize: MainAxisSize.min,
+												children: [
+													TextButton(
+														onPressed: () async {
+															try {
+																await JoinRequestService
+																		.rejectJoinRequest(
+																	groupId: groupId,
+																	requesterId: doc.id,
+																);
+
+																if (!context.mounted) return;
+
+																ScaffoldMessenger.of(context)
+																		.showSnackBar(
+																	const SnackBar(
+																		content: Text(
+																			'Join request rejected.',
+																		),
+																	),
+																);
+															} catch (e) {
+																if (!context.mounted) return;
+
+																ScaffoldMessenger.of(context)
+																		.showSnackBar(
+																	const SnackBar(
+																		content: Text(
+																			'Could not reject join request.',
+																		),
+																	),
+																);
+															}
+														},
+														child: const Text('Reject'),
+													),
+													const SizedBox(width: 8),
+													FilledButton(
+														onPressed: () async {
+															try {
+																await JoinRequestService
+																		.approveJoinRequest(
+																	groupId: groupId,
+																	requesterId: doc.id,
+																);
+
+																if (!context.mounted) return;
+
+																ScaffoldMessenger.of(context)
+																		.showSnackBar(
+																	const SnackBar(
+																		content: Text(
+																			'Join request approved.',
+																		),
+																	),
+																);
+															} catch (e) {
+																debugPrint(
+																	'JOIN APPROVE ERROR => $e',
+																);
+
+																if (!context.mounted) return;
+
+																ScaffoldMessenger.of(context)
+																		.showSnackBar(
+																	SnackBar(
+																		content: Text(
+																			e.toString().contains(
+																				'requester_capacity_reached',
+																			)
+																					? 'Requester limit reached.'
+																					: 'Could not approve join request.',
+																		),
+																	),
+																);
+															}
+														},
+														child: const Text('Approve'),
+													),
+												],
+											),
+										);
+									}).toList(),
+								);
+							},
+						),
+					),
+					actions: [
+						TextButton(
+							onPressed: () {
+								Navigator.pop(dialogContext);
+							},
+							child: const Text('Close'),
+						),
+					],
+				);
+			},
+		);
+	}	
 	
   void _selectVehicle(String vehicleId) {
     setState(() {
@@ -579,6 +785,7 @@ class _DashboardPageState extends State<DashboardPage> {
           DashboardHeader(
 						groupName: _groupName,
 						managerName: _managerName,
+						groupCode: _groupCode,
 						onEditGroupName: _editGroupName,
 						onFleetManagement: _showFleetManagement,
 					),
@@ -596,20 +803,27 @@ class _DashboardPageState extends State<DashboardPage> {
 												if (!_mapFullscreen)
 													SizedBox(
 														width: 360,
-														child: LeftPanel(
-															vehicles: _locators,
-															selectedVehicleId: _selectedVehicleId,
-															onVehicleSelected: _selectVehicle,
-															onVehicleTypeChanged: (locatorId, type) {
-																setState(() {
-																	final vehicle = _locators.firstWhere(
-																		(v) => v.locatorId == locatorId,
-																	);
+														child: Column(
+															children: [
+																_buildJoinRequests(),
+																Expanded(
+																	child: LeftPanel(
+																		vehicles: _locators,
+																		selectedVehicleId: _selectedVehicleId,
+																		onVehicleSelected: _selectVehicle,
+																		onVehicleTypeChanged: (locatorId, type) {
+																			setState(() {
+																				final vehicle = _locators.firstWhere(
+																					(v) => v.locatorId == locatorId,
+																				);
 
-																	vehicle.vehicleType = type;
-																});
-															},
-															onAddVehicle: _showAddVehicleDialog,
+																				vehicle.vehicleType = type;
+																			});
+																		},
+																		onAddVehicle: _showAddVehicleDialog,
+																	),
+																),
+															],
 														),
 													),
 													Expanded(
